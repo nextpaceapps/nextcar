@@ -1,0 +1,15 @@
+{
+  "name": "nextcar-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=apps/frontend",
+    "dev:backend": "npm run dev --workspace=apps/backend",
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces"
+  }
+}
