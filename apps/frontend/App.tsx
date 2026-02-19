@@ -5,6 +5,7 @@ import Header from './components/Header';
 import CarCard from './components/CarCard';
 import Footer from './components/Footer';
 import { Car } from './types';
+import './App.css'
 
 const INITIAL_CARS: Car[] = [
   {
@@ -54,7 +55,7 @@ const App: React.FC = () => {
     document.documentElement.classList.toggle('dark');
   };
 
-  const filteredCars = INITIAL_CARS.filter(car => 
+  const filteredCars = INITIAL_CARS.filter(car =>
     car.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     car.description.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -63,10 +64,10 @@ const App: React.FC = () => {
     <div className="bg-[#f2f4f7] dark:bg-[#050608] min-h-screen transition-colors duration-300">
       {/* Centered Main Wrapper */}
       <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row relative bg-white dark:bg-[#0a0c10] shadow-sm">
-        
+
         {/* Sidebar - Flush with the right part */}
         <Sidebar />
-        
+
         {/* Main Content */}
         <main className="flex-1 flex flex-col min-h-screen border-l border-slate-100 dark:border-slate-800/50">
           <Header value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
@@ -101,7 +102,7 @@ const App: React.FC = () => {
       </div>
 
       {/* Floating Dark Mode Toggle */}
-      <button 
+      <button
         onClick={toggleDarkMode}
         className="fixed bottom-6 right-6 z-50 p-4 bg-white dark:bg-slate-900 rounded-full shadow-2xl border border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:scale-110 transition-transform flex items-center justify-center group"
         aria-label="Toggle dark mode"
