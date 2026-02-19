@@ -11,5 +11,9 @@
     "dev:admin": "npm run dev --workspace=apps/admin",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces"
+  },
+  "overrides": {
+    "vite": "^6.2.0",
+    "@vitejs/plugin-react": "^5.0.0"
   }
 }
