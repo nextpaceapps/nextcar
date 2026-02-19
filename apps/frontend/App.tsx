@@ -6,9 +6,6 @@ import CarCard from './components/CarCard';
 import Footer from './components/Footer';
 import { Car } from './types';
 import './App.css'
-import app from './firebase';
-
-console.log('Firebase initialized:', app);
 
 const INITIAL_CARS: Car[] = [
   {
