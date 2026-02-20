@@ -18,9 +18,11 @@ app.get('/', (req, res) => {
 });
 
 import carRoutes from './routes/cars';
+import aiRoutes from './routes/ai';
 
 // Mount routes
 app.use('/api/cars', carRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
