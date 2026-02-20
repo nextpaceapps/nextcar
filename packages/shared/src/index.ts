@@ -1,12 +1,5 @@
-export interface Vehicle {
-    id: string;
-    title: string;
-    make: string;
-    model: string;
-    year: number;
-    price: number;
-    // Add other fields from schema
-}
+export * from './types/car.js';
+export * from './schemas/car.js';
 
 export interface User {
     uid: string;
