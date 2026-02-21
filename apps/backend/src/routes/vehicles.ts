@@ -1,0 +1,41 @@
+import { Router } from 'express';
+import { db } from '../config/firebase';
+import { asyncHandler } from '../middleware/validate';
+import { COLLECTIONS } from '@nextcar/shared';
+import { AppError } from '../utils/AppError';
+import { successResponse } from '../utils/response';
+
+const router = Router();
+
+// GET /api/vehicles
+router.get('/', asyncHandler(async (req, res) => {
+    const limit = Number(req.query.limit) || 20;
+
+    const query = db.collection(COLLECTIONS.CARS)
+        .where('deleted', '==', false)
+        .where('status', '==', 'published')
+        .limit(limit);
+
+    const snapshot = await query.get();
+    const vehicles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    successResponse(res, vehicles);
+}));
+
+// GET /api/vehicles/:id
+router.get('/:id', asyncHandler(async (req, res) => {
+    const doc = await db.collection(COLLECTIONS.CARS).doc(req.params.id as string).get();
+
+    if (!doc.exists) {
+        throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
+    }
+
+    const data = doc.data() as any;
+    if (data.deleted === true || data.status !== 'published') {
+        throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
+    }
+
+    successResponse(res, { id: doc.id, ...data });
+}));
+
+export default router;

@@ -1,36 +1,20 @@
-import {
-    collection,
-    doc,
-    getDocs,
-    getDoc,
-    query,
-    orderBy,
-    where
-} from 'firebase/firestore';
-import { db } from '../../firebase';
 import type { Car } from '@nextcar/shared';
-import { COLLECTIONS } from '@nextcar/shared';
 
-const CARS_COLLECTION = COLLECTIONS.CARS;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
 
 export const carService = {
     async getPublishedCars(): Promise<Car[]> {
-        const q = query(
-            collection(db, CARS_COLLECTION),
-            where('status', '==', 'published'),
-            where('deleted', '==', false),
-            orderBy('createdAt', 'desc')
-        );
-        const snapshot = await getDocs(q);
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Car));
+        const response = await fetch(`${BACKEND_URL}/api/vehicles`);
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error?.message || 'Failed to get cars');
+        return data.data;
     },
 
     async getCar(id: string): Promise<Car | null> {
-        const docRef = doc(db, CARS_COLLECTION, id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && !docSnap.data().deleted) {
-            return { id: docSnap.id, ...docSnap.data() } as Car;
-        }
-        return null;
+        const response = await fetch(`${BACKEND_URL}/api/vehicles/${id}`);
+        if (response.status === 404) return null;
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error?.message || 'Failed to fetch car');
+        return data.data;
     }
 };
