@@ -7,6 +7,11 @@ NextCar — monorepo for a used-car dealership platform (public catalogue, admin
 - Firebase: `nextcar-83e67`
 - GitHub: `nextpaceapps/nextcar`
 
+## Working Process
+
+- **Always create a new branch** before starting any new task or issue (e.g., `git checkout -b feature/issue-name`).
+
+
 ## Docs
 
 | Doc | What it covers |
