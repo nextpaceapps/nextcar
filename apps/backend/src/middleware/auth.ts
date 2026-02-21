@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { auth, db } from '../config/firebase';
 import type { DecodedIdToken } from 'firebase-admin/auth';
+import { errorResponse } from '../utils/response';
 
 export interface AuthRequest extends Request {
     user?: DecodedIdToken;
@@ -9,7 +10,8 @@ export interface AuthRequest extends Request {
 export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'Missing or invalid authorization header' });
+        errorResponse(res, 'UNAUTHORIZED', 'Missing or invalid authorization header', 401);
+        return;
     }
 
     const token = authHeader.split('Bearer ')[1];
@@ -21,18 +23,21 @@ export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFu
         const userDoc = await db.collection('users').doc(decodedToken.uid).get();
 
         if (!userDoc.exists) {
-            return res.status(403).json({ error: 'User not found in database' });
+            errorResponse(res, 'FORBIDDEN', 'User not found in database', 403);
+            return;
         }
 
         const userData = userDoc.data();
         if (userData?.role !== 'Admin') {
-            return res.status(403).json({ error: 'Insufficient permissions' });
+            errorResponse(res, 'FORBIDDEN', 'Insufficient permissions', 403);
+            return;
         }
 
         req.user = decodedToken;
         next();
     } catch (error) {
         console.error('Error verifying token:', error);
-        return res.status(401).json({ error: 'Unauthorized' });
+        errorResponse(res, 'UNAUTHORIZED', 'Unauthorized', 401);
+        return;
     }
 };
