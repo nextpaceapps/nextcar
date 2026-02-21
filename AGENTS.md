@@ -2,6 +2,11 @@
 
 NextCar — monorepo for a used-car dealership platform (public catalogue, admin panel, backend API, shared types) backed by Firebase.
 
+## Project
+
+- Firebase: `nextcar-83e67`
+- GitHub: `nextpaceapps/nextcar`
+
 ## Docs
 
 | Doc | What it covers |
@@ -26,4 +31,6 @@ npm run build                 # Build all workspaces
 - Types are **derived from Zod schemas** — see `docs/CONVENTIONS.md`.
 - Collection names use the **shared `COLLECTIONS` constant** — never hardcode.
 - Documents use **soft delete** (`deleted: true`) — never remove.
+- Queries must filter **`deleted == false`** — never return deleted documents.
+- Composite indexes must exist for any query combining **`where()` + `orderBy()`**.
 - Security rules are **temporarily open** — see `docs/SECURITY.md`.

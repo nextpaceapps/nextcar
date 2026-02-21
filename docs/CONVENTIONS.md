@@ -18,6 +18,14 @@
 - **No `alert()`** — use inline error state with a dismissible UI banner.
 - **Error typing** — catch blocks use `error: unknown` with `instanceof Error` narrowing.
 
+## Don'ts
+
+- Don't use `deleteDoc()` — use soft delete (`deleted: true`)
+- Don't use `new Date()` for timestamps — use `serverTimestamp()`
+- Don't expose API keys via `VITE_` env vars — route through backend
+- Don't hardcode collection names — use `COLLECTIONS` constant
+- Don't write manual interfaces that duplicate Zod schemas — use `z.infer<>`
+
 ## Naming
 
 - Entity is currently "Car" throughout the codebase. Rename to "Vehicle" is tracked in GitHub issue #23.

@@ -17,7 +17,7 @@ Both reference GitHub issue #21 for the production checklist.
 ## Production Checklist
 
 Tracked in GitHub issue #21. Key items:
-1. Implement admin authentication (issue #3)
+1. Implement admin authentication (issue #5)
 2. Tighten Firestore rules to `request.auth != null` for writes
 3. Tighten Storage rules to `request.auth != null` for writes
 4. Update `cors.json` with production origins

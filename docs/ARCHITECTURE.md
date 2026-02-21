@@ -26,6 +26,8 @@ Frontend UI ← Firestore (published, non-deleted cars)
 - AI listing parsing goes `Admin → Backend /api/ai/parse-listing → Gemini → Admin`.
 - Frontend reads published, non-deleted documents.
 
+> **Note:** Migration to API-first (Next.js API routes) is planned — see issue #2.
+
 ## Package Layering
 
 | Layer | Package | Depends On |
