@@ -1,12 +1,10 @@
-export interface Vehicle {
-    id: string;
-    title: string;
-    make: string;
-    model: string;
-    year: number;
-    price: number;
-    // Add other fields from schema
-}
+export * from './types/car.js';
+export * from './schemas/car.js';
+
+// Firestore collection names — single source of truth
+export const COLLECTIONS = {
+    CARS: 'cars',
+} as const;
 
 export interface User {
     uid: string;
