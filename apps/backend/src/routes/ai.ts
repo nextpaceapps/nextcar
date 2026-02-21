@@ -75,7 +75,7 @@ const responseSchema = {
     required: ['make', 'model', 'year', 'mileage', 'fuelType', 'transmission', 'bodyType', 'color'],
 };
 
-// POST /api/ai/parse-listing
+// TODO: add auth middleware and rate limiting before deployment (#21)
 router.post('/parse-listing', async (req, res) => {
     try {
         const { rawText } = req.body;
@@ -92,6 +92,7 @@ router.post('/parse-listing', async (req, res) => {
             return;
         }
 
+        // TODO: move GoogleGenAI instantiation outside handler (initialize once, not per request)
         const ai = new GoogleGenAI({ apiKey });
 
         const response = await ai.models.generateContent({
@@ -109,7 +110,13 @@ router.post('/parse-listing', async (req, res) => {
             return;
         }
 
-        const parsed = JSON.parse(text);
+        let parsed;
+        try {
+            parsed = JSON.parse(text);
+        } catch {
+            res.status(500).json({ error: 'Failed to parse AI response as JSON' });
+            return;
+        }
 
         // Ensure defaults
         const result = {
