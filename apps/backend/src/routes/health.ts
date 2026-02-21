@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { successResponse } from '../utils/response';
 import { withValidation, asyncHandler } from '../middleware/validate';
-import { requireAdmin } from '../middleware/auth';
+import { requireAdmin, AuthRequest } from '../middleware/auth';
 import { AppError } from '../utils/AppError';
 
 const router = Router();
@@ -24,6 +24,7 @@ router.post(
     requireAdmin,
     withValidation(PayloadSchema),
     asyncHandler(async (req, res) => {
+        const authReq = req as AuthRequest;
         // Since we reach this point, req.body is fully validated by Zod and req.user exists
         const { name } = req.body;
 
@@ -34,7 +35,7 @@ router.post(
 
         successResponse(res, {
             message: `Hello ${name}!`,
-            user: (req as any).user?.uid
+            user: authReq.user?.uid
         }, 201);
     })
 );

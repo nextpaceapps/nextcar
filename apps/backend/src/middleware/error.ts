@@ -4,14 +4,14 @@ import { AppError } from '../utils/AppError';
 import { errorResponse } from '../utils/response';
 
 export const errorHandler = (
-    err: any,
+    err: unknown,
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     if (err instanceof ZodError) {
         // Format Zod validation errors to a unified string or structured message
-        const message = (err as any).errors.map((e: any) => `${e.path.join('.')}: ${e.message}`).join('; ');
+        const message = err.issues.map((e) => `${e.path.join('.')}: ${e.message}`).join('; ');
         return errorResponse(res, 'VALIDATION_ERROR', message, 400);
     }
 

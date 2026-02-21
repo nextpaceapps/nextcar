@@ -61,6 +61,7 @@ throw new AppError('VEHICLE_NOT_FOUND', 'The vehicle you specified does not exis
 The NextCar platform aims to incorporate the following structured layout. Each of these endpoints must respect the conventions listed above.
 
 ### Vehicles
+*Public endpoints deal with fetching vehicle listings safely, while Admin endpoints support editing configurations and lifecycle events.*
 - \`GET /api/vehicles\` (Public)
 - \`GET /api/vehicles/:id\` (Public)
 - \`POST /api/vehicles\` (Admin Only)
@@ -68,12 +69,14 @@ The NextCar platform aims to incorporate the following structured layout. Each o
 - \`DELETE /api/vehicles/:id\` (Admin Only)
 
 ### Customers
+*Users inherently exist on CRM tracking levels strictly accessed by standard Admin management rules.*
 - \`GET /api/customers\` (Admin Only)
-- \`POST /api/customers\` (Public: Creating a customer entity)
+- \`POST /api/customers\` (Admin Only)
 - \`PUT /api/customers/:id\` (Admin Only)
 - \`DELETE /api/customers/:id\` (Admin Only)
 
 ### Opportunities
+*Prospective interest generation from customer sites dynamically submits form leads here publicly.*
 - \`GET /api/opportunities\` (Admin Only)
 - \`POST /api/opportunities\` (Public: Submitting interest generates an oppty)
 - \`PUT /api/opportunities/:id\` (Admin Only)
