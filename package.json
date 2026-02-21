@@ -10,7 +10,8 @@
     "dev:backend": "npm run dev --workspace=apps/backend",
     "dev:admin": "npm run dev --workspace=apps/admin",
     "build": "npm run build --workspaces",
-    "test": "npm run test --workspaces"
+    "test": "npm run test --workspaces",
+    "create-owner": "npm run create-owner --workspace=apps/backend"
   },
   "overrides": {
     "vite": "^6.2.0",
