@@ -2,9 +2,10 @@ import { Router } from 'express';
 import { db } from '../config/firebase';
 import { requireAdmin } from '../middleware/auth';
 import { asyncHandler, withValidation } from '../middleware/validate';
-import { carSchema, COLLECTIONS } from '@nextcar/shared';
+import { carSchema, COLLECTIONS, type Car } from '@nextcar/shared';
 import { AppError } from '../utils/AppError';
 import { successResponse } from '../utils/response';
+import { FieldValue } from 'firebase-admin/firestore';
 
 const router = Router();
 
@@ -17,6 +18,7 @@ router.get('/', asyncHandler(async (req, res) => {
 
     const query = db.collection(COLLECTIONS.CARS)
         .where('deleted', '==', false)
+        .orderBy('createdAt', 'desc')
         .limit(limit);
 
     const snapshot = await query.get();
@@ -33,7 +35,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
     }
 
-    const data = doc.data() as any;
+    const data = doc.data() as Car;
     if (data.deleted === true) {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
     }
@@ -41,14 +43,13 @@ router.get('/:id', asyncHandler(async (req, res) => {
     successResponse(res, { id: doc.id, ...data });
 }));
 
-// POST /api/admin/vehicles
-router.post('/', withValidation(carSchema), asyncHandler(async (req, res) => {
+router.post('/', withValidation(carSchema.omit({ status: true, deleted: true })), asyncHandler(async (req, res) => {
     const vehicleData = {
         ...req.body,
         status: 'draft',
         deleted: false,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: FieldValue.serverTimestamp(),
+        updatedAt: FieldValue.serverTimestamp(),
     };
 
     const docRef = await db.collection(COLLECTIONS.CARS).add(vehicleData);
@@ -56,7 +57,7 @@ router.post('/', withValidation(carSchema), asyncHandler(async (req, res) => {
 }));
 
 // PUT /api/admin/vehicles/:id
-router.put('/:id', withValidation(carSchema), asyncHandler(async (req, res) => {
+router.put('/:id', withValidation(carSchema.partial()), asyncHandler(async (req, res) => {
     const docRef = db.collection(COLLECTIONS.CARS).doc(req.params.id as string);
     const doc = await docRef.get();
 
@@ -72,7 +73,7 @@ router.put('/:id', withValidation(carSchema), asyncHandler(async (req, res) => {
 
     const payload = {
         ...updateData,
-        updatedAt: new Date().toISOString(),
+        updatedAt: FieldValue.serverTimestamp(),
     };
 
     await docRef.update(payload);
@@ -97,7 +98,7 @@ router.delete('/:id', asyncHandler(async (req, res) => {
     await docRef.update({
         status: 'archived',
         deleted: true,
-        updatedAt: new Date().toISOString()
+        updatedAt: FieldValue.serverTimestamp()
     });
 
     successResponse(res, { id: req.params.id as string, message: 'Vehicle deleted successfully' });

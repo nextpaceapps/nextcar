@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { db } from '../config/firebase';
 import { asyncHandler } from '../middleware/validate';
-import { COLLECTIONS } from '@nextcar/shared';
+import { COLLECTIONS, type Car } from '@nextcar/shared';
 import { AppError } from '../utils/AppError';
 import { successResponse } from '../utils/response';
 
@@ -14,6 +14,7 @@ router.get('/', asyncHandler(async (req, res) => {
     const query = db.collection(COLLECTIONS.CARS)
         .where('deleted', '==', false)
         .where('status', '==', 'published')
+        .orderBy('createdAt', 'desc')
         .limit(limit);
 
     const snapshot = await query.get();
@@ -30,7 +31,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
     }
 
-    const data = doc.data() as any;
+    const data = doc.data() as Car;
     if (data.deleted === true || data.status !== 'published') {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
     }

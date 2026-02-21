@@ -64,9 +64,11 @@ The NextCar platform aims to incorporate the following structured layout. Each o
 *Public endpoints deal with fetching vehicle listings safely, while Admin endpoints support editing configurations and lifecycle events.*
 - \`GET /api/vehicles\` (Public)
 - \`GET /api/vehicles/:id\` (Public)
-- \`POST /api/vehicles\` (Admin Only)
-- \`PUT /api/vehicles/:id\` (Admin Only)
-- \`DELETE /api/vehicles/:id\` (Admin Only)
+- \`GET /api/admin/vehicles\` (Admin Only)
+- \`GET /api/admin/vehicles/:id\` (Admin Only)
+- \`POST /api/admin/vehicles\` (Admin Only)
+- \`PUT /api/admin/vehicles/:id\` (Admin Only)
+- \`DELETE /api/admin/vehicles/:id\` (Admin Only)
 
 ### Customers
 *Users inherently exist on CRM tracking levels strictly accessed by standard Admin management rules.*

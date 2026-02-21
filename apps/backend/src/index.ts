@@ -12,7 +12,7 @@ const port = process.env.PORT || 5000;
 app.use(cors({
     origin: [
         process.env.ADMIN_ORIGIN || 'http://localhost:5174',
-        process.env.FRONTEND_ORIGIN || 'http://localhost:3000'
+        process.env.FRONTEND_ORIGIN || 'http://localhost:5173'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
