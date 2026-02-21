@@ -23,10 +23,16 @@ app.get('/', (req, res) => {
 
 import carRoutes from './routes/cars';
 import aiRoutes from './routes/ai';
+import healthRoutes from './routes/health';
+import { errorHandler } from './middleware/error';
 
 // Mount routes
 app.use('/api/cars', carRoutes);
 app.use('/api/ai', aiRoutes);
+app.use('/api/health', healthRoutes);
+
+// Register the catch-all error handler at the end of the middleware chain
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
