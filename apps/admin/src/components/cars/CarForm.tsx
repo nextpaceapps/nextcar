@@ -56,7 +56,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
         setValueAs: (v: any) => (v === '' || v === undefined || v === null) ? undefined : Number(v)
     });
 
-    const { fields: imageFields, remove: removeImage } = useFieldArray({
+    const { fields: imageFields, remove: removeImage, update: updateImage } = useFieldArray({
         control,
         name: "images"
     });
@@ -122,8 +122,12 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             ...img,
             isPrimary: i === index,
         })));
-        // Also unset primary on existing images
-        imageFields.forEach((_, i) => removeImage(i));
+        // Also unset primary on existing images (don't delete them!)
+        imageFields.forEach((field, i) => {
+            if (field.isPrimary) {
+                updateImage(i, { ...field, isPrimary: false });
+            }
+        });
     };
 
     // --- Form Submit ---
