@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@nextcar/shared": "*",
     "@tanstack/react-query": "^5.90.21",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

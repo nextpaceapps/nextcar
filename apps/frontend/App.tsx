@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import CarCard from './components/CarCard';
+import CarCard from './src/components/CarCard';
 import Footer from './components/Footer';
 import { carService } from './src/services/carService';
 import type { Car } from '@nextcar/shared';
@@ -31,22 +31,7 @@ const App: React.FC = () => {
     return title.includes(q) || desc.includes(q);
   });
 
-  // Map Firestore Car to the display format expected by CarCard
-  const displayCars = filteredCars.map((car: Car) => ({
-    id: car.id || '',
-    title: `${car.make} ${car.model}`,
-    description: car.description || `${car.year} ${car.make} ${car.model} — ${car.mileage.toLocaleString()} km, ${car.fuelType}, ${car.transmission}`,
-    image: car.photos?.sort((a, b) => a.order - b.order)?.[0]?.url || 'https://placehold.co/800x450?text=No+Image',
-    specs: {
-      engine: car.power || car.engineSize || car.fuelType,
-      gearbox: car.transmission,
-      mileage: `${car.mileage.toLocaleString()} km`,
-    },
-    tags: [
-      car.bodyType,
-      ...(car.features?.slice(0, 2) || []),
-    ].filter(Boolean),
-  }));
+
 
   return (
     <div className="bg-[#f2f4f7] dark:bg-[#050608] min-h-screen transition-colors duration-300">
@@ -65,14 +50,14 @@ const App: React.FC = () => {
               <div className="flex items-center justify-center py-20">
                 <div className="text-slate-400 text-lg">Loading inventory...</div>
               </div>
-            ) : displayCars.length === 0 ? (
+            ) : filteredCars.length === 0 ? (
               <div className="flex items-center justify-center py-20">
                 <div className="text-slate-400 text-lg">
                   {searchQuery ? 'No cars match your search.' : 'No cars in inventory yet.'}
                 </div>
               </div>
             ) : (
-              displayCars.map(car => (
+              filteredCars.map(car => (
                 <CarCard key={car.id} car={car} />
               ))
             )}

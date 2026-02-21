@@ -9,8 +9,9 @@ import {
 } from 'firebase/firestore';
 import { db } from '../../firebase';
 import type { Car } from '@nextcar/shared';
+import { COLLECTIONS } from '@nextcar/shared';
 
-const CARS_COLLECTION = 'cars';
+const CARS_COLLECTION = COLLECTIONS.CARS;
 
 export const carService = {
     async getPublishedCars(): Promise<Car[]> {

@@ -18,12 +18,17 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
+// Augment globalThis for HMR guard
+declare global {
+    var __FIREBASE_EMULATORS_CONNECTED__: boolean | undefined;
+}
+
 // Connect to emulators in development (guard against HMR re-calls)
-if (import.meta.env.DEV && !(globalThis as any).__FIREBASE_EMULATORS_CONNECTED__) {
+if (import.meta.env.DEV && !globalThis.__FIREBASE_EMULATORS_CONNECTED__) {
     connectAuthEmulator(auth, 'http://127.0.0.1:9099', { disableWarnings: true });
     connectFirestoreEmulator(db, '127.0.0.1', 8080);
     connectStorageEmulator(storage, '127.0.0.1', 9199);
-    (globalThis as any).__FIREBASE_EMULATORS_CONNECTED__ = true;
+    globalThis.__FIREBASE_EMULATORS_CONNECTED__ = true;
 }
 
 export default app;

@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { carSchema, type CarSchema, type Car } from '@nextcar/shared';
+import { carSchema, type CarSchema, type Car, type CarPhoto } from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { carService } from '../../services/carService';
 import { aiService } from '../../services/aiService';
@@ -33,6 +33,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     // Image upload state
     const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
     const [isUploading, setIsUploading] = useState(false);
+    const [saveError, setSaveError] = useState<string | null>(null);
 
     // Cleanup object URLs on unmount to prevent memory leaks
     useEffect(() => {
@@ -52,18 +53,24 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             features: initialData.features || [],
             photos: initialData.photos || []
         } : {
-            status: 'draft',
+            status: 'draft' as const,
             features: [],
             photos: [],
             year: new Date().getFullYear(),
             price: 0,
-            mileage: 0
-        } as any
+            mileage: 0,
+            make: '',
+            model: '',
+            fuelType: 'Petrol' as const,
+            transmission: 'Automatic' as const,
+            bodyType: 'Sedan' as const,
+            color: '',
+        }
     });
 
     // Helper for optional number fields — converts empty string to undefined instead of NaN
-    const optionalNumber = (name: string) => register(name as any, {
-        setValueAs: (v: any) => (v === '' || v === undefined || v === null) ? undefined : Number(v)
+    const optionalNumber = (name: keyof CarSchema) => register(name, {
+        setValueAs: (v: string | undefined | null) => (v === '' || v === undefined || v === null) ? undefined : Number(v)
     });
 
     const { fields: photoFields, remove: removePhoto } = useFieldArray({
@@ -195,9 +202,10 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             } else {
                 await createMutation.mutateAsync(finalData);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : 'An unexpected error occurred';
             console.error('Error saving car:', error);
-            alert(`Failed to save car: ${error?.message || JSON.stringify(error)}`);
+            setSaveError(message);
         } finally {
             setIsUploading(false);
         }
@@ -251,8 +259,15 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             </div>
 
             {/* Main Form */}
-            <form onSubmit={handleSubmit(onSubmit as any)} className="space-y-6 bg-white p-6 rounded-lg shadow">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow">
                 <h2 className="text-2xl font-bold mb-6">{isEdit ? 'Edit Car' : 'Add New Car'}</h2>
+
+                {saveError && (
+                    <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
+                        <span className="text-sm">❌ {saveError}</span>
+                        <button type="button" onClick={() => setSaveError(null)} className="text-red-500 hover:text-red-700 font-bold">×</button>
+                    </div>
+                )}
 
                 {/* Basic Info */}
                 <fieldset className="border border-gray-200 rounded-lg p-4">
@@ -400,25 +415,28 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                         <div className="mb-4">
                             <p className="text-sm text-gray-500 mb-2">Existing photos:</p>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                {photoFields.map((field, index) => (
-                                    <div key={field.id} className="relative group rounded-lg overflow-hidden border border-gray-200">
-                                        <img
-                                            src={(field as any).url}
-                                            alt={`Car ${index + 1}`}
-                                            className="w-full h-32 object-cover"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => removePhoto(index)}
-                                            className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            ×
-                                        </button>
-                                        <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                                            #{(field as any).order + 1}
-                                        </span>
-                                    </div>
-                                ))}
+                                {photoFields.map((field, index) => {
+                                    const photo = field as unknown as CarPhoto & { id: string };
+                                    return (
+                                        <div key={field.id} className="relative group rounded-lg overflow-hidden border border-gray-200">
+                                            <img
+                                                src={photo.url}
+                                                alt={`Car ${index + 1}`}
+                                                className="w-full h-32 object-cover"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => removePhoto(index)}
+                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                ×
+                                            </button>
+                                            <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                                                #{photo.order + 1}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

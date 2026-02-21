@@ -1,59 +1,24 @@
-export type CarStatus = 'draft' | 'published' | 'sold';
+import { z } from 'zod';
+import {
+    carSchema,
+    carPhotoSchema,
+    carEquipmentSchema,
+    carStatusSchema,
+    fuelTypeSchema,
+    transmissionSchema,
+    bodyTypeSchema,
+} from '../schemas/car.js';
 
-export type FuelType = 'Petrol' | 'Diesel' | 'Electric' | 'Hybrid' | 'Plug-in Hybrid';
+// Derive types from Zod schemas — single source of truth
+export type CarStatus = z.infer<typeof carStatusSchema>;
+export type FuelType = z.infer<typeof fuelTypeSchema>;
+export type Transmission = z.infer<typeof transmissionSchema>;
+export type BodyType = z.infer<typeof bodyTypeSchema>;
+export type CarPhoto = z.infer<typeof carPhotoSchema>;
+export type CarEquipment = z.infer<typeof carEquipmentSchema>;
 
-export type Transmission = 'Manual' | 'Automatic';
-
-export type BodyType = 'Sedan' | 'SUV' | 'Hatchback' | 'Coupe' | 'Convertible' | 'Wagon' | 'Van' | 'Truck';
-
-export interface CarPhoto {
-    url: string;
-    order: number;
-}
-
-export interface CarEquipment {
-    airConditioning?: string[];
-    infotainment?: string[];
-    mirrors?: string[];
-    parkingAid?: string[];
-    safety?: string[];
-    seats?: string[];
-    steeringWheel?: string[];
-    wheels?: string[];
-    windows?: string[];
-    other?: string[];
-}
-
-export interface Car {
-    id?: string;
-    make: string;
-    model: string;
-    year: number;
-    price: number;
-    mileage: number;
-    fuelType: FuelType;
-    transmission: Transmission;
-    bodyType: BodyType;
-    color: string;
-    vin?: string;
-    description?: string;
-    features?: string[];
-    photos: CarPhoto[];
-    videoLinks?: string[];
-    status: CarStatus;
-    deleted?: boolean;
-    // Extended fields
-    power?: string;          // e.g. "72 kW (98 Hp)"
-    engineSize?: string;     // e.g. "1,797 cc"
-    doors?: number;
-    seats?: number;
-    co2Standard?: string;    // e.g. "EU6b"
-    interiorColor?: string;
-    numberOfKeys?: number;
-    firstRegistration?: string;  // date string
-    technicalInspection?: string; // date string
-    condition?: string;
-    equipment?: CarEquipment;
+// Car extends the schema type with Firestore-managed fields
+export interface Car extends z.infer<typeof carSchema> {
     createdAt?: any;  // Firestore Timestamp
     updatedAt?: any;  // Firestore Timestamp
 }
