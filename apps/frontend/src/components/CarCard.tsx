@@ -6,8 +6,8 @@ interface CarCardProps {
 }
 
 export default function CarCard({ car }: CarCardProps) {
-    const mainImage = car.images.find(img => img.isPrimary) || car.images[0];
-    const imageUrl = mainImage?.url || 'https://placehold.co/600x400?text=No+Image';
+    const sortedPhotos = [...car.photos].sort((a, b) => a.order - b.order);
+    const imageUrl = sortedPhotos[0]?.url || 'https://placehold.co/600x400?text=No+Image';
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">

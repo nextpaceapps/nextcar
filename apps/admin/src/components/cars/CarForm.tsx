@@ -17,7 +17,6 @@ interface PendingImage {
     file: File;
     preview: string;
     progress: number;
-    isPrimary: boolean;
 }
 
 export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
@@ -35,16 +34,20 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
     const [isUploading, setIsUploading] = useState(false);
 
+    // Video links state
+    const [videoLinks, setVideoLinks] = useState<string[]>(initialData?.videoLinks || []);
+    const [newVideoLink, setNewVideoLink] = useState('');
+
     const { register, control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<CarSchema>({
         resolver: zodResolver(carSchema),
         defaultValues: initialData ? {
             ...initialData,
             features: initialData.features || [],
-            images: initialData.images || []
+            photos: initialData.photos || []
         } : {
             status: 'draft',
             features: [],
-            images: [],
+            photos: [],
             year: new Date().getFullYear(),
             price: 0,
             mileage: 0
@@ -56,9 +59,9 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
         setValueAs: (v: any) => (v === '' || v === undefined || v === null) ? undefined : Number(v)
     });
 
-    const { fields: imageFields, remove: removeImage, update: updateImage } = useFieldArray({
+    const { fields: photoFields, remove: removePhoto } = useFieldArray({
         control,
-        name: "images"
+        name: "photos"
     });
 
     // --- AI Parsing ---
@@ -74,7 +77,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             // Reset form with parsed data
             reset({
                 ...parsed,
-                images: initialData?.images || [],
+                photos: initialData?.photos || [],
             });
             setParseSuccess(true);
             setRawText('');
@@ -93,7 +96,6 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             file,
             preview: URL.createObjectURL(file),
             progress: 0,
-            isPrimary: pendingImages.length === 0 && imageFields.length === 0,
         }));
 
         setPendingImages(prev => [...prev, ...newImages]);
@@ -102,7 +104,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     const handleDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault();
         handleFilesSelected(e.dataTransfer.files);
-    }, [pendingImages.length, imageFields.length]);
+    }, [pendingImages.length, photoFields.length]);
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -117,17 +119,16 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
         });
     };
 
-    const togglePrimaryPending = (index: number) => {
-        setPendingImages(prev => prev.map((img, i) => ({
-            ...img,
-            isPrimary: i === index,
-        })));
-        // Also unset primary on existing images (don't delete them!)
-        imageFields.forEach((field, i) => {
-            if (field.isPrimary) {
-                updateImage(i, { ...field, isPrimary: false });
-            }
-        });
+    const addVideoLink = () => {
+        const url = newVideoLink.trim();
+        if (url && !videoLinks.includes(url)) {
+            setVideoLinks(prev => [...prev, url]);
+            setNewVideoLink('');
+        }
+    };
+
+    const removeVideoLink = (index: number) => {
+        setVideoLinks(prev => prev.filter((_, i) => i !== index));
     };
 
     // --- Form Submit ---
@@ -155,7 +156,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             const carId = isEdit ? initialData!.id! : `temp_${Date.now()}`;
 
             // Upload pending images
-            let uploadedImages = [...(data.images || [])];
+            let allPhotos = [...(data.photos || [])];
             if (pendingImages.length > 0) {
                 const urls = await storageService.uploadMultipleImages(
                     carId,
@@ -167,15 +168,16 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                     }
                 );
 
-                const newImages = urls.map((url, i) => ({
+                const startOrder = allPhotos.length;
+                const newPhotos = urls.map((url, i) => ({
                     url,
-                    isPrimary: pendingImages[i].isPrimary,
+                    order: startOrder + i,
                 }));
 
-                uploadedImages = [...uploadedImages, ...newImages];
+                allPhotos = [...allPhotos, ...newPhotos];
             }
 
-            const finalData = { ...data, images: uploadedImages };
+            const finalData = { ...data, photos: allPhotos, videoLinks };
 
             if (isEdit) {
                 await updateMutation.mutateAsync(finalData);
@@ -382,12 +384,12 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                 <fieldset className="border border-gray-200 rounded-lg p-4">
                     <legend className="text-sm font-semibold text-gray-600 px-2">Photos</legend>
 
-                    {/* Existing images (for edit mode) */}
-                    {imageFields.length > 0 && (
+                    {/* Existing photos (for edit mode) */}
+                    {photoFields.length > 0 && (
                         <div className="mb-4">
                             <p className="text-sm text-gray-500 mb-2">Existing photos:</p>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                {imageFields.map((field, index) => (
+                                {photoFields.map((field, index) => (
                                     <div key={field.id} className="relative group rounded-lg overflow-hidden border border-gray-200">
                                         <img
                                             src={(field as any).url}
@@ -396,16 +398,14 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                                         />
                                         <button
                                             type="button"
-                                            onClick={() => removeImage(index)}
+                                            onClick={() => removePhoto(index)}
                                             className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
                                         >
                                             ×
                                         </button>
-                                        {(field as any).isPrimary && (
-                                            <span className="absolute bottom-1 left-1 bg-blue-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                                                Cover
-                                            </span>
-                                        )}
+                                        <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                                            #{(field as any).order + 1}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
@@ -436,16 +436,9 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                                         >
                                             ×
                                         </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => togglePrimaryPending(index)}
-                                            className={`absolute bottom-1 left-1 text-[10px] px-2 py-0.5 rounded-full font-bold ${img.isPrimary
-                                                ? 'bg-blue-500 text-white'
-                                                : 'bg-white/80 text-gray-600 opacity-0 group-hover:opacity-100 transition-opacity'
-                                                }`}
-                                        >
-                                            {img.isPrimary ? 'Cover' : 'Set as cover'}
-                                        </button>
+                                        <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
+                                            #{photoFields.length + index + 1}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
@@ -474,6 +467,44 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                             onChange={(e) => handleFilesSelected(e.target.files)}
                             className="hidden"
                         />
+                    </div>
+                </fieldset>
+
+                {/* Video Links Section */}
+                <fieldset className="border border-gray-200 rounded-lg p-4">
+                    <legend className="text-sm font-semibold text-gray-600 px-2">Video Links</legend>
+                    {videoLinks.length > 0 && (
+                        <div className="mb-3 space-y-2">
+                            {videoLinks.map((link, index) => (
+                                <div key={index} className="flex items-center gap-2 bg-gray-50 rounded-md px-3 py-2">
+                                    <span className="text-sm text-gray-700 truncate flex-1">🎬 {link}</span>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeVideoLink(index)}
+                                        className="text-red-500 hover:text-red-700 text-sm font-bold"
+                                    >
+                                        ×
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <div className="flex gap-2">
+                        <input
+                            value={newVideoLink}
+                            onChange={(e) => setNewVideoLink(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addVideoLink())}
+                            placeholder="https://youtube.com/watch?v=..."
+                            className="flex-1 rounded-md border-gray-300 shadow-sm border p-2 text-sm"
+                        />
+                        <button
+                            type="button"
+                            onClick={addVideoLink}
+                            disabled={!newVideoLink.trim()}
+                            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 disabled:opacity-50 text-sm font-medium"
+                        >
+                            + Add
+                        </button>
                     </div>
                 </fieldset>
 

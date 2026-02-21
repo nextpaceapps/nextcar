@@ -5,9 +5,9 @@ export const fuelTypeSchema = z.enum(['Petrol', 'Diesel', 'Electric', 'Hybrid', 
 export const transmissionSchema = z.enum(['Manual', 'Automatic']);
 export const bodyTypeSchema = z.enum(['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Truck']);
 
-export const carImageSchema = z.object({
+export const carPhotoSchema = z.object({
     url: z.string().url(),
-    isPrimary: z.boolean(),
+    order: z.number().int().min(0),
 });
 
 export const carEquipmentSchema = z.object({
@@ -37,8 +37,10 @@ export const carSchema = z.object({
     vin: z.string().optional(),
     description: z.string().optional(),
     features: z.array(z.string()).optional(),
-    images: z.array(carImageSchema),
+    photos: z.array(carPhotoSchema),
+    videoLinks: z.array(z.string().url()).optional(),
     status: carStatusSchema,
+    deleted: z.boolean().optional(),
     // Extended fields
     power: z.string().optional(),
     engineSize: z.string().optional(),
@@ -51,8 +53,6 @@ export const carSchema = z.object({
     technicalInspection: z.string().optional(),
     condition: z.string().optional(),
     equipment: carEquipmentSchema.optional(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
 });
 
 export type CarSchema = z.infer<typeof carSchema>;

@@ -17,6 +17,7 @@ export const carService = {
         const q = query(
             collection(db, CARS_COLLECTION),
             where('status', '==', 'published'),
+            where('deleted', '==', false),
             orderBy('createdAt', 'desc')
         );
         const snapshot = await getDocs(q);
@@ -26,12 +27,8 @@ export const carService = {
     async getCar(id: string): Promise<Car | null> {
         const docRef = doc(db, CARS_COLLECTION, id);
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            const data = docSnap.data() as Car;
-            // Only return if published (or maybe fine to return draft if accessed directly? sticking to published for now safety)
-            // Actually common pattern is to allow fetching by ID, but maybe check status in component.
-            // For now just return data.
-            return { id: docSnap.id, ...data };
+        if (docSnap.exists() && !docSnap.data().deleted) {
+            return { id: docSnap.id, ...docSnap.data() } as Car;
         }
         return null;
     }

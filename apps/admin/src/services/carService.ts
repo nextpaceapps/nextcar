@@ -5,9 +5,10 @@ import {
     getDoc,
     addDoc,
     updateDoc,
-    deleteDoc,
     query,
-    orderBy
+    orderBy,
+    where,
+    serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
 import type { Car, CarSchema } from '@nextcar/shared';
@@ -16,7 +17,11 @@ const CARS_COLLECTION = 'cars';
 
 export const carService = {
     async getCars(): Promise<Car[]> {
-        const q = query(collection(db, CARS_COLLECTION), orderBy('createdAt', 'desc'));
+        const q = query(
+            collection(db, CARS_COLLECTION),
+            where('deleted', '==', false),
+            orderBy('createdAt', 'desc')
+        );
         const snapshot = await getDocs(q);
         return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Car));
     },
@@ -24,7 +29,7 @@ export const carService = {
     async getCar(id: string): Promise<Car | null> {
         const docRef = doc(db, CARS_COLLECTION, id);
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
+        if (docSnap.exists() && !docSnap.data().deleted) {
             return { id: docSnap.id, ...docSnap.data() } as Car;
         }
         return null;
@@ -33,8 +38,9 @@ export const carService = {
     async createCar(carData: CarSchema): Promise<string> {
         const docRef = await addDoc(collection(db, CARS_COLLECTION), {
             ...carData,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
+            deleted: false,
+            createdAt: serverTimestamp(),
+            updatedAt: serverTimestamp(),
         });
         return docRef.id;
     },
@@ -43,12 +49,15 @@ export const carService = {
         const docRef = doc(db, CARS_COLLECTION, id);
         await updateDoc(docRef, {
             ...carData,
-            updatedAt: new Date().toISOString()
+            updatedAt: serverTimestamp(),
         });
     },
 
     async deleteCar(id: string): Promise<void> {
         const docRef = doc(db, CARS_COLLECTION, id);
-        await deleteDoc(docRef);
+        await updateDoc(docRef, {
+            deleted: true,
+            updatedAt: serverTimestamp(),
+        });
     }
 };

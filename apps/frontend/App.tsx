@@ -36,7 +36,7 @@ const App: React.FC = () => {
     id: car.id || '',
     title: `${car.make} ${car.model}`,
     description: car.description || `${car.year} ${car.make} ${car.model} — ${car.mileage.toLocaleString()} km, ${car.fuelType}, ${car.transmission}`,
-    image: car.images?.find(img => img.isPrimary)?.url || car.images?.[0]?.url || 'https://placehold.co/800x450?text=No+Image',
+    image: car.photos?.sort((a, b) => a.order - b.order)?.[0]?.url || 'https://placehold.co/800x450?text=No+Image',
     specs: {
       engine: car.power || car.engineSize || car.fuelType,
       gearbox: car.transmission,

@@ -9,6 +9,24 @@
                     "order": "ASCENDING"
                 },
                 {
+                    "fieldPath": "deleted",
+                    "order": "ASCENDING"
+                },
+                {
+                    "fieldPath": "createdAt",
+                    "order": "DESCENDING"
+                }
+            ]
+        },
+        {
+            "collectionGroup": "cars",
+            "queryScope": "COLLECTION",
+            "fields": [
+                {
+                    "fieldPath": "deleted",
+                    "order": "ASCENDING"
+                },
+                {
                     "fieldPath": "createdAt",
                     "order": "DESCENDING"
                 }

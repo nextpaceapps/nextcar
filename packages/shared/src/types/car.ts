@@ -6,9 +6,9 @@ export type Transmission = 'Manual' | 'Automatic';
 
 export type BodyType = 'Sedan' | 'SUV' | 'Hatchback' | 'Coupe' | 'Convertible' | 'Wagon' | 'Van' | 'Truck';
 
-export interface CarImage {
+export interface CarPhoto {
     url: string;
-    isPrimary: boolean;
+    order: number;
 }
 
 export interface CarEquipment {
@@ -38,8 +38,10 @@ export interface Car {
     vin?: string;
     description?: string;
     features?: string[];
-    images: CarImage[];
+    photos: CarPhoto[];
+    videoLinks?: string[];
     status: CarStatus;
+    deleted?: boolean;
     // Extended fields
     power?: string;          // e.g. "72 kW (98 Hp)"
     engineSize?: string;     // e.g. "1,797 cc"
@@ -52,6 +54,6 @@ export interface Car {
     technicalInspection?: string; // date string
     condition?: string;
     equipment?: CarEquipment;
-    createdAt?: string;
-    updatedAt?: string;
+    createdAt?: any;  // Firestore Timestamp
+    updatedAt?: any;  // Firestore Timestamp
 }
