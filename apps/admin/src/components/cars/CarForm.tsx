@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { carSchema, type CarSchema, type Car } from '@nextcar/shared';
@@ -33,6 +33,13 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     // Image upload state
     const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
     const [isUploading, setIsUploading] = useState(false);
+
+    // Cleanup object URLs on unmount to prevent memory leaks
+    useEffect(() => {
+        return () => {
+            pendingImages.forEach(img => URL.revokeObjectURL(img.preview));
+        };
+    }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
     // Video links state
     const [videoLinks, setVideoLinks] = useState<string[]>(initialData?.videoLinks || []);
@@ -141,7 +148,11 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: CarSchema) => carService.updateCar(initialData!.id!, data),
+        mutationFn: (data: CarSchema) => {
+            const id = initialData?.id;
+            if (!id) throw new Error('Cannot update car without an ID');
+            return carService.updateCar(id, data);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['cars'] });
             navigate('/cars');
@@ -153,7 +164,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             setIsUploading(pendingImages.length > 0);
 
             // Generate a temporary ID for new cars to use as storage path
-            const carId = isEdit ? initialData!.id! : `temp_${Date.now()}`;
+            const carId = isEdit && initialData?.id ? initialData.id : `temp_${Date.now()}`;
 
             // Upload pending images
             let allPhotos = [...(data.photos || [])];
