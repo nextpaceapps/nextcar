@@ -32,10 +32,15 @@ async function createOwner() {
         console.log(`User created with UID: ${userRecord.uid}`);
 
         console.log('Setting admin role in Firestore...');
+
+        const admin = require('firebase-admin');
+
         await db.collection('users').doc(userRecord.uid).set({
-            role: 'Admin',
+            uid: userRecord.uid,
             email: userRecord.email,
-            createdAt: new Date()
+            role: 'Admin',
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
         console.log('Successfully provisioned the owner account!');

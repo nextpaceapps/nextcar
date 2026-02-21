@@ -21,9 +21,10 @@ export default function LoginPage() {
         try {
             await signInWithEmailAndPassword(auth, email, password);
             navigate(from, { replace: true });
-        } catch (err: any) {
-            console.error('Login error:', err);
-            setError(err.message || 'Failed to login');
+        } catch (error: unknown) {
+            console.error('Login error:', error);
+            const message = error instanceof Error ? error.message : 'Failed to login';
+            setError(message);
         } finally {
             setLoading(false);
         }

@@ -14,5 +14,7 @@ export default function ProtectedRoute({ children }: { children: ReactNode }) {
         return <Navigate to="/login" state={{ from: location }} replace />;
     }
 
+    // Role check is deferred to the backend API middleware for simplicity.
+    // This is purely a UX guard to prevent unauthenticated access.
     return children;
 }

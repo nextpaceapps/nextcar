@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: process.env.ADMIN_ORIGIN || 'http://localhost:5173',
+    origin: process.env.ADMIN_ORIGIN || 'http://localhost:5174',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }));

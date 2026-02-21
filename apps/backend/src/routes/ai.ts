@@ -1,5 +1,6 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { GoogleGenAI } from '@google/genai';
+import { requireAdmin, AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
@@ -75,8 +76,8 @@ const responseSchema = {
     required: ['make', 'model', 'year', 'mileage', 'fuelType', 'transmission', 'bodyType', 'color'],
 };
 
-// TODO: add auth middleware and rate limiting before deployment (#21)
-router.post('/parse-listing', async (req, res) => {
+// TODO: add rate limiting before deployment (#21)
+router.post('/parse-listing', requireAdmin, async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { rawText } = req.body;
 
