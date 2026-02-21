@@ -24,7 +24,7 @@ export default function CarsPage() {
     };
 
     if (isLoading) return <div>Loading cars...</div>;
-    if (error) return <div>Error loading cars</div>;
+    if (error) return <div>Error loading cars: {(error as Error).message}</div>;
 
     return (
         <div>
