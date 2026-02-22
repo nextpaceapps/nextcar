@@ -38,7 +38,14 @@ export const carSchema = z.object({
     description: z.string().optional(),
     features: z.array(z.string()).optional(),
     photos: z.array(carPhotoSchema),
-    videoLinks: z.array(z.string().url()).optional(),
+    videoLinks: z.array(
+        z.string()
+            .url('Invalid URL format')
+            .regex(
+                /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)/,
+                'Must be a valid YouTube URL',
+            )
+    ).optional(),
     status: carStatusSchema,
     deleted: z.boolean().optional(),
     // Extended fields
