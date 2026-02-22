@@ -1,16 +1,5 @@
-import { auth } from '../lib/firebase';
 import type { Customer, CustomerSchema } from '@nextcar/shared';
-
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
-
-const getAuthHeaders = async () => {
-    const token = await auth.currentUser?.getIdToken();
-    if (!token) throw new Error('Not authenticated');
-    return {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    };
-};
+import { BACKEND_URL, getAuthHeaders } from './api';
 
 export const customerService = {
     async getCustomers(): Promise<Customer[]> {

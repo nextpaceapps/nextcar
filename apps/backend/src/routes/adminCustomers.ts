@@ -57,7 +57,8 @@ router.post('/', withValidation(customerSchema.omit({ deleted: true })), asyncHa
     };
 
     const docRef = await db.collection(COLLECTIONS.CUSTOMERS).add(customerData);
-    successResponse(res, { id: docRef.id, ...customerData }, 201);
+    const newDoc = await docRef.get();
+    successResponse(res, { id: docRef.id, ...newDoc.data() }, 201);
 }));
 
 // PUT /api/admin/customers/:id

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const CUSTOMER_TAGS = ['buyer', 'seller', 'VIP', 'service', 'lead'] as const;
-export const customerTagSchema = z.enum(['buyer', 'seller', 'VIP', 'service', 'lead']);
+export const customerTagSchema = z.enum(CUSTOMER_TAGS);
 
 export const customerSchema = z.object({
     id: z.string().optional(),

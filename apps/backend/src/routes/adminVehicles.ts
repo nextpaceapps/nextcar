@@ -63,7 +63,8 @@ router.post('/', withValidation(carSchema.omit({ status: true, deleted: true }))
     };
 
     const docRef = await db.collection(COLLECTIONS.CARS).add(vehicleData);
-    successResponse(res, { id: docRef.id, ...vehicleData }, 201);
+    const newDoc = await docRef.get();
+    successResponse(res, { id: docRef.id, ...newDoc.data() }, 201);
 }));
 
 // PUT /api/admin/vehicles/:id

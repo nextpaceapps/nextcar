@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { customerSchema, CUSTOMER_TAGS, type CustomerSchema, type Customer } from '@nextcar/shared';
+import { customerSchema, CUSTOMER_TAGS, type CustomerSchema, type Customer, type CustomerTag } from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { customerService } from '../../services/customerService';
 import { useNavigate } from 'react-router-dom';
@@ -34,10 +34,10 @@ export default function CustomerForm({ initialData, isEdit = false }: CustomerFo
 
     const watchTags = watch('tags') || [];
 
-    const toggleTag = (tag: string) => {
-        const newTags = watchTags.includes(tag as any)
+    const toggleTag = (tag: CustomerTag) => {
+        const newTags = watchTags.includes(tag)
             ? watchTags.filter(t => t !== tag)
-            : [...watchTags, tag as any];
+            : [...watchTags, tag];
         setValue('tags', newTags, { shouldValidate: true, shouldDirty: true });
     };
 
