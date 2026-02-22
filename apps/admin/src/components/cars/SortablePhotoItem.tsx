@@ -48,7 +48,7 @@ export function SortablePhotoItem({ photo, index, onRemove }: SortablePhotoItemP
                 ×
             </button>
             <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                #{photo.order + 1}
+                #{index + 1}
             </span>
         </div>
     );

@@ -111,7 +111,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             }
         } catch (error) {
             console.error('Failed to delete photo:', error);
-            alert('Failed to delete photo.');
+            setSaveError('Failed to delete photo.');
         }
     };
 
