@@ -7,6 +7,10 @@ import { carService } from '../../services/carService';
 import { aiService } from '../../services/aiService';
 import { storageService } from '../../services/storageService';
 import { useNavigate } from 'react-router-dom';
+import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
+import { SortableContext, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable';
+import { SortablePhotoItem } from './SortablePhotoItem';
 
 interface CarFormProps {
     initialData?: Car;
@@ -46,7 +50,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     const [videoLinks, setVideoLinks] = useState<string[]>(initialData?.videoLinks || []);
     const [newVideoLink, setNewVideoLink] = useState('');
 
-    const { register, control, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<CarSchema>({
+    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<CarSchema>({
         resolver: zodResolver(carSchema),
         defaultValues: initialData ? {
             ...initialData,
@@ -73,10 +77,43 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
         setValueAs: (v: string | undefined | null) => (v === '' || v === undefined || v === null) ? undefined : Number(v)
     });
 
-    const { fields: photoFields, remove: removePhoto } = useFieldArray({
+    const { fields: photoFields, remove: removePhoto, move: movePhoto } = useFieldArray({
         control,
         name: "photos"
     });
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    );
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event;
+        if (over && active.id !== over.id) {
+            const oldIndex = photoFields.findIndex((item) => item.id === active.id);
+            const newIndex = photoFields.findIndex((item) => item.id === over.id);
+            movePhoto(oldIndex, newIndex);
+        }
+    };
+
+    const handleRemoveExistingPhoto = async (index: number, photoUrl: string) => {
+        if (!window.confirm("Are you sure you want to delete this photo forever?")) return;
+
+        try {
+            await storageService.deleteCarImage(photoUrl);
+            removePhoto(index);
+
+            if (isEdit && initialData?.id) {
+                const photos = getValues('photos') || [];
+                const updatedPhotos = photos.map((p, i) => ({ ...p, order: i }));
+                await carService.updateCar(initialData.id, { photos: updatedPhotos });
+                queryClient.invalidateQueries({ queryKey: ['cars'] });
+            }
+        } catch (error) {
+            console.error('Failed to delete photo:', error);
+            alert('Failed to delete photo.');
+        }
+    };
 
     // --- AI Parsing ---
     const handleParse = async () => {
@@ -194,6 +231,8 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
 
                 allPhotos = [...allPhotos, ...newPhotos];
             }
+
+            allPhotos = allPhotos.map((p, i) => ({ ...p, order: i }));
 
             const finalData = { ...data, photos: allPhotos, videoLinks };
 
@@ -415,30 +454,23 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                     {photoFields.length > 0 && (
                         <div className="mb-4">
                             <p className="text-sm text-gray-500 mb-2">Existing photos:</p>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                {photoFields.map((field, index) => {
-                                    const photo = field as unknown as CarPhoto & { id: string };
-                                    return (
-                                        <div key={field.id} className="relative group rounded-lg overflow-hidden border border-gray-200">
-                                            <img
-                                                src={photo.url}
-                                                alt={`Car ${index + 1}`}
-                                                className="w-full h-32 object-cover"
-                                            />
-                                            <button
-                                                type="button"
-                                                onClick={() => removePhoto(index)}
-                                                className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                                            >
-                                                ×
-                                            </button>
-                                            <span className="absolute bottom-1 left-1 bg-black/60 text-white text-[10px] px-2 py-0.5 rounded-full font-bold">
-                                                #{photo.order + 1}
-                                            </span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
+                            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                                <SortableContext items={photoFields.map(f => f.id)} strategy={rectSortingStrategy}>
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                        {photoFields.map((field, index) => {
+                                            const photo = field as unknown as CarPhoto & { id: string };
+                                            return (
+                                                <SortablePhotoItem
+                                                    key={field.id}
+                                                    photo={photo}
+                                                    index={index}
+                                                    onRemove={handleRemoveExistingPhoto}
+                                                />
+                                            );
+                                        })}
+                                    </div>
+                                </SortableContext>
+                            </DndContext>
                         </div>
                     )}
 

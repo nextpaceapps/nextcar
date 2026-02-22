@@ -36,6 +36,11 @@ router.get('/:id', asyncHandler(async (req, res) => {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
     }
 
+    // Sort photos by order exactly matching the drag-and-drop ordering in admin UI
+    if (data.photos && Array.isArray(data.photos)) {
+        data.photos.sort((a, b) => a.order - b.order);
+    }
+
     successResponse(res, { id: doc.id, ...data });
 }));
 
