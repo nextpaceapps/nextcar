@@ -23,6 +23,8 @@ export const carEquipmentSchema = z.object({
     other: z.array(z.string()).optional(),
 });
 
+export const YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)/;
+
 export const carSchema = z.object({
     id: z.string().optional(),
     make: z.string().min(1, 'Make is required'),
@@ -41,10 +43,7 @@ export const carSchema = z.object({
     videoLinks: z.array(
         z.string()
             .url('Invalid URL format')
-            .regex(
-                /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)/,
-                'Must be a valid YouTube URL',
-            )
+            .regex(YOUTUBE_URL_REGEX, 'Must be a valid YouTube URL')
     ).optional(),
     status: carStatusSchema,
     deleted: z.boolean().optional(),

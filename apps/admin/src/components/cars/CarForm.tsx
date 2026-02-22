@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { carSchema, type CarSchema, type Car, type CarPhoto } from '@nextcar/shared';
+import { carSchema, YOUTUBE_URL_REGEX, type CarSchema, type Car, type CarPhoto } from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { carService } from '../../services/carService';
 import { aiService } from '../../services/aiService';
@@ -175,8 +175,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
         const url = newVideoLink.trim();
         setVideoLinkError(null);
         if (url) {
-            const youtubeRegex = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)/;
-            if (!youtubeRegex.test(url)) {
+            if (!YOUTUBE_URL_REGEX.test(url)) {
                 setVideoLinkError('Must be a valid YouTube URL (e.g. youtube.com/watch?v=)');
                 return;
             }
