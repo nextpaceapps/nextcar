@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { carSchema, type CarSchema, type Car, type CarPhoto } from '@nextcar/shared';
+import { carSchema, YOUTUBE_URL_REGEX, type CarSchema, type Car, type CarPhoto } from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { carService } from '../../services/carService';
 import { aiService } from '../../services/aiService';
@@ -49,6 +49,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     // Video links state
     const [videoLinks, setVideoLinks] = useState<string[]>(initialData?.videoLinks || []);
     const [newVideoLink, setNewVideoLink] = useState('');
+    const [videoLinkError, setVideoLinkError] = useState<string | null>(null);
 
     const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<CarSchema>({
         resolver: zodResolver(carSchema),
@@ -172,7 +173,16 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
 
     const addVideoLink = () => {
         const url = newVideoLink.trim();
-        if (url && !videoLinks.includes(url)) {
+        setVideoLinkError(null);
+        if (url) {
+            if (!YOUTUBE_URL_REGEX.test(url)) {
+                setVideoLinkError('Must be a valid YouTube URL (e.g. youtube.com/watch?v=)');
+                return;
+            }
+            if (videoLinks.includes(url)) {
+                setVideoLinkError('This video link is already added');
+                return;
+            }
             setVideoLinks(prev => [...prev, url]);
             setNewVideoLink('');
         }
@@ -554,10 +564,13 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                     <div className="flex gap-2">
                         <input
                             value={newVideoLink}
-                            onChange={(e) => setNewVideoLink(e.target.value)}
+                            onChange={(e) => {
+                                setNewVideoLink(e.target.value);
+                                if (videoLinkError) setVideoLinkError(null);
+                            }}
                             onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addVideoLink())}
                             placeholder="https://youtube.com/watch?v=..."
-                            className="flex-1 rounded-md border-gray-300 shadow-sm border p-2 text-sm"
+                            className={`flex-1 rounded-md shadow-sm border p-2 text-sm ${videoLinkError ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'border-gray-300'}`}
                         />
                         <button
                             type="button"
@@ -568,6 +581,11 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                             + Add
                         </button>
                     </div>
+                    {videoLinkError && (
+                        <p className="mt-1 flex items-center gap-1 text-sm text-red-600 font-medium bg-red-50 px-3 py-2 rounded-md border border-red-100">
+                            <span>❌</span> {videoLinkError}
+                        </p>
+                    )}
                 </fieldset>
 
                 {/* Actions */}
