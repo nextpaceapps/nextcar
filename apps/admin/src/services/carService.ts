@@ -1,64 +1,64 @@
-import {
-    collection,
-    doc,
-    getDocs,
-    getDoc,
-    addDoc,
-    updateDoc,
-    query,
-    orderBy,
-    where,
-    serverTimestamp,
-} from 'firebase/firestore';
-import { db } from '../lib/firebase';
+import { auth } from '../lib/firebase';
 import type { Car, CarSchema } from '@nextcar/shared';
-import { COLLECTIONS } from '@nextcar/shared';
 
-const CARS_COLLECTION = COLLECTIONS.CARS;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+
+const getAuthHeaders = async () => {
+    const token = await auth.currentUser?.getIdToken();
+    if (!token) throw new Error('Not authenticated');
+    return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    };
+};
 
 export const carService = {
     async getCars(): Promise<Car[]> {
-        const q = query(
-            collection(db, CARS_COLLECTION),
-            where('deleted', '==', false),
-            orderBy('createdAt', 'desc')
-        );
-        const snapshot = await getDocs(q);
-        return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Car));
+        const response = await fetch(`${BACKEND_URL}/api/admin/vehicles`, {
+            headers: await getAuthHeaders()
+        });
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error?.message || 'Failed to get cars');
+        return data.data;
     },
 
     async getCar(id: string): Promise<Car | null> {
-        const docRef = doc(db, CARS_COLLECTION, id);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && !docSnap.data().deleted) {
-            return { id: docSnap.id, ...docSnap.data() } as Car;
-        }
-        return null;
+        const response = await fetch(`${BACKEND_URL}/api/admin/vehicles/${id}`, {
+            headers: await getAuthHeaders()
+        });
+        if (response.status === 404) return null;
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error?.message || 'Failed to fetch car');
+        return data.data;
     },
 
     async createCar(carData: CarSchema): Promise<string> {
-        const docRef = await addDoc(collection(db, CARS_COLLECTION), {
-            ...carData,
-            deleted: false,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
+        const response = await fetch(`${BACKEND_URL}/api/admin/vehicles`, {
+            method: 'POST',
+            headers: await getAuthHeaders(),
+            body: JSON.stringify(carData)
         });
-        return docRef.id;
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error?.message || 'Failed to create car');
+        return data.data.id;
     },
 
     async updateCar(id: string, carData: Partial<CarSchema>): Promise<void> {
-        const docRef = doc(db, CARS_COLLECTION, id);
-        await updateDoc(docRef, {
-            ...carData,
-            updatedAt: serverTimestamp(),
+        const response = await fetch(`${BACKEND_URL}/api/admin/vehicles/${id}`, {
+            method: 'PUT',
+            headers: await getAuthHeaders(),
+            body: JSON.stringify(carData)
         });
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error?.message || 'Failed to update car');
     },
 
     async deleteCar(id: string): Promise<void> {
-        const docRef = doc(db, CARS_COLLECTION, id);
-        await updateDoc(docRef, {
-            deleted: true,
-            updatedAt: serverTimestamp(),
+        const response = await fetch(`${BACKEND_URL}/api/admin/vehicles/${id}`, {
+            method: 'DELETE',
+            headers: await getAuthHeaders()
         });
+        const data = await response.json();
+        if (!data.success) throw new Error(data.error?.message || 'Failed to delete car');
     }
 };

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const carStatusSchema = z.enum(['draft', 'published', 'sold']);
+export const carStatusSchema = z.enum(['draft', 'published', 'sold', 'archived']);
 export const fuelTypeSchema = z.enum(['Petrol', 'Diesel', 'Electric', 'Hybrid', 'Plug-in Hybrid']);
 export const transmissionSchema = z.enum(['Manual', 'Automatic']);
 export const bodyTypeSchema = z.enum(['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Truck']);

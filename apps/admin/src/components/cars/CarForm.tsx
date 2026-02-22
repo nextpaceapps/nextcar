@@ -397,6 +397,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                                 <option value="draft">Draft</option>
                                 <option value="published">Published</option>
                                 <option value="sold">Sold</option>
+                                <option value="archived">Archived</option>
                             </select>
                         </div>
                     </div>

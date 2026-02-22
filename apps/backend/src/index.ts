@@ -10,7 +10,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: process.env.ADMIN_ORIGIN || 'http://localhost:5174',
+    origin: [
+        process.env.ADMIN_ORIGIN || 'http://localhost:5174',
+        process.env.FRONTEND_ORIGIN || 'http://localhost:5173'
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true
 }));
@@ -21,13 +24,15 @@ app.get('/', (req, res) => {
     res.send('NextCar Backend is running');
 });
 
-import carRoutes from './routes/cars';
+import vehiclesRoutes from './routes/vehicles';
+import adminVehiclesRoutes from './routes/adminVehicles';
 import aiRoutes from './routes/ai';
 import healthRoutes from './routes/health';
 import { errorHandler } from './middleware/error';
 
 // Mount routes
-app.use('/api/cars', carRoutes);
+app.use('/api/vehicles', vehiclesRoutes);
+app.use('/api/admin/vehicles', adminVehiclesRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/health', healthRoutes);
 
