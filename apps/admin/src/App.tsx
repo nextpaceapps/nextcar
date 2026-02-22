@@ -5,6 +5,9 @@ import EditCarPage from './pages/EditCarPage';
 import CarForm from './components/cars/CarForm';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
+import CustomersPage from './pages/CustomersPage';
+import EditCustomerPage from './pages/EditCustomerPage';
+import CustomerForm from './components/customers/CustomerForm';
 import './App.css'
 
 function App() {
@@ -23,6 +26,7 @@ function App() {
           <ul className="flex gap-4">
             <li><Link to="/" className="hover:text-gray-300">Dashboard</Link></li>
             <li><Link to="/cars" className="hover:text-gray-300">Inventory</Link></li>
+            <li><Link to="/customers" className="hover:text-gray-300">Customers</Link></li>
           </ul>
           <button onClick={handleLogout} className="text-sm bg-red-600 px-3 py-1 rounded hover:bg-red-700">Logout</button>
         </nav>
@@ -35,6 +39,9 @@ function App() {
           <Route path="/cars" element={<ProtectedRoute><CarsPage /></ProtectedRoute>} />
           <Route path="/cars/new" element={<ProtectedRoute><CarForm /></ProtectedRoute>} />
           <Route path="/cars/:id/edit" element={<ProtectedRoute><EditCarPage /></ProtectedRoute>} />
+          <Route path="/customers" element={<ProtectedRoute><CustomersPage /></ProtectedRoute>} />
+          <Route path="/customers/new" element={<ProtectedRoute><CustomerForm /></ProtectedRoute>} />
+          <Route path="/customers/:id/edit" element={<ProtectedRoute><EditCustomerPage /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>
