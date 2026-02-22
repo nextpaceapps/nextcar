@@ -22,7 +22,13 @@ router.get('/', asyncHandler(async (req, res) => {
         .limit(limit);
 
     const snapshot = await query.get();
-    const vehicles = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    const vehicles = snapshot.docs.map(doc => {
+        const data = doc.data() as Car;
+        if (data.photos && Array.isArray(data.photos)) {
+            data.photos.sort((a, b) => a.order - b.order);
+        }
+        return { id: doc.id, ...data };
+    });
 
     successResponse(res, vehicles);
 }));
@@ -38,6 +44,10 @@ router.get('/:id', asyncHandler(async (req, res) => {
     const data = doc.data() as Car;
     if (data.deleted === true) {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
+    }
+
+    if (data.photos && Array.isArray(data.photos)) {
+        data.photos.sort((a, b) => a.order - b.order);
     }
 
     successResponse(res, { id: doc.id, ...data });
