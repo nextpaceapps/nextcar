@@ -10,7 +10,27 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
     const { id } = await params;
     const car = await getPublishedVehicleById(id);
     if (!car) return { title: 'Not Found' };
-    return { title: `${car.year} ${car.make} ${car.model} | Nextcar` };
+
+    const title = `${car.year} ${car.make} ${car.model} — $${car.price.toLocaleString()}`;
+    const description = car.description ? car.description.substring(0, 160) : `Check out this premium ${car.year} ${car.make} ${car.model}.`;
+    const image = car.photos && car.photos.length > 0 ? car.photos[0].url : '';
+
+    return {
+        title: `${car.year} ${car.make} ${car.model} | Nextcar`,
+        description,
+        openGraph: {
+            title,
+            description,
+            images: image ? [{ url: image }] : [],
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: image ? [image] : [],
+        }
+    };
 }
 
 export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
