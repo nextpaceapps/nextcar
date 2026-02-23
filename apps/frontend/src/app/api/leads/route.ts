@@ -2,11 +2,25 @@ import { NextResponse } from 'next/server';
 import { db } from '../../../lib/firebase-admin';
 import * as admin from 'firebase-admin';
 import { z } from 'zod';
+import { COLLECTIONS } from '@nextcar/shared';
 
 // Simple in-memory rate limiting (Note: in serverless environments, this resets per isolate, but it's okay for basic protection)
 const rateLimitMap = new Map<string, { count: number, resetTime: number }>();
 const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute
 const MAX_REQUESTS_PER_WINDOW = 5; // 5 requests per minute
+
+let lastCleanupTime = Date.now();
+function cleanupRateLimitMap() {
+    const now = Date.now();
+    if (now - lastCleanupTime > RATE_LIMIT_WINDOW_MS) {
+        for (const [ip, limit] of rateLimitMap.entries()) {
+            if (now > limit.resetTime) {
+                rateLimitMap.delete(ip);
+            }
+        }
+        lastCleanupTime = now;
+    }
+}
 
 const leadSchema = z.object({
     name: z.string().min(1, 'Name is required'),
@@ -23,6 +37,8 @@ export async function POST(request: Request) {
     try {
         const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
         const now = Date.now();
+
+        cleanupRateLimitMap();
 
         let rateLimit = rateLimitMap.get(ip);
         if (!rateLimit || now > rateLimit.resetTime) {
@@ -49,7 +65,7 @@ export async function POST(request: Request) {
         let customerId: string | null = null;
 
         if (email) {
-            const customerQuery = await db.collection('customers')
+            const customerQuery = await db.collection(COLLECTIONS.CUSTOMERS)
                 .where('email', '==', email)
                 .where('deleted', '==', false)
                 .limit(1)
@@ -61,7 +77,7 @@ export async function POST(request: Request) {
         }
 
         if (!customerId) {
-            const customerRef = db.collection('customers').doc();
+            const customerRef = db.collection(COLLECTIONS.CUSTOMERS).doc();
             customerId = customerRef.id;
             const newCustomer = {
                 id: customerId,
@@ -78,7 +94,7 @@ export async function POST(request: Request) {
         }
 
         // 2. Opportunity creation
-        const oppRef = db.collection('opportunities').doc();
+        const oppRef = db.collection(COLLECTIONS.OPPORTUNITIES).doc();
         const newOpp = {
             id: oppRef.id,
             customerId,
