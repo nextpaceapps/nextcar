@@ -27,6 +27,7 @@ app.get('/', (req, res) => {
 import vehiclesRoutes from './routes/vehicles';
 import adminVehiclesRoutes from './routes/adminVehicles';
 import adminCustomersRoutes from './routes/adminCustomers';
+import adminOpportunitiesRoutes from './routes/adminOpportunities';
 import aiRoutes from './routes/ai';
 import healthRoutes from './routes/health';
 import { errorHandler } from './middleware/error';
@@ -35,6 +36,7 @@ import { errorHandler } from './middleware/error';
 app.use('/api/vehicles', vehiclesRoutes);
 app.use('/api/admin/vehicles', adminVehiclesRoutes);
 app.use('/api/admin/customers', adminCustomersRoutes);
+app.use('/api/admin/opportunities', adminOpportunitiesRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/health', healthRoutes);
 

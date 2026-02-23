@@ -8,6 +8,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import CustomersPage from './pages/CustomersPage';
 import EditCustomerPage from './pages/EditCustomerPage';
 import CustomerForm from './components/customers/CustomerForm';
+import OpportunitiesPage from './pages/OpportunitiesPage';
+import EditOpportunityPage from './pages/EditOpportunityPage';
+import OpportunityForm from './components/opportunities/OpportunityForm';
 import './App.css'
 
 function App() {
@@ -27,6 +30,7 @@ function App() {
             <li><Link to="/" className="hover:text-gray-300">Dashboard</Link></li>
             <li><Link to="/cars" className="hover:text-gray-300">Inventory</Link></li>
             <li><Link to="/customers" className="hover:text-gray-300">Customers</Link></li>
+            <li><Link to="/opportunities" className="hover:text-gray-300">Opportunities</Link></li>
           </ul>
           <button onClick={handleLogout} className="text-sm bg-red-600 px-3 py-1 rounded hover:bg-red-700">Logout</button>
         </nav>
@@ -42,6 +46,9 @@ function App() {
           <Route path="/customers" element={<ProtectedRoute><CustomersPage /></ProtectedRoute>} />
           <Route path="/customers/new" element={<ProtectedRoute><CustomerForm /></ProtectedRoute>} />
           <Route path="/customers/:id/edit" element={<ProtectedRoute><EditCustomerPage /></ProtectedRoute>} />
+          <Route path="/opportunities" element={<ProtectedRoute><OpportunitiesPage /></ProtectedRoute>} />
+          <Route path="/opportunities/new" element={<ProtectedRoute><OpportunityForm /></ProtectedRoute>} />
+          <Route path="/opportunities/:id/edit" element={<ProtectedRoute><EditOpportunityPage /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>
