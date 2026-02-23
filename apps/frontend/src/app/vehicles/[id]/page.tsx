@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getPublishedVehicleById } from '../../../lib/data/vehicles';
 import PhotoGallery from '../../../components/PhotoGallery';
 import YoutubeEmbed from '../../../components/YoutubeEmbed';
+import LeadCaptureForm from '../../../components/LeadCaptureForm';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
@@ -73,12 +74,12 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                         </div>
 
                         <div className="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-4">
-                            <button className="w-full bg-primary dark:bg-white text-white dark:text-primary py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20 dark:shadow-white/10">
+                            <a href="#inquiry-form" className="block w-full text-center bg-primary dark:bg-white text-white dark:text-primary py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20 dark:shadow-white/10">
                                 Contact Sales
-                            </button>
-                            <button className="w-full bg-transparent border-2 border-slate-200 dark:border-slate-800 dark:text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:border-primary dark:hover:border-white transition-colors active:scale-95">
+                            </a>
+                            <a href="#inquiry-form" className="block w-full text-center bg-transparent border-2 border-slate-200 dark:border-slate-800 dark:text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:border-primary dark:hover:border-white transition-colors active:scale-95">
                                 Test Drive
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -93,6 +94,10 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                 </div>
 
                 <YoutubeEmbed links={car.videoLinks} />
+
+                <div className="mt-12 max-w-3xl mx-auto lg:mx-0">
+                    <LeadCaptureForm vehicleId={id} />
+                </div>
 
             </main>
         </>

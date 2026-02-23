@@ -11,6 +11,11 @@ export const opportunitySchema = z.object({
     expectedValue: z.number().min(0).optional(),
     notes: z.string().optional(),
     nextActionDate: z.string().optional(),
+    source: z.object({
+        page: z.string(),
+        vehicleId: z.string().nullable().optional(),
+        submittedAt: z.any(), // Uses z.any() to handle Firestore Timestamp objects which zod doesn't natively support out of the box
+    }).nullable().optional(),
     deleted: z.boolean().optional().default(false),
 });
 

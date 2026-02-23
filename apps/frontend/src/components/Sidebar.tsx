@@ -20,37 +20,37 @@ const Sidebar: React.FC = () => {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Ongoing Sales</p>
           <div className="flex items-center gap-4">
             <div className="flex -space-x-4 overflow-hidden">
-              <img 
-                alt="Car sale avatar" 
-                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover" 
-                src="https://picsum.photos/seed/car1/100/100" 
+              <img
+                alt="Car sale avatar"
+                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
+                src="https://picsum.photos/seed/car1/100/100"
               />
-              <img 
-                alt="Car sale avatar" 
-                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover" 
-                src="https://picsum.photos/seed/car2/100/100" 
+              <img
+                alt="Car sale avatar"
+                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
+                src="https://picsum.photos/seed/car2/100/100"
               />
-              <img 
-                alt="Car sale avatar" 
-                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover" 
-                src="https://picsum.photos/seed/car3/100/100" 
+              <img
+                alt="Car sale avatar"
+                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
+                src="https://picsum.photos/seed/car3/100/100"
               />
               <div className="flex items-center justify-center h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark bg-slate-100 dark:bg-slate-800 text-[10px] font-extrabold dark:text-white">+12</div>
             </div>
           </div>
           <p className="text-sm text-slate-500 italic dark:text-slate-400 leading-relaxed">
-            Your next car starting from <br/>
+            Your next car starting from <br />
             <span className="font-bold text-primary dark:text-white text-base not-italic">€18,900</span>
           </p>
         </div>
 
         {/* Actions and Info Cards */}
         <div className="space-y-6">
-          <button className="w-full bg-primary dark:bg-white dark:text-primary text-white py-5 rounded-full font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]">
-            Let's talk 
+          <a href="?contact=true" className="w-full bg-primary dark:bg-white dark:text-primary text-white py-5 rounded-full font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]">
+            Let's talk
             <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
-          </button>
-          
+          </a>
+
           <div className="grid grid-cols-2 gap-3">
             <div className="p-5 rounded-large bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
               <span className="material-symbols-outlined text-slate-400 mb-2">account_balance</span>
