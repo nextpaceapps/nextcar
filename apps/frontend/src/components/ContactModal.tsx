@@ -16,8 +16,6 @@ function ContactModalContent() {
 
     const isOpen = searchParams?.get('contact') === 'true';
 
-    if (!mounted || !isOpen) return null;
-
     const close = () => {
         router.push(pathname, { scroll: false });
     };
@@ -30,6 +28,8 @@ function ContactModalContent() {
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [pathname]);
+
+    if (!mounted || !isOpen) return null;
 
     return (
         <div
