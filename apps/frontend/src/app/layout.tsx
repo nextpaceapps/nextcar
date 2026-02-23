@@ -2,6 +2,7 @@ import ThemeProvider from '../components/ThemeProvider';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import ContactModal from '../components/ContactModal';
 import '../app/globals.css';
 import { Metadata } from 'next';
 
@@ -47,6 +48,7 @@ export default function RootLayout({
               <Header />
               {children}
               <Footer />
+              <ContactModal />
             </div>
           </div>
         </ThemeProvider>
