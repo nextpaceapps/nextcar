@@ -9,7 +9,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             return NextResponse.json({ success: false, error: { message: 'Vehicle not found' } }, { status: 404 });
         }
         return NextResponse.json({ success: true, data: vehicle });
-    } catch (error: any) {
-        return NextResponse.json({ success: false, error: { message: error.message } }, { status: 500 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ success: false, error: { message } }, { status: 500 });
     }
 }

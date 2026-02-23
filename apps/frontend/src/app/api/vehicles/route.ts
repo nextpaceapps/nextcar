@@ -8,7 +8,8 @@ export async function GET(request: Request) {
     try {
         const vehicles = await getPublishedVehicles(limit);
         return NextResponse.json({ success: true, data: vehicles });
-    } catch (error: any) {
-        return NextResponse.json({ success: false, error: { message: error.message } }, { status: 500 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : 'Unknown error';
+        return NextResponse.json({ success: false, error: { message } }, { status: 500 });
     }
 }

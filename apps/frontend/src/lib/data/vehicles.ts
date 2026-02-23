@@ -1,7 +1,8 @@
 import { db } from '../firebase-admin';
 import { COLLECTIONS, type Car } from '@nextcar/shared';
+import { cache } from 'react';
 
-export async function getPublishedVehicles(limit = 20): Promise<Car[]> {
+export const getPublishedVehicles = cache(async (limit = 20): Promise<Car[]> => {
     const query = db.collection(COLLECTIONS.CARS)
         .where('deleted', '==', false)
         .where('status', '==', 'published')
@@ -24,9 +25,9 @@ export async function getPublishedVehicles(limit = 20): Promise<Car[]> {
         };
         return transformed as Car;
     });
-}
+});
 
-export async function getPublishedVehicleById(id: string): Promise<Car | null> {
+export const getPublishedVehicleById = cache(async (id: string): Promise<Car | null> => {
     const doc = await db.collection(COLLECTIONS.CARS).doc(id).get();
 
     if (!doc.exists) {
@@ -50,4 +51,4 @@ export async function getPublishedVehicleById(id: string): Promise<Car | null> {
     };
 
     return transformed as Car;
-}
+});
