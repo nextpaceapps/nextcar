@@ -1,20 +1,5 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# NextCar Frontend
 
-# Run and deploy your AI Studio app
+This is the Next.js frontend application for the NextCar dealership platform.
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/drive/1NbzK72qv5M3WP1sfZ4mE49aorsdA54A8
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+It operates seamlessly alongside the Firebase backend and admin dashboard within the NextCar monorepo structure. It interfaces directly with Firebase Admin for secure static data fetching utilizing SSR capabilities, enhancing SEO and latency.

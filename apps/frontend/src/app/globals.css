@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: 'Outfit', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+
+  --color-primary: #1a1a1a;
+  --color-background-light: #f8f9fa;
+  --color-background-dark: #0f1115;
+
+  --radius-large: 1.5rem;
+  --radius-xlarge: 2.5rem;
+}
+
+@layer base {
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+  }
+}
+
+@keyframes drive {
+  0% {
+    transform: translateX(-5px);
+  }
+
+  50% {
+    transform: translateX(5px);
+  }
+
+  100% {
+    transform: translateX(-5px);
+  }
+}
+
+.car-animation {
+  animation: drive 3s ease-in-out infinite;
+}

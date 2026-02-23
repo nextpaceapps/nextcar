@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import type { Car } from '@nextcar/shared';
 
 interface CarCardProps {
@@ -23,7 +23,7 @@ export default function CarCard({ car }: CarCardProps) {
                 <p className="text-gray-600 text-sm mb-2">{car.year} • {car.mileage.toLocaleString()} miles</p>
                 <div className="flex justify-between items-center mt-4">
                     <span className="text-2xl font-bold text-blue-600">${car.price.toLocaleString()}</span>
-                    <Link to={`/inventory/${car.id}`} className="px-4 py-2 bg-gray-900 text-white text-sm rounded hover:bg-gray-800 transition-colors">
+                    <Link href={`/vehicles/${car.id}`} className="px-4 py-2 bg-gray-900 text-white text-sm rounded hover:bg-gray-800 transition-colors">
                         View Details
                     </Link>
                 </div>
