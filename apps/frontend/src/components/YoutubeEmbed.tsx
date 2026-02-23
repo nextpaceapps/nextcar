@@ -28,6 +28,7 @@ export default function YoutubeEmbed({ links }: { links?: string[] }) {
                                 title={`YouTube Video ${idx + 1}`}
                                 className="w-full h-full"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                loading="lazy"
                                 allowFullScreen
                             />
                         </div>

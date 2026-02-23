@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 interface Photo {
     url: string;
@@ -27,7 +28,14 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
                 className="w-full h-[60vh] bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden cursor-pointer shadow-lg group relative"
                 onClick={() => setSelectedPhoto(sorted[0].url)}
             >
-                <img src={sorted[0].url} alt="Main" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                <Image
+                    src={sorted[0].url}
+                    alt="Main"
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
                 <span className="absolute bottom-4 right-4 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-md">
                     Enlarge
@@ -42,7 +50,13 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
                             className="aspect-[4/3] bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:opacity-90 relative"
                             onClick={() => setSelectedPhoto(photo.url)}
                         >
-                            <img src={photo.url} alt={`Gallery ${i}`} className="w-full h-full object-cover" />
+                            <Image
+                                src={photo.url}
+                                alt={`Gallery ${i}`}
+                                fill
+                                sizes="(max-width: 1024px) 25vw, 16vw"
+                                className="object-cover"
+                            />
                         </div>
                     ))}
                 </div>
@@ -53,8 +67,14 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
                     className="fixed inset-0 z-50 bg-black/90 p-8 flex items-center justify-center backdrop-blur-sm"
                     onClick={() => setSelectedPhoto(null)}
                 >
-                    <img src={selectedPhoto} alt="Enlarged" className="max-w-full max-h-full object-contain shadow-2xl rounded-sm" />
-                    <button className="fixed top-8 right-8 text-white/50 hover:text-white p-2">
+                    <Image
+                        src={selectedPhoto}
+                        alt="Enlarged"
+                        fill
+                        sizes="100vw"
+                        className="object-contain shadow-2xl rounded-sm p-4 md:p-8"
+                    />
+                    <button className="fixed top-8 right-8 text-white/50 hover:text-white p-2 z-10">
                         <span className="material-symbols-outlined text-4xl leading-none">close</span>
                     </button>
                 </div>

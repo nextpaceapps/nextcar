@@ -1,21 +1,26 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Car } from '@nextcar/shared';
 
 interface CarCardProps {
     car: Car;
+    priority?: boolean;
 }
 
-export default function CarCard({ car }: CarCardProps) {
+export default function CarCard({ car, priority = false }: CarCardProps) {
     const sortedPhotos = [...car.photos].sort((a, b) => a.order - b.order);
     const imageUrl = sortedPhotos[0]?.url || 'https://placehold.co/600x400?text=No+Image';
 
     return (
         <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-            <div className="h-48 overflow-hidden">
-                <img
+            <div className="h-48 relative overflow-hidden">
+                <Image
                     src={imageUrl}
                     alt={`${car.make} ${car.model}`}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    priority={priority}
+                    className="object-cover"
                 />
             </div>
             <div className="p-4">
