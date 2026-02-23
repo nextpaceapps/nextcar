@@ -25,7 +25,8 @@ export default async function VehiclesPage({
 }) {
     const query = await searchParams;
     const q = typeof query.q === 'string' ? query.q.toLowerCase() : '';
-    const currentLimit = typeof query.limit === 'string' ? parseInt(query.limit, 10) : 20;
+    const parsedLimit = typeof query.limit === 'string' ? parseInt(query.limit, 10) : 20;
+    const currentLimit = isNaN(parsedLimit) || parsedLimit < 1 ? 20 : parsedLimit;
 
     // We fetch currentLimit + 1 to know if there are more inventory items
     const fetchLimit = currentLimit + 1;
