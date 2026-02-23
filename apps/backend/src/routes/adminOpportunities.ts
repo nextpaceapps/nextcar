@@ -44,10 +44,36 @@ router.get('/', asyncHandler(async (req, res) => {
         .limit(limit);
 
     const snapshot = await query.get();
-    const opportunities = await Promise.all(snapshot.docs.map(async doc => {
-        const data = doc.data() as Opportunity;
-        return await enrichOpportunity(data, doc.id);
-    }));
+    const rawOpportunities = snapshot.docs.map(doc => ({ id: doc.id, ...(doc.data() as Opportunity) }));
+
+    const customerIds = [...new Set(rawOpportunities.map(o => o.customerId).filter(Boolean))];
+    const vehicleIds = [...new Set(rawOpportunities.map(o => o.vehicleId).filter(Boolean))];
+
+    const customerDocs = customerIds.length > 0
+        ? await db.getAll(...customerIds.map(id => db.collection(COLLECTIONS.CUSTOMERS).doc(id!)))
+        : [];
+    const vehicleDocs = vehicleIds.length > 0
+        ? await db.getAll(...vehicleIds.map(id => db.collection(COLLECTIONS.CARS).doc(id!)))
+        : [];
+
+    const customerMap = new Map(customerDocs.map(doc => [doc.id, doc.data()]));
+    const vehicleMap = new Map(vehicleDocs.map(doc => [doc.id, doc.data()]));
+
+    const opportunities = rawOpportunities.map(opp => {
+        let customerName = 'Unknown Customer';
+        if (opp.customerId && customerMap.has(opp.customerId)) {
+            const cData = customerMap.get(opp.customerId);
+            if (cData) customerName = cData.name || customerName;
+        }
+
+        let vehicleName = undefined;
+        if (opp.vehicleId && vehicleMap.has(opp.vehicleId)) {
+            const vData = vehicleMap.get(opp.vehicleId);
+            if (vData) vehicleName = `${vData.make} ${vData.model} (${vData.year})`;
+        }
+
+        return { ...opp, customerName, vehicleName };
+    });
 
     successResponse(res, opportunities);
 }));
