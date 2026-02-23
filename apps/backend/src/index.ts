@@ -24,7 +24,6 @@ app.get('/', (req, res) => {
     res.send('NextCar Backend is running');
 });
 
-import vehiclesRoutes from './routes/vehicles';
 import adminVehiclesRoutes from './routes/adminVehicles';
 import adminCustomersRoutes from './routes/adminCustomers';
 import adminOpportunitiesRoutes from './routes/adminOpportunities';
@@ -33,7 +32,6 @@ import healthRoutes from './routes/health';
 import { errorHandler } from './middleware/error';
 
 // Mount routes
-app.use('/api/vehicles', vehiclesRoutes);
 app.use('/api/admin/vehicles', adminVehiclesRoutes);
 app.use('/api/admin/customers', adminCustomersRoutes);
 app.use('/api/admin/opportunities', adminOpportunitiesRoutes);
