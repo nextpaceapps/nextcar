@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const Header: React.FC = () => {
+const HeaderContent: React.FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [value, setValue] = useState(searchParams?.get('q') || '');
@@ -46,6 +46,14 @@ const Header: React.FC = () => {
         </button>
       </div>
     </div>
+  );
+};
+
+const Header: React.FC = () => {
+  return (
+    <Suspense fallback={<div className="h-[92px] w-full bg-slate-50 dark:bg-[#0a0c10]" />}>
+      <HeaderContent />
+    </Suspense>
   );
 };
 

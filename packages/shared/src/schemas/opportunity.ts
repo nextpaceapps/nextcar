@@ -11,6 +11,11 @@ export const opportunitySchema = z.object({
     expectedValue: z.number().min(0).optional(),
     notes: z.string().optional(),
     nextActionDate: z.string().optional(),
+    source: z.object({
+        page: z.string(),
+        vehicleId: z.string().nullable().optional(),
+        submittedAt: z.any(),
+    }).nullable().optional(),
     deleted: z.boolean().optional().default(false),
 });
 
