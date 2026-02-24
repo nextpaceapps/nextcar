@@ -1,17 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { carService } from '../services/carService';
+import { vehicleService } from '../services/vehicleService';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../lib/AuthContext';
-import type { Car } from '@nextcar/shared';
+import type { Vehicle } from '@nextcar/shared';
 import { useState, useMemo } from 'react';
 
-export default function CarsPage() {
+export default function VehiclesPage() {
     const { role } = useAuth();
     const canWrite = role === 'Admin' || role === 'Editor';
     const queryClient = useQueryClient();
-    const { data: cars, isLoading, error } = useQuery({
-        queryKey: ['cars'],
-        queryFn: carService.getCars
+    const { data: vehicles, isLoading, error } = useQuery({
+        queryKey: ['vehicles'],
+        queryFn: vehicleService.getVehicles
     });
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -25,75 +25,75 @@ export default function CarsPage() {
     const ITEMS_PER_PAGE = 20;
 
     const deleteMutation = useMutation({
-        mutationFn: carService.deleteCar,
+        mutationFn: vehicleService.deleteVehicle,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['cars'] });
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] });
         }
     });
 
     const updateStatusMutation = useMutation({
-        mutationFn: ({ id, status }: { id: string, status: Car['status'] }) =>
-            carService.updateCar(id, { status }),
+        mutationFn: ({ id, status }: { id: string, status: Vehicle['status'] }) =>
+            vehicleService.updateVehicle(id, { status }),
         onMutate: async ({ id, status }) => {
-            await queryClient.cancelQueries({ queryKey: ['cars'] });
-            const previousCars = queryClient.getQueryData(['cars']);
-            queryClient.setQueryData(['cars'], (old: any) =>
-                old?.map((car: any) => car.id === id ? { ...car, status } : car)
+            await queryClient.cancelQueries({ queryKey: ['vehicles'] });
+            const previousVehicles = queryClient.getQueryData(['vehicles']);
+            queryClient.setQueryData(['vehicles'], (old: any) =>
+                old?.map((vehicle: any) => vehicle.id === id ? { ...vehicle, status } : vehicle)
             );
-            return { previousCars };
+            return { previousVehicles };
         },
         onError: (_err, _variables, context) => {
-            if (context?.previousCars) {
-                queryClient.setQueryData(['cars'], context.previousCars);
+            if (context?.previousVehicles) {
+                queryClient.setQueryData(['vehicles'], context.previousVehicles);
             }
         },
         onSettled: () => {
-            queryClient.invalidateQueries({ queryKey: ['cars'] });
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] });
         },
     });
 
     const handleDelete = async (id: string) => {
-        if (confirm('Are you sure you want to delete this car?')) {
+        if (confirm('Are you sure you want to delete this vehicle?')) {
             await deleteMutation.mutateAsync(id);
         }
     };
 
-    const handleUpdateStatus = async (id: string, status: Car['status']) => {
+    const handleUpdateStatus = async (id: string, status: Vehicle['status']) => {
         await updateStatusMutation.mutateAsync({ id, status });
     };
 
     const availableMakes = useMemo(() => {
-        if (!cars) return [];
-        const makes = new Set(cars.map(c => c.make).filter(Boolean));
+        if (!vehicles) return [];
+        const makes = new Set(vehicles.map(v => v.make).filter(Boolean));
         return Array.from(makes).sort() as string[];
-    }, [cars]);
+    }, [vehicles]);
 
-    const filteredCars = useMemo(() => {
-        if (!cars) return [];
-        return cars.filter(car => {
-            const title = `${car.make} ${car.model}`.toLowerCase();
-            const vin = (car.vin || '').toLowerCase();
+    const filteredVehicles = useMemo(() => {
+        if (!vehicles) return [];
+        return vehicles.filter(vehicle => {
+            const title = `${vehicle.make} ${vehicle.model}`.toLowerCase();
+            const vin = (vehicle.vin || '').toLowerCase();
             const search = searchTerm.toLowerCase();
 
             if (search && !(title.includes(search) || vin.includes(search))) return false;
-            if (statusFilter !== 'all' && car.status !== statusFilter) return false;
-            if (makeFilter !== 'all' && car.make !== makeFilter) return false;
+            if (statusFilter !== 'all' && vehicle.status !== statusFilter) return false;
+            if (makeFilter !== 'all' && vehicle.make !== makeFilter) return false;
 
-            if (yearMin && car.year < parseInt(yearMin, 10)) return false;
-            if (yearMax && car.year > parseInt(yearMax, 10)) return false;
+            if (yearMin && vehicle.year < parseInt(yearMin, 10)) return false;
+            if (yearMax && vehicle.year > parseInt(yearMax, 10)) return false;
 
-            if (priceMin && car.price < parseInt(priceMin, 10)) return false;
-            if (priceMax && car.price > parseInt(priceMax, 10)) return false;
+            if (priceMin && vehicle.price < parseInt(priceMin, 10)) return false;
+            if (priceMax && vehicle.price > parseInt(priceMax, 10)) return false;
 
             return true;
         });
-    }, [cars, searchTerm, statusFilter, makeFilter, yearMin, yearMax, priceMin, priceMax]);
+    }, [vehicles, searchTerm, statusFilter, makeFilter, yearMin, yearMax, priceMin, priceMax]);
 
     // Reset page if filters change
     useMemo(() => { setCurrentPage(1); }, [searchTerm, statusFilter, makeFilter, yearMin, yearMax, priceMin, priceMax]);
 
-    const totalPages = Math.ceil(filteredCars.length / ITEMS_PER_PAGE);
-    const paginatedCars = filteredCars.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+    const totalPages = Math.ceil(filteredVehicles.length / ITEMS_PER_PAGE);
+    const paginatedVehicles = filteredVehicles.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
     const hasActiveFilters = searchTerm !== '' || statusFilter !== 'all' || makeFilter !== 'all' || yearMin !== '' || yearMax !== '' || priceMin !== '' || priceMax !== '';
 
@@ -108,16 +108,16 @@ export default function CarsPage() {
         setCurrentPage(1);
     };
 
-    if (isLoading) return <div>Loading cars...</div>;
-    if (error) return <div>Error loading cars: {(error as Error).message}</div>;
+    if (isLoading) return <div>Loading vehicles...</div>;
+    if (error) return <div>Error loading vehicles: {(error as Error).message}</div>;
 
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Car Inventory</h1>
+                <h1 className="text-2xl font-bold">Vehicle Inventory</h1>
                 {canWrite && (
-                    <Link to="/cars/new" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                        Add New Car
+                    <Link to="/vehicles/new" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Add New Vehicle
                     </Link>
                 )}
             </div>
@@ -233,57 +233,57 @@ export default function CarsPage() {
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {paginatedCars.length === 0 ? (
+                        {paginatedVehicles.length === 0 ? (
                             <tr>
                                 <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                                     No vehicles found matching the given criteria.
                                 </td>
                             </tr>
                         ) : (
-                            paginatedCars.map((car: Car) => (
-                                <tr key={car.id}>
+                            paginatedVehicles.map((vehicle: Vehicle) => (
+                                <tr key={vehicle.id}>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                        <div className="text-sm font-medium text-gray-900">{car.make} {car.model}</div>
-                                        <div className="text-xs text-gray-500 font-mono">VIN: {car.vin || 'N/A'}</div>
+                                        <div className="text-sm font-medium text-gray-900">{vehicle.make} {vehicle.model}</div>
+                                        <div className="text-xs text-gray-500 font-mono">VIN: {vehicle.vin || 'N/A'}</div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {car.year} • {car.mileage?.toLocaleString()} km
+                                        {vehicle.year} • {vehicle.mileage?.toLocaleString()} km
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        ${car.price.toLocaleString()}
+                                        ${vehicle.price.toLocaleString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            ${car.status === 'published' ? 'bg-green-100 text-green-800' :
-                                                car.status === 'sold' ? 'bg-red-100 text-red-800' :
-                                                    car.status === 'archived' ? 'bg-gray-100 text-gray-800' :
+                                            ${vehicle.status === 'published' ? 'bg-green-100 text-green-800' :
+                                                vehicle.status === 'sold' ? 'bg-red-100 text-red-800' :
+                                                    vehicle.status === 'archived' ? 'bg-gray-100 text-gray-800' :
                                                         'bg-yellow-100 text-yellow-800'}`}>
-                                            {car.status}
+                                            {vehicle.status}
                                         </span>
                                     </td>
                                     {canWrite && (
                                         <td className="px-6 py-4 flex gap-2 w-full text-sm">
-                                            {(car.status === 'draft' || car.status === 'archived') && (
+                                            {(vehicle.status === 'draft' || vehicle.status === 'archived') && (
                                                 <button
-                                                    onClick={() => handleUpdateStatus(car.id!, 'published')}
+                                                    onClick={() => handleUpdateStatus(vehicle.id!, 'published')}
                                                     disabled={updateStatusMutation.isPending}
                                                     className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
                                                 >
                                                     Publish
                                                 </button>
                                             )}
-                                            {car.status === 'published' && (
+                                            {vehicle.status === 'published' && (
                                                 <button
-                                                    onClick={() => handleUpdateStatus(car.id!, 'sold')}
+                                                    onClick={() => handleUpdateStatus(vehicle.id!, 'sold')}
                                                     disabled={updateStatusMutation.isPending}
                                                     className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
                                                 >
                                                     Mark Sold
                                                 </button>
                                             )}
-                                            {car.status !== 'archived' && (
+                                            {vehicle.status !== 'archived' && (
                                                 <button
-                                                    onClick={() => handleUpdateStatus(car.id!, 'archived')}
+                                                    onClick={() => handleUpdateStatus(vehicle.id!, 'archived')}
                                                     disabled={updateStatusMutation.isPending}
                                                     className="bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
                                                 >
@@ -295,11 +295,11 @@ export default function CarsPage() {
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                         {canWrite ? (
                                             <>
-                                                <Link to={`/cars/${car.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                                <button onClick={() => handleDelete(car.id!)} className="text-red-600 hover:text-red-900">Delete</button>
+                                                <Link to={`/vehicles/${vehicle.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
+                                                <button onClick={() => handleDelete(vehicle.id!)} className="text-red-600 hover:text-red-900">Delete</button>
                                             </>
                                         ) : (
-                                            <Link to={`/cars/${car.id}/edit`} className="text-indigo-600 hover:text-indigo-900">View Details</Link>
+                                            <Link to={`/vehicles/${vehicle.id}/edit`} className="text-indigo-600 hover:text-indigo-900">View Details</Link>
                                         )}
                                     </td>
                                 </tr>
@@ -329,7 +329,7 @@ export default function CarsPage() {
                         <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                             <div>
                                 <p className="text-sm text-gray-700">
-                                    Showing <span className="font-medium">{((currentPage - 1) * ITEMS_PER_PAGE) + 1}</span> to <span className="font-medium">{Math.min(currentPage * ITEMS_PER_PAGE, filteredCars.length)}</span> of <span className="font-medium">{filteredCars.length}</span> results
+                                    Showing <span className="font-medium">{((currentPage - 1) * ITEMS_PER_PAGE) + 1}</span> to <span className="font-medium">{Math.min(currentPage * ITEMS_PER_PAGE, filteredVehicles.length)}</span> of <span className="font-medium">{filteredVehicles.length}</span> results
                                 </p>
                             </div>
                             <div>

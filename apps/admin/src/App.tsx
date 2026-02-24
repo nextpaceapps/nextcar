@@ -1,8 +1,8 @@
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './lib/AuthContext';
-import CarsPage from './pages/CarsPage';
-import EditCarPage from './pages/EditCarPage';
-import CarForm from './components/cars/CarForm';
+import VehiclesPage from './pages/VehiclesPage';
+import EditVehiclePage from './pages/EditVehiclePage';
+import VehicleForm from './components/vehicles/VehicleForm';
 import DashboardPage from './pages/DashboardPage';
 import PipelinePage from './pages/PipelinePage';
 import UsersPage from './pages/UsersPage';
@@ -31,7 +31,7 @@ function App() {
         <nav className="p-4 bg-gray-800 text-white mb-8 flex justify-between items-center">
           <ul className="flex gap-4">
             <li><Link to="/" className="hover:text-gray-300">Dashboard</Link></li>
-            <li><Link to="/cars" className="hover:text-gray-300">Inventory</Link></li>
+            <li><Link to="/vehicles" className="hover:text-gray-300">Vehicles</Link></li>
             <li><Link to="/customers" className="hover:text-gray-300">Customers</Link></li>
             <li><Link to="/opportunities" className="hover:text-gray-300">Opportunities</Link></li>
             <li><Link to="/pipeline" className="hover:text-gray-300">Pipeline</Link></li>
@@ -52,9 +52,9 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/cars" element={<ProtectedRoute><CarsPage /></ProtectedRoute>} />
-          <Route path="/cars/new" element={<ProtectedRoute><CarForm /></ProtectedRoute>} />
-          <Route path="/cars/:id/edit" element={<ProtectedRoute><EditCarPage /></ProtectedRoute>} />
+          <Route path="/vehicles" element={<ProtectedRoute><VehiclesPage /></ProtectedRoute>} />
+          <Route path="/vehicles/new" element={<ProtectedRoute><VehicleForm /></ProtectedRoute>} />
+          <Route path="/vehicles/:id/edit" element={<ProtectedRoute><EditVehiclePage /></ProtectedRoute>} />
           <Route path="/customers" element={<ProtectedRoute><CustomersPage /></ProtectedRoute>} />
           <Route path="/customers/new" element={<ProtectedRoute><CustomerForm /></ProtectedRoute>} />
           <Route path="/customers/:id/edit" element={<ProtectedRoute><EditCustomerPage /></ProtectedRoute>} />

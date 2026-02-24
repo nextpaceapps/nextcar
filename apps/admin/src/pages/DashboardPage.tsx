@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { carService } from '../services/carService';
+import { vehicleService } from '../services/vehicleService';
 import { opportunityService } from '../services/opportunityService';
 import { customerService } from '../services/customerService';
-import type { Car, Opportunity, Customer } from '@nextcar/shared';
+import type { Vehicle, Opportunity, Customer } from '@nextcar/shared';
 import { OPPORTUNITY_STAGES } from '@nextcar/shared';
 
 interface DashboardData {
-    cars: Car[];
+    vehicles: Vehicle[];
     opportunities: Opportunity[];
     customers: Customer[];
 }
@@ -20,12 +20,12 @@ export default function DashboardPage() {
     useEffect(() => {
         async function fetchAll() {
             try {
-                const [cars, opportunities, customers] = await Promise.all([
-                    carService.getCars(),
+                const [vehicles, opportunities, customers] = await Promise.all([
+                    vehicleService.getVehicles(),
                     opportunityService.getOpportunities(),
                     customerService.getCustomers(),
                 ]);
-                setData({ cars, opportunities, customers });
+                setData({ vehicles, opportunities, customers });
             } catch (err: unknown) {
                 setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
             } finally {
@@ -53,12 +53,12 @@ export default function DashboardPage() {
 
     if (!data) return null;
 
-    const { cars, opportunities, customers } = data;
+    const { vehicles, opportunities, customers } = data;
 
     // --- Vehicle counts by status ---
     const vehicleStatuses = ['draft', 'published', 'sold', 'archived'] as const;
     const vehicleCounts = Object.fromEntries(
-        vehicleStatuses.map(s => [s, cars.filter(c => c.status === s).length])
+        vehicleStatuses.map(s => [s, vehicles.filter(v => v.status === s).length])
     ) as Record<string, number>;
 
     // --- Opportunity counts by stage ---
@@ -101,7 +101,7 @@ export default function DashboardPage() {
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard label="Total Vehicles" value={cars.length} icon="🚗" />
+                <StatCard label="Total Vehicles" value={vehicles.length} icon="🚗" />
                 <StatCard label="Total Customers" value={customers.length} icon="👤" />
                 <StatCard
                     label="Pipeline Value"
@@ -115,7 +115,7 @@ export default function DashboardPage() {
             <section>
                 <div className="flex items-center justify-between mb-3">
                     <h2 className="text-xl font-semibold text-gray-800">Inventory by Status</h2>
-                    <Link to="/cars" className="text-sm text-blue-600 hover:underline">View All →</Link>
+                    <Link to="/vehicles" className="text-sm text-blue-600 hover:underline">View All →</Link>
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {vehicleStatuses.map(status => (

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-NextCar — monorepo for a used-car dealership platform (public catalogue, admin panel, backend API, shared types) backed by Firebase.
+NextCar — monorepo for a used-vehicle dealership platform (public catalogue, admin panel, backend API, shared types) backed by Firebase.
 
 ## Project
 

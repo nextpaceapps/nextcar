@@ -32,6 +32,6 @@
   }
 }
 
-.car-animation {
+.vehicle-animation {
   animation: drive 3s ease-in-out infinite;
 }

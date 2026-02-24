@@ -72,7 +72,7 @@ export default function LeadCaptureForm({ vehicleId }: LeadCaptureFormProps) {
         <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 mt-12 mb-8" id="inquiry-form">
             <h3 className="text-2xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
                 <span className="material-symbols-outlined text-primary dark:text-white">mail</span>
-                {vehicleId ? 'Interested in this car?' : "Let's talk"}
+                {vehicleId ? 'Interested in this vehicle?' : "Let's talk"}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">

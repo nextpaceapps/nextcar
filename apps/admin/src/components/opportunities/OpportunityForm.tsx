@@ -6,7 +6,7 @@ import { opportunitySchema, OPPORTUNITY_STAGES, type OpportunitySchema, type Opp
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { opportunityService } from '../../services/opportunityService';
 import { customerService } from '../../services/customerService';
-import { carService } from '../../services/carService';
+import { vehicleService } from '../../services/vehicleService';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../lib/AuthContext';
 
@@ -32,8 +32,8 @@ export default function OpportunityForm({ initialData, isEdit = false }: Opportu
     });
 
     const { data: vehicles = [] } = useQuery({
-        queryKey: ['cars'],
-        queryFn: carService.getCars
+        queryKey: ['vehicles'],
+        queryFn: vehicleService.getVehicles
     });
 
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<z.input<typeof opportunitySchema>>({

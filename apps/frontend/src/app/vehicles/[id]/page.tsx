@@ -8,15 +8,15 @@ import { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
-    const car = await getPublishedVehicleById(id);
-    if (!car) return { title: 'Not Found' };
+    const vehicle = await getPublishedVehicleById(id);
+    if (!vehicle) return { title: 'Not Found' };
 
-    const title = `${car.year} ${car.make} ${car.model} — $${car.price.toLocaleString()}`;
-    const description = car.description ? car.description.substring(0, 160) : `Check out this premium ${car.year} ${car.make} ${car.model}.`;
-    const image = car.photos && car.photos.length > 0 ? car.photos[0].url : '';
+    const title = `${vehicle.year} ${vehicle.make} ${vehicle.model} — $${vehicle.price.toLocaleString()}`;
+    const description = vehicle.description ? vehicle.description.substring(0, 160) : `Check out this premium ${vehicle.year} ${vehicle.make} ${vehicle.model}.`;
+    const image = vehicle.photos && vehicle.photos.length > 0 ? vehicle.photos[0].url : '';
 
     return {
-        title: `${car.year} ${car.make} ${car.model} | Nextcar`,
+        title: `${vehicle.year} ${vehicle.make} ${vehicle.model} | Nextcar`,
         description,
         openGraph: {
             title,
@@ -35,9 +35,9 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params;
-    const car = await getPublishedVehicleById(id);
+    const vehicle = await getPublishedVehicleById(id);
 
-    if (!car) {
+    if (!vehicle) {
         notFound();
     }
 
@@ -54,40 +54,40 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
 
                 <div className="flex flex-col lg:flex-row gap-12 items-start">
                     <div className="w-full lg:w-2/3">
-                        <PhotoGallery photos={car.photos || []} />
+                        <PhotoGallery photos={vehicle.photos || []} />
                     </div>
 
                     <div className="w-full lg:w-1/3 space-y-8 sticky top-32">
                         <div>
                             <h1 className="text-4xl lg:text-5xl font-display font-bold leading-tight uppercase tracking-tighter dark:text-white">
-                                {car.year} {car.make} <br />
-                                <span className="text-slate-400">{car.model}</span>
+                                {vehicle.year} {vehicle.make} <br />
+                                <span className="text-slate-400">{vehicle.model}</span>
                             </h1>
                             <div className="mt-6 text-4xl font-bold text-primary dark:text-white font-display">
-                                ${car.price.toLocaleString()}
+                                ${vehicle.price.toLocaleString()}
                             </div>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                                 <span className="material-symbols-outlined text-slate-400 block mb-2">speed</span>
-                                <div className="text-sm font-bold uppercase tracking-wider">{car.mileage.toLocaleString()} mi</div>
+                                <div className="text-sm font-bold uppercase tracking-wider">{vehicle.mileage.toLocaleString()} mi</div>
                                 <div className="text-[10px] text-slate-500 font-medium">Mileage</div>
                             </div>
                             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                                 <span className="material-symbols-outlined text-slate-400 block mb-2">local_gas_station</span>
-                                <div className="text-sm font-bold uppercase tracking-wider">{car.fuelType}</div>
+                                <div className="text-sm font-bold uppercase tracking-wider">{vehicle.fuelType}</div>
                                 <div className="text-[10px] text-slate-500 font-medium">Fuel Type</div>
                             </div>
                             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                                 <span className="material-symbols-outlined text-slate-400 block mb-2">settings</span>
-                                <div className="text-sm font-bold uppercase tracking-wider">{car.transmission}</div>
+                                <div className="text-sm font-bold uppercase tracking-wider">{vehicle.transmission}</div>
                                 <div className="text-[10px] text-slate-500 font-medium">Transmission</div>
                             </div>
-                            {car.vin && (
+                            {vehicle.vin && (
                                 <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                                     <span className="material-symbols-outlined text-slate-400 block mb-2">tag</span>
-                                    <div className="text-sm font-bold uppercase tracking-wider truncate">{car.vin}</div>
+                                    <div className="text-sm font-bold uppercase tracking-wider truncate">{vehicle.vin}</div>
                                     <div className="text-[10px] text-slate-500 font-medium">VIN</div>
                                 </div>
                             )}
@@ -109,11 +109,11 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                         Description
                     </h3>
                     <div className="prose dark:prose-invert prose-lg text-slate-600 dark:text-slate-400 break-words whitespace-pre-wrap">
-                        {car.description || 'No description provided.'}
+                        {vehicle.description || 'No description provided.'}
                     </div>
                 </div>
 
-                <YoutubeEmbed links={car.videoLinks} />
+                <YoutubeEmbed links={vehicle.videoLinks} />
 
                 <div className="mt-12 max-w-3xl mx-auto lg:mx-0">
                     <LeadCaptureForm vehicleId={id} />

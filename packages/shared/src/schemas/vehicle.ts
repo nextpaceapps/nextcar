@@ -1,16 +1,16 @@
 import { z } from 'zod';
 
-export const carStatusSchema = z.enum(['draft', 'published', 'sold', 'archived']);
+export const vehicleStatusSchema = z.enum(['draft', 'published', 'sold', 'archived']);
 export const fuelTypeSchema = z.enum(['Petrol', 'Diesel', 'Electric', 'Hybrid', 'Plug-in Hybrid']);
 export const transmissionSchema = z.enum(['Manual', 'Automatic']);
 export const bodyTypeSchema = z.enum(['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Truck']);
 
-export const carPhotoSchema = z.object({
+export const vehiclePhotoSchema = z.object({
     url: z.string().url(),
     order: z.number().int().min(0),
 });
 
-export const carEquipmentSchema = z.object({
+export const vehicleEquipmentSchema = z.object({
     airConditioning: z.array(z.string()).optional(),
     infotainment: z.array(z.string()).optional(),
     mirrors: z.array(z.string()).optional(),
@@ -25,7 +25,7 @@ export const carEquipmentSchema = z.object({
 
 export const YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)/;
 
-export const carSchema = z.object({
+export const vehicleSchema = z.object({
     id: z.string().optional(),
     make: z.string().min(1, 'Make is required'),
     model: z.string().min(1, 'Model is required'),
@@ -39,13 +39,13 @@ export const carSchema = z.object({
     vin: z.string().optional(),
     description: z.string().optional(),
     features: z.array(z.string()).optional(),
-    photos: z.array(carPhotoSchema),
+    photos: z.array(vehiclePhotoSchema),
     videoLinks: z.array(
         z.string()
             .url('Invalid URL format')
             .regex(YOUTUBE_URL_REGEX, 'Must be a valid YouTube URL')
     ).optional(),
-    status: carStatusSchema,
+    status: vehicleStatusSchema,
     deleted: z.boolean().optional(),
     // Extended fields
     power: z.string().optional(),
@@ -58,7 +58,7 @@ export const carSchema = z.object({
     firstRegistration: z.string().optional(),
     technicalInspection: z.string().optional(),
     condition: z.string().optional(),
-    equipment: carEquipmentSchema.optional(),
+    equipment: vehicleEquipmentSchema.optional(),
 });
 
-export type CarSchema = z.infer<typeof carSchema>;
+export type VehicleSchema = z.infer<typeof vehicleSchema>;
