@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DndContext, DragOverlay, useDroppable, useDraggable, type DragEndEvent, type DragStartEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { opportunityService } from '../services/opportunityService';
 import { Link } from 'react-router-dom';
-import type { Opportunity } from '@nextcar/shared';
+import type { Opportunity, OpportunityStage } from '@nextcar/shared';
 import { OPPORTUNITY_STAGES } from '@nextcar/shared';
 
 const STAGE_COLORS: Record<string, { bg: string; border: string; header: string }> = {
@@ -28,8 +28,8 @@ export default function PipelinePage() {
     });
 
     const updateMutation = useMutation({
-        mutationFn: ({ id, stage }: { id: string; stage: string }) =>
-            opportunityService.updateOpportunity(id, { stage: stage as any }),
+        mutationFn: ({ id, stage }: { id: string; stage: OpportunityStage }) =>
+            opportunityService.updateOpportunity(id, { stage }),
         onSuccess: () => queryClient.invalidateQueries({ queryKey: ['opportunities'] }),
     });
 
@@ -47,8 +47,8 @@ export default function PipelinePage() {
         const newStage = over.id as string;
         const opp = opportunities.find(o => o.id === oppId);
 
-        if (opp && opp.stage !== newStage && OPPORTUNITY_STAGES.includes(newStage as any)) {
-            updateMutation.mutate({ id: oppId, stage: newStage });
+        if (opp && opp.stage !== newStage && (OPPORTUNITY_STAGES as readonly string[]).includes(newStage)) {
+            updateMutation.mutate({ id: oppId, stage: newStage as OpportunityStage });
         }
     };
 
