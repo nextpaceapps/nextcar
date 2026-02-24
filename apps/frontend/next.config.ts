@@ -19,20 +19,24 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
+    const adminOrigin = process.env.NODE_ENV === 'production'
+      ? 'https://nextcar-83e67.web.app'
+      : 'http://localhost:5174';
+
     return [
       {
         source: '/admin/:path*',
-        destination: 'http://localhost:5174/:path*',
+        destination: `${adminOrigin}/:path*`,
         permanent: false,
       },
       {
         source: '/vehicles',
-        destination: 'http://localhost:5174/vehicles',
+        destination: `${adminOrigin}/vehicles`,
         permanent: false,
       },
       {
         source: '/admin',
-        destination: 'http://localhost:5174/',
+        destination: `${adminOrigin}/`,
         permanent: false,
       }
     ];

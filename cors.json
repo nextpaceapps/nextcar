@@ -5,9 +5,8 @@
             "http://localhost:5174",
             "http://127.0.0.1:5173",
             "http://127.0.0.1:5174",
-            "https://nextcar.com",
-            "https://www.nextcar.com",
-            "https://admin.nextcar.com"
+            "https://nextcar-frontend-001--nextcar-83e67.europe-west4.hosted.app",
+            "https://nextcar-83e67.web.app"
         ],
         "method": [
             "GET",
