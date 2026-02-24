@@ -7,7 +7,7 @@ export * from './schemas/opportunity.js';
 
 // Firestore collection names — single source of truth
 export const COLLECTIONS = {
-    VEHICLES: 'vehicles',
+    VEHICLES: 'cars',
     CUSTOMERS: 'customers',
     OPPORTUNITIES: 'opportunities',
     USERS: 'users',
