@@ -196,6 +196,41 @@ export default function DashboardPage() {
                     </div>
                 )}
             </section>
+
+            {/* Due Reminders — overdue nextActionDate */}
+            <ReminderSection
+                title="⚠️ Due Reminders"
+                emptyText="No overdue follow-ups."
+                opportunities={(() => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    return opportunities
+                        .filter(o => o.nextActionDate && new Date(o.nextActionDate) <= today && o.stage !== 'won' && o.stage !== 'lost')
+                        .sort((a, b) => new Date(a.nextActionDate!).getTime() - new Date(b.nextActionDate!).getTime());
+                })()}
+                stageColors={stageColors}
+                isOverdue
+            />
+
+            {/* Upcoming Follow-ups — next 7 days */}
+            <ReminderSection
+                title="📅 Upcoming Follow-ups (7 days)"
+                emptyText="No upcoming follow-ups scheduled."
+                opportunities={(() => {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    const weekOut = new Date(today);
+                    weekOut.setDate(weekOut.getDate() + 7);
+                    return opportunities
+                        .filter(o => {
+                            if (!o.nextActionDate || o.stage === 'won' || o.stage === 'lost') return false;
+                            const d = new Date(o.nextActionDate);
+                            return d > today && d <= weekOut;
+                        })
+                        .sort((a, b) => new Date(a.nextActionDate!).getTime() - new Date(b.nextActionDate!).getTime());
+                })()}
+                stageColors={stageColors}
+            />
         </div>
     );
 }
@@ -212,5 +247,51 @@ function StatCard({ label, value, icon, subtitle }: { label: string; value: stri
                 </div>
             </div>
         </div>
+    );
+}
+
+function ReminderSection({ title, emptyText, opportunities, stageColors, isOverdue }: {
+    title: string;
+    emptyText: string;
+    opportunities: Opportunity[];
+    stageColors: Record<string, string>;
+    isOverdue?: boolean;
+}) {
+    return (
+        <section>
+            <h2 className="text-xl font-semibold text-gray-800 mb-3">{title}</h2>
+            {opportunities.length === 0 ? (
+                <div className="text-gray-400 py-6 text-center bg-white border border-gray-200 rounded-lg">
+                    {emptyText}
+                </div>
+            ) : (
+                <div className="space-y-2">
+                    {opportunities.map(opp => (
+                        <div
+                            key={opp.id}
+                            className={`flex items-center justify-between bg-white border rounded-lg px-4 py-3 shadow-sm ${isOverdue ? 'border-red-200' : 'border-gray-200'}`}
+                        >
+                            <div className="flex items-center gap-4">
+                                <div>
+                                    <div className="font-medium text-gray-900 text-sm">{opp.customerName || 'Unknown'}</div>
+                                    {opp.vehicleName && <div className="text-xs text-gray-500">{opp.vehicleName}</div>}
+                                </div>
+                                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${stageColors[opp.stage] || ''}`}>
+                                    {opp.stage.charAt(0).toUpperCase() + opp.stage.slice(1)}
+                                </span>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <span className={`text-xs ${isOverdue ? 'text-red-600 font-semibold' : 'text-gray-500'}`}>
+                                    📅 {opp.nextActionDate}
+                                </span>
+                                <Link to={`/opportunities/${opp.id}/edit`} className="text-blue-600 hover:text-blue-800 text-xs font-medium">
+                                    View →
+                                </Link>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )}
+        </section>
     );
 }

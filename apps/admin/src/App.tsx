@@ -4,6 +4,7 @@ import CarsPage from './pages/CarsPage';
 import EditCarPage from './pages/EditCarPage';
 import CarForm from './components/cars/CarForm';
 import DashboardPage from './pages/DashboardPage';
+import PipelinePage from './pages/PipelinePage';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import CustomersPage from './pages/CustomersPage';
@@ -32,6 +33,7 @@ function App() {
             <li><Link to="/cars" className="hover:text-gray-300">Inventory</Link></li>
             <li><Link to="/customers" className="hover:text-gray-300">Customers</Link></li>
             <li><Link to="/opportunities" className="hover:text-gray-300">Opportunities</Link></li>
+            <li><Link to="/pipeline" className="hover:text-gray-300">Pipeline</Link></li>
           </ul>
           <button onClick={handleLogout} className="text-sm bg-red-600 px-3 py-1 rounded hover:bg-red-700">Logout</button>
         </nav>
@@ -50,6 +52,7 @@ function App() {
           <Route path="/opportunities" element={<ProtectedRoute><OpportunitiesPage /></ProtectedRoute>} />
           <Route path="/opportunities/new" element={<ProtectedRoute><OpportunityForm /></ProtectedRoute>} />
           <Route path="/opportunities/:id/edit" element={<ProtectedRoute><EditOpportunityPage /></ProtectedRoute>} />
+          <Route path="/pipeline" element={<ProtectedRoute><PipelinePage /></ProtectedRoute>} />
         </Routes>
       </main>
     </div>
