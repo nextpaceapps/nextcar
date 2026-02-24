@@ -10,6 +10,7 @@ export const COLLECTIONS = {
     CARS: 'cars',
     CUSTOMERS: 'customers',
     OPPORTUNITIES: 'opportunities',
+    USERS: 'users',
 } as const;
 
 export interface User {

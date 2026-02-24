@@ -8,6 +8,7 @@ import { opportunityService } from '../../services/opportunityService';
 import { customerService } from '../../services/customerService';
 import { carService } from '../../services/carService';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../../lib/AuthContext';
 
 interface OpportunityFormProps {
     initialData?: Opportunity;
@@ -15,6 +16,8 @@ interface OpportunityFormProps {
 }
 
 export default function OpportunityForm({ initialData, isEdit = false }: OpportunityFormProps) {
+    const { role } = useAuth();
+    const isViewer = role === 'Viewer';
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [searchParams] = useSearchParams();
@@ -104,64 +107,66 @@ export default function OpportunityForm({ initialData, isEdit = false }: Opportu
                     </div>
                 )}
 
-                <fieldset className="border border-gray-200 rounded-lg p-4 space-y-4">
-                    <legend className="text-sm font-semibold text-gray-600 px-2">Key Entities</legend>
+                <fieldset disabled={isViewer} className="contents">
+                    <fieldset className="border border-gray-200 rounded-lg p-4 space-y-4">
+                        <legend className="text-sm font-semibold text-gray-600 px-2">Key Entities</legend>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Customer *</label>
-                            <select {...register('customerId')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2">
-                                <option value="">Select a Customer...</option>
-                                {customers.map(c => (
-                                    <option key={c.id} value={c.id}>{c.name} {c.email ? `(${c.email})` : ''}</option>
-                                ))}
-                            </select>
-                            {errors.customerId && <p className="text-red-500 text-xs mt-1">{errors.customerId.message}</p>}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Customer *</label>
+                                <select {...register('customerId')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2">
+                                    <option value="">Select a Customer...</option>
+                                    {customers.map(c => (
+                                        <option key={c.id} value={c.id}>{c.name} {c.email ? `(${c.email})` : ''}</option>
+                                    ))}
+                                </select>
+                                {errors.customerId && <p className="text-red-500 text-xs mt-1">{errors.customerId.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Vehicle</label>
+                                <select {...register('vehicleId')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2">
+                                    <option value="">None (Optional)</option>
+                                    {vehicles.map(v => (
+                                        <option key={v.id} value={v.id}>{v.make} {v.model} - {v.year}</option>
+                                    ))}
+                                </select>
+                                {errors.vehicleId && <p className="text-red-500 text-xs mt-1">{errors.vehicleId.message}</p>}
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset className="border border-gray-200 rounded-lg p-4 space-y-4">
+                        <legend className="text-sm font-semibold text-gray-600 px-2">Opportunity Details</legend>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Stage</label>
+                                <select {...register('stage')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 uppercase text-sm">
+                                    {OPPORTUNITY_STAGES.map(s => <option key={s} value={s}>{s}</option>)}
+                                </select>
+                                {errors.stage && <p className="text-red-500 text-xs mt-1">{errors.stage.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Expected Value ($)</label>
+                                <input type="number" {...optionalNumber('expectedValue')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" />
+                                {errors.expectedValue && <p className="text-red-500 text-xs mt-1">{errors.expectedValue.message}</p>}
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Next Action Date</label>
+                                <input type="date" {...register('nextActionDate')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" />
+                                {errors.nextActionDate && <p className="text-red-500 text-xs mt-1">{errors.nextActionDate.message}</p>}
+                            </div>
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700">Vehicle</label>
-                            <select {...register('vehicleId')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2">
-                                <option value="">None (Optional)</option>
-                                {vehicles.map(v => (
-                                    <option key={v.id} value={v.id}>{v.make} {v.model} - {v.year}</option>
-                                ))}
-                            </select>
-                            {errors.vehicleId && <p className="text-red-500 text-xs mt-1">{errors.vehicleId.message}</p>}
+                            <label className="block text-sm font-medium text-gray-700">Notes</label>
+                            <textarea {...register('notes')} rows={4} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" />
+                            {errors.notes && <p className="text-red-500 text-xs mt-1">{errors.notes.message}</p>}
                         </div>
-                    </div>
-                </fieldset>
-
-                <fieldset className="border border-gray-200 rounded-lg p-4 space-y-4">
-                    <legend className="text-sm font-semibold text-gray-600 px-2">Opportunity Details</legend>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Stage</label>
-                            <select {...register('stage')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2 uppercase text-sm">
-                                {OPPORTUNITY_STAGES.map(s => <option key={s} value={s}>{s}</option>)}
-                            </select>
-                            {errors.stage && <p className="text-red-500 text-xs mt-1">{errors.stage.message}</p>}
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Expected Value ($)</label>
-                            <input type="number" {...optionalNumber('expectedValue')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" />
-                            {errors.expectedValue && <p className="text-red-500 text-xs mt-1">{errors.expectedValue.message}</p>}
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-medium text-gray-700">Next Action Date</label>
-                            <input type="date" {...register('nextActionDate')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" />
-                            {errors.nextActionDate && <p className="text-red-500 text-xs mt-1">{errors.nextActionDate.message}</p>}
-                        </div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Notes</label>
-                        <textarea {...register('notes')} rows={4} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" />
-                        {errors.notes && <p className="text-red-500 text-xs mt-1">{errors.notes.message}</p>}
-                    </div>
+                    </fieldset>
                 </fieldset>
 
                 <div className="flex justify-end gap-4">
@@ -174,10 +179,10 @@ export default function OpportunityForm({ initialData, isEdit = false }: Opportu
                     </button>
                     <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isViewer}
                         className="px-6 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 font-medium flex items-center gap-2"
                     >
-                        {isSubmitting ? 'Saving...' : '💾 Save Opportunity'}
+                        {isSubmitting ? 'Saving...' : `💾 ${isViewer ? 'Read Only' : 'Save Opportunity'}`}
                     </button>
                 </div>
             </form>

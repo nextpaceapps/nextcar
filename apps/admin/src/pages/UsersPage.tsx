@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '../services/userService';
 
@@ -11,10 +12,21 @@ export default function UsersPage() {
         queryFn: userService.getUsers,
     });
 
+    const [updateMessage, setUpdateMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
     const updateRoleMutation = useMutation({
         mutationFn: ({ uid, role }: { uid: string; role: 'Admin' | 'Editor' | 'Viewer' }) =>
             userService.updateUserRole(uid, role),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['users'] });
+            setUpdateMessage({ type: 'success', text: 'Role updated successfully' });
+            setTimeout(() => setUpdateMessage(null), 3000);
+        },
+        onError: (err: any) => {
+            const msg = err.response?.data?.error?.message || err.message || 'Failed to update role';
+            setUpdateMessage({ type: 'error', text: msg });
+            setTimeout(() => setUpdateMessage(null), 5000);
+        }
     });
 
     if (isLoading) return <div className="p-8 text-center text-gray-500">Loading users…</div>;
@@ -22,7 +34,17 @@ export default function UsersPage() {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
+                {updateMessage && (
+                    <div className={`px-4 py-2 rounded-md text-sm font-medium border animate-in fade-in slide-in-from-top-2 duration-300 ${updateMessage.type === 'success'
+                        ? 'bg-green-50 text-green-700 border-green-200'
+                        : 'bg-red-50 text-red-700 border-red-200'
+                        }`}>
+                        {updateMessage.type === 'success' ? '✅' : '❌'} {updateMessage.text}
+                    </div>
+                )}
+            </div>
 
             <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
                 <table className="min-w-full divide-y divide-gray-200">

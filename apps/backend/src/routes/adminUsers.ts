@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { db } from '../config/firebase';
 import { withRole, type AuthRequest } from '../middleware/auth';
 import { asyncHandler } from '../middleware/validate';
+import { COLLECTIONS } from '@nextcar/shared';
 import { successResponse } from '../utils/response';
 import { AppError } from '../utils/AppError';
 
@@ -11,7 +12,7 @@ const router = Router();
 router.get('/me', withRole('Viewer'), asyncHandler(async (req, res) => {
     const authReq = req as AuthRequest;
     const uid = authReq.user!.uid;
-    const userDoc = await db.collection('users').doc(uid).get();
+    const userDoc = await db.collection(COLLECTIONS.USERS).doc(uid).get();
 
     if (!userDoc.exists) {
         throw new AppError('NOT_FOUND', 'User not found', 404);
@@ -27,7 +28,7 @@ router.get('/me', withRole('Viewer'), asyncHandler(async (req, res) => {
 
 // GET /api/admin/users — list all users (Admin only)
 router.get('/', withRole('Admin'), asyncHandler(async (req, res) => {
-    const snapshot = await db.collection('users').orderBy('email').get();
+    const snapshot = await db.collection(COLLECTIONS.USERS).orderBy('email').get();
     const users = snapshot.docs.map(doc => ({
         uid: doc.id,
         ...doc.data(),
@@ -39,18 +40,23 @@ router.get('/', withRole('Admin'), asyncHandler(async (req, res) => {
 router.put('/:uid', withRole('Admin'), asyncHandler(async (req, res) => {
     const { uid } = req.params;
     const { role } = req.body;
+    const authReq = req as AuthRequest;
+
+    if (uid === authReq.user?.uid) {
+        throw new AppError('FORBIDDEN', 'You cannot change your own role to prevent self-demotion', 403);
+    }
 
     const validRoles = ['Admin', 'Editor', 'Viewer'];
     if (!role || !validRoles.includes(role)) {
         throw new AppError('VALIDATION_ERROR', `Role must be one of: ${validRoles.join(', ')}`, 400);
     }
 
-    const userDoc = await db.collection('users').doc(uid as string).get();
+    const userDoc = await db.collection(COLLECTIONS.USERS).doc(uid as string).get();
     if (!userDoc.exists) {
         throw new AppError('NOT_FOUND', 'User not found', 404);
     }
 
-    await db.collection('users').doc(uid as string).update({ role });
+    await db.collection(COLLECTIONS.USERS).doc(uid as string).update({ role });
 
     successResponse(res, { uid, role, message: 'Role updated successfully' });
 }));

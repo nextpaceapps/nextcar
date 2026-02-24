@@ -19,7 +19,6 @@ import './App.css'
 function App() {
   const { user, role, signOut } = useAuth();
   const navigate = useNavigate();
-  const canWrite = role === 'Admin' || role === 'Editor';
 
   const handleLogout = async () => {
     await signOut();
@@ -54,14 +53,14 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/cars" element={<ProtectedRoute><CarsPage /></ProtectedRoute>} />
-          {canWrite && <Route path="/cars/new" element={<ProtectedRoute><CarForm /></ProtectedRoute>} />}
-          {canWrite && <Route path="/cars/:id/edit" element={<ProtectedRoute><EditCarPage /></ProtectedRoute>} />}
+          <Route path="/cars/new" element={<ProtectedRoute><CarForm /></ProtectedRoute>} />
+          <Route path="/cars/:id/edit" element={<ProtectedRoute><EditCarPage /></ProtectedRoute>} />
           <Route path="/customers" element={<ProtectedRoute><CustomersPage /></ProtectedRoute>} />
-          {canWrite && <Route path="/customers/new" element={<ProtectedRoute><CustomerForm /></ProtectedRoute>} />}
-          {canWrite && <Route path="/customers/:id/edit" element={<ProtectedRoute><EditCustomerPage /></ProtectedRoute>} />}
+          <Route path="/customers/new" element={<ProtectedRoute><CustomerForm /></ProtectedRoute>} />
+          <Route path="/customers/:id/edit" element={<ProtectedRoute><EditCustomerPage /></ProtectedRoute>} />
           <Route path="/opportunities" element={<ProtectedRoute><OpportunitiesPage /></ProtectedRoute>} />
-          {canWrite && <Route path="/opportunities/new" element={<ProtectedRoute><OpportunityForm /></ProtectedRoute>} />}
-          {canWrite && <Route path="/opportunities/:id/edit" element={<ProtectedRoute><EditOpportunityPage /></ProtectedRoute>} />}
+          <Route path="/opportunities/new" element={<ProtectedRoute><OpportunityForm /></ProtectedRoute>} />
+          <Route path="/opportunities/:id/edit" element={<ProtectedRoute><EditOpportunityPage /></ProtectedRoute>} />
           <Route path="/pipeline" element={<ProtectedRoute><PipelinePage /></ProtectedRoute>} />
           {role === 'Admin' && <Route path="/users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />}
         </Routes>
