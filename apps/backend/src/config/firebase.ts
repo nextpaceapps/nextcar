@@ -2,6 +2,7 @@ import admin from 'firebase-admin';
 import dotenv from 'dotenv';
 import path from 'path';
 
+dotenv.config({ path: path.join(__dirname, '../../.env.local') });
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
 // Initialize using Application Default Credentials with GOOGLE_APPLICATION_CREDENTIALS

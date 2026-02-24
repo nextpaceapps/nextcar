@@ -36,7 +36,9 @@
             "source": "apps/backend",
             "codebase": "api",
             "predeploy": [
-                "npm run build --workspace=apps/backend"
+                "npm run build -w packages/shared",
+                "rm -rf apps/backend/shared && cp -r packages/shared apps/backend/shared",
+                "npm run build -w apps/backend"
             ]
         }
     ],

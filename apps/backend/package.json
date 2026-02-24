@@ -18,7 +18,7 @@
   "description": "",
   "dependencies": {
     "@google/genai": "^1.42.0",
-    "@nextcar/shared": "file:../../packages/shared",
+    "@nextcar/shared": "file:./shared",
     "@sentry/node": "^10.39.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
