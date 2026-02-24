@@ -31,11 +31,6 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: '/vehicles',
-        destination: `${adminOrigin}/vehicles`,
-        permanent: false,
-      },
-      {
         source: '/admin',
         destination: `${adminOrigin}/`,
         permanent: false,
