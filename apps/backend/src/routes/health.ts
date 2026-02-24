@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { successResponse } from '../utils/response';
 import { withValidation, asyncHandler } from '../middleware/validate';
-import { requireAdmin, AuthRequest } from '../middleware/auth';
+import { withRole, type AuthRequest } from '../middleware/auth';
 import { AppError } from '../utils/AppError';
 
 const router = Router();
@@ -21,7 +21,7 @@ const PayloadSchema = z.object({
 // An example protected route utilizing validation, auth middleware, and the async wrapper
 router.post(
     '/protected',
-    requireAdmin,
+    withRole('Admin'),
     withValidation(PayloadSchema),
     asyncHandler(async (req, res) => {
         const authReq = req as AuthRequest;

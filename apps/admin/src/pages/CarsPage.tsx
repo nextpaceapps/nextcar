@@ -1,10 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { carService } from '../services/carService';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../lib/AuthContext';
 import type { Car } from '@nextcar/shared';
 import { useState, useMemo } from 'react';
 
 export default function CarsPage() {
+    const { role } = useAuth();
+    const canWrite = role === 'Admin' || role === 'Editor';
     const queryClient = useQueryClient();
     const { data: cars, isLoading, error } = useQuery({
         queryKey: ['cars'],
@@ -112,9 +115,11 @@ export default function CarsPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-2xl font-bold">Car Inventory</h1>
-                <Link to="/cars/new" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-                    Add New Car
-                </Link>
+                {canWrite && (
+                    <Link to="/cars/new" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                        Add New Car
+                    </Link>
+                )}
             </div>
 
             <div className="bg-white p-4 rounded-lg shadow space-y-4">
@@ -223,7 +228,7 @@ export default function CarsPage() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quick Actions</th>
+                            {canWrite && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quick Actions</th>}
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
                     </thead>
@@ -256,38 +261,46 @@ export default function CarsPage() {
                                             {car.status}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 flex gap-2 w-full text-sm">
-                                        {(car.status === 'draft' || car.status === 'archived') && (
-                                            <button
-                                                onClick={() => handleUpdateStatus(car.id!, 'published')}
-                                                disabled={updateStatusMutation.isPending}
-                                                className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
-                                            >
-                                                Publish
-                                            </button>
-                                        )}
-                                        {car.status === 'published' && (
-                                            <button
-                                                onClick={() => handleUpdateStatus(car.id!, 'sold')}
-                                                disabled={updateStatusMutation.isPending}
-                                                className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
-                                            >
-                                                Mark Sold
-                                            </button>
-                                        )}
-                                        {car.status !== 'archived' && (
-                                            <button
-                                                onClick={() => handleUpdateStatus(car.id!, 'archived')}
-                                                disabled={updateStatusMutation.isPending}
-                                                className="bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
-                                            >
-                                                Archive
-                                            </button>
-                                        )}
-                                    </td>
+                                    {canWrite && (
+                                        <td className="px-6 py-4 flex gap-2 w-full text-sm">
+                                            {(car.status === 'draft' || car.status === 'archived') && (
+                                                <button
+                                                    onClick={() => handleUpdateStatus(car.id!, 'published')}
+                                                    disabled={updateStatusMutation.isPending}
+                                                    className="bg-green-50 text-green-700 border border-green-200 hover:bg-green-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
+                                                >
+                                                    Publish
+                                                </button>
+                                            )}
+                                            {car.status === 'published' && (
+                                                <button
+                                                    onClick={() => handleUpdateStatus(car.id!, 'sold')}
+                                                    disabled={updateStatusMutation.isPending}
+                                                    className="bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
+                                                >
+                                                    Mark Sold
+                                                </button>
+                                            )}
+                                            {car.status !== 'archived' && (
+                                                <button
+                                                    onClick={() => handleUpdateStatus(car.id!, 'archived')}
+                                                    disabled={updateStatusMutation.isPending}
+                                                    className="bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100 px-2 py-1 rounded shadow-sm text-xs font-medium"
+                                                >
+                                                    Archive
+                                                </button>
+                                            )}
+                                        </td>
+                                    )}
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <Link to={`/cars/${car.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
-                                        <button onClick={() => handleDelete(car.id!)} className="text-red-600 hover:text-red-900">Delete</button>
+                                        {canWrite ? (
+                                            <>
+                                                <Link to={`/cars/${car.id}/edit`} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</Link>
+                                                <button onClick={() => handleDelete(car.id!)} className="text-red-600 hover:text-red-900">Delete</button>
+                                            </>
+                                        ) : (
+                                            <Link to={`/cars/${car.id}/edit`} className="text-indigo-600 hover:text-indigo-900">View Details</Link>
+                                        )}
                                     </td>
                                 </tr>
                             ))

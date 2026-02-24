@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import { GoogleGenAI } from '@google/genai';
-import { requireAdmin, AuthRequest } from '../middleware/auth';
+import { withRole, type AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
@@ -77,7 +77,7 @@ const responseSchema = {
 };
 
 // TODO: add rate limiting before deployment (#21)
-router.post('/parse-listing', requireAdmin, async (req: AuthRequest, res: Response): Promise<void> => {
+router.post('/parse-listing', withRole('Editor'), async (req: AuthRequest, res: Response): Promise<void> => {
     try {
         const { rawText } = req.body;
 
