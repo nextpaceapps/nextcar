@@ -1,53 +1,53 @@
-import type { Car, CarSchema } from '@nextcar/shared';
+import type { Vehicle, VehicleSchema } from '@nextcar/shared';
 import { BACKEND_URL, getAuthHeaders } from './api';
 
-export const carService = {
-    async getCars(): Promise<Car[]> {
+export const vehicleService = {
+    async getVehicles(): Promise<Vehicle[]> {
         const response = await fetch(`${BACKEND_URL}/api/admin/vehicles`, {
             headers: await getAuthHeaders()
         });
         const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to get cars');
+        if (!data.success) throw new Error(data.error?.message || 'Failed to get vehicles');
         return data.data;
     },
 
-    async getCar(id: string): Promise<Car | null> {
+    async getVehicle(id: string): Promise<Vehicle | null> {
         const response = await fetch(`${BACKEND_URL}/api/admin/vehicles/${id}`, {
             headers: await getAuthHeaders()
         });
         if (response.status === 404) return null;
         const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to fetch car');
+        if (!data.success) throw new Error(data.error?.message || 'Failed to fetch vehicle');
         return data.data;
     },
 
-    async createCar(carData: CarSchema): Promise<string> {
+    async createVehicle(vehicleData: VehicleSchema): Promise<string> {
         const response = await fetch(`${BACKEND_URL}/api/admin/vehicles`, {
             method: 'POST',
             headers: await getAuthHeaders(),
-            body: JSON.stringify(carData)
+            body: JSON.stringify(vehicleData)
         });
         const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to create car');
+        if (!data.success) throw new Error(data.error?.message || 'Failed to create vehicle');
         return data.data.id;
     },
 
-    async updateCar(id: string, carData: Partial<CarSchema>): Promise<void> {
+    async updateVehicle(id: string, vehicleData: Partial<VehicleSchema>): Promise<void> {
         const response = await fetch(`${BACKEND_URL}/api/admin/vehicles/${id}`, {
             method: 'PUT',
             headers: await getAuthHeaders(),
-            body: JSON.stringify(carData)
+            body: JSON.stringify(vehicleData)
         });
         const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to update car');
+        if (!data.success) throw new Error(data.error?.message || 'Failed to update vehicle');
     },
 
-    async deleteCar(id: string): Promise<void> {
+    async deleteVehicle(id: string): Promise<void> {
         const response = await fetch(`${BACKEND_URL}/api/admin/vehicles/${id}`, {
             method: 'DELETE',
             headers: await getAuthHeaders()
         });
         const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to delete car');
+        if (!data.success) throw new Error(data.error?.message || 'Failed to delete vehicle');
     }
 };

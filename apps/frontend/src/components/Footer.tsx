@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
 
         <div className="relative z-10">
           <h2 className="text-3xl lg:text-5xl font-display font-semibold leading-tight max-w-3xl mb-4">
-            The car that will save your time and money is just a few clicks away.
+            The vehicle that will save your time and money is just a few clicks away.
           </h2>
           <p className="text-slate-400 text-lg mb-10">Ready to get started?</p>
 

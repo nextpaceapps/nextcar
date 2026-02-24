@@ -19,7 +19,7 @@ packages/
 ```
 Admin UI → Backend API (AI parse) → Admin UI → Firestore
                                                   ↓
-Frontend UI ← Firestore (published, non-deleted cars)
+Frontend UI ← Firestore (published, non-deleted vehicles)
 ```
 
 - All writes go through `apps/admin` → Firestore.
@@ -41,12 +41,12 @@ Frontend UI ← Firestore (published, non-deleted cars)
 
 | Concern | File |
 |---|---|
-| Zod schemas (source of truth) | `packages/shared/src/schemas/car.ts` |
-| Derived types | `packages/shared/src/types/car.ts` |
+| Zod schemas (source of truth) | `packages/shared/src/schemas/vehicle.ts` |
+| Derived types | `packages/shared/src/types/vehicle.ts` |
 | Collection constants | `packages/shared/src/index.ts` |
-| Admin car form | `apps/admin/src/components/cars/CarForm.tsx` |
-| Admin Firestore service | `apps/admin/src/services/carService.ts` |
-| Frontend Firestore service | `apps/frontend/src/services/carService.ts` |
+| Admin vehicle form | `apps/admin/src/components/vehicles/VehicleForm.tsx` |
+| Admin Firestore service | `apps/admin/src/services/vehicleService.ts` |
+| Frontend Firestore service | `apps/frontend/src/lib/data/vehicles.ts` |
 | Backend AI route | `apps/backend/src/routes/ai.ts` |
 | Firestore security rules | `firestore.rules` |
 | Storage security rules | `storage.rules` |

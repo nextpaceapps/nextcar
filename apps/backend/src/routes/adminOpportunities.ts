@@ -21,7 +21,7 @@ const enrichOpportunity = async (data: Opportunity, docId: string) => {
     }
 
     if (data.vehicleId) {
-        const vehicleDoc = await db.collection(COLLECTIONS.CARS).doc(data.vehicleId).get();
+        const vehicleDoc = await db.collection(COLLECTIONS.VEHICLES).doc(data.vehicleId).get();
         if (vehicleDoc.exists) {
             const vData = vehicleDoc.data();
             vehicleName = `${vData?.make} ${vData?.model} (${vData?.year})`;
@@ -50,7 +50,7 @@ router.get('/', withRole('Viewer'), asyncHandler(async (req, res) => {
         ? await db.getAll(...customerIds.map(id => db.collection(COLLECTIONS.CUSTOMERS).doc(id!)))
         : [];
     const vehicleDocs = vehicleIds.length > 0
-        ? await db.getAll(...vehicleIds.map(id => db.collection(COLLECTIONS.CARS).doc(id!)))
+        ? await db.getAll(...vehicleIds.map(id => db.collection(COLLECTIONS.VEHICLES).doc(id!)))
         : [];
 
     const customerMap = new Map(customerDocs.map(doc => [doc.id, doc.data()]));

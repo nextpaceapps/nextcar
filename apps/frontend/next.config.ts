@@ -25,8 +25,8 @@ const nextConfig: NextConfig = {
         permanent: false,
       },
       {
-        source: '/cars',
-        destination: 'http://localhost:5174/cars',
+        source: '/vehicles',
+        destination: 'http://localhost:5174/vehicles',
         permanent: false,
       },
       {

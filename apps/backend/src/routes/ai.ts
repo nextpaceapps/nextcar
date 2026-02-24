@@ -4,10 +4,10 @@ import { withRole, type AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
-const PARSE_CAR_PROMPT = `You are a car listing data parser. Given raw text from a car listing source, extract and return structured car data as JSON.
+const PARSE_VEHICLE_PROMPT = `You are a vehicle listing data parser. Given raw text from a vehicle listing source, extract and return structured vehicle data as JSON.
 
 Rules:
-- "make" should be the car manufacturer brand (e.g., Toyota, BMW, Audi). Infer from context if not explicit.
+- "make" should be the vehicle manufacturer brand (e.g., Toyota, BMW, Audi). Infer from context if not explicit.
 - "model" should be the specific model name.
 - "year" should be the model year (integer).
 - "price" should be 0 if not provided (user will fill in).
@@ -29,7 +29,7 @@ Rules:
 - "features" should be a flat array of all equipment items combined.
 - Set "status" to "draft".
 
-Parse the following car listing text:
+Parse the following vehicle listing text:
 `;
 
 const responseSchema = {
@@ -98,7 +98,7 @@ router.post('/parse-listing', withRole('Editor'), async (req: AuthRequest, res: 
 
         const response = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: PARSE_CAR_PROMPT + rawText,
+            contents: PARSE_VEHICLE_PROMPT + rawText,
             config: {
                 responseMimeType: 'application/json',
                 responseSchema,

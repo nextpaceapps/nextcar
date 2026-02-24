@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { carSchema, YOUTUBE_URL_REGEX, type CarSchema, type Car, type CarPhoto } from '@nextcar/shared';
+import { vehicleSchema, YOUTUBE_URL_REGEX, type VehicleSchema, type Vehicle, type VehiclePhoto } from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { carService } from '../../services/carService';
+import { vehicleService } from '../../services/vehicleService';
 import { aiService } from '../../services/aiService';
 import { storageService } from '../../services/storageService';
 import { useNavigate } from 'react-router-dom';
@@ -13,8 +13,8 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable';
 import { SortablePhotoItem } from './SortablePhotoItem';
 
-interface CarFormProps {
-    initialData?: Car;
+interface VehicleFormProps {
+    initialData?: Vehicle;
     isEdit?: boolean;
 }
 
@@ -24,7 +24,7 @@ interface PendingImage {
     progress: number;
 }
 
-export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
+export default function VehicleForm({ initialData, isEdit = false }: VehicleFormProps) {
     const { role } = useAuth();
     const isViewer = role === 'Viewer';
     const navigate = useNavigate();
@@ -54,8 +54,8 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     const [newVideoLink, setNewVideoLink] = useState('');
     const [videoLinkError, setVideoLinkError] = useState<string | null>(null);
 
-    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<CarSchema>({
-        resolver: zodResolver(carSchema),
+    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<VehicleSchema>({
+        resolver: zodResolver(vehicleSchema),
         defaultValues: initialData ? {
             ...initialData,
             features: initialData.features || [],
@@ -77,7 +77,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
     });
 
     // Helper for optional number fields — converts empty string to undefined instead of NaN
-    const optionalNumber = (name: keyof CarSchema) => register(name, {
+    const optionalNumber = (name: keyof VehicleSchema) => register(name, {
         setValueAs: (v: string | undefined | null) => (v === '' || v === undefined || v === null) ? undefined : Number(v)
     });
 
@@ -104,14 +104,14 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
         if (!window.confirm("Are you sure you want to delete this photo forever?")) return;
 
         try {
-            await storageService.deleteCarImage(photoUrl);
+            await storageService.deleteVehicleImage(photoUrl);
             removePhoto(index);
 
             if (isEdit && initialData?.id) {
                 const photos = getValues('photos') || [];
                 const updatedPhotos = photos.map((p, i) => ({ ...p, order: i }));
-                await carService.updateCar(initialData.id, { photos: updatedPhotos });
-                queryClient.invalidateQueries({ queryKey: ['cars'] });
+                await vehicleService.updateVehicle(initialData.id, { photos: updatedPhotos });
+                queryClient.invalidateQueries({ queryKey: ['vehicles'] });
             }
         } catch (error) {
             console.error('Failed to delete photo:', error);
@@ -128,7 +128,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
         setParseSuccess(false);
 
         try {
-            const parsed = await aiService.parseCarListing(rawText);
+            const parsed = await aiService.parseVehicleListing(rawText);
             // Reset form with parsed data
             reset({
                 ...parsed,
@@ -197,37 +197,37 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
 
     // --- Form Submit ---
     const createMutation = useMutation({
-        mutationFn: carService.createCar,
+        mutationFn: vehicleService.createVehicle,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['cars'] });
-            navigate('/cars');
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+            navigate('/vehicles');
         }
     });
 
     const updateMutation = useMutation({
-        mutationFn: (data: CarSchema) => {
+        mutationFn: (data: VehicleSchema) => {
             const id = initialData?.id;
-            if (!id) throw new Error('Cannot update car without an ID');
-            return carService.updateCar(id, data);
+            if (!id) throw new Error('Cannot update vehicle without an ID');
+            return vehicleService.updateVehicle(id, data);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['cars'] });
-            navigate('/cars');
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+            navigate('/vehicles');
         }
     });
 
-    const onSubmit: SubmitHandler<CarSchema> = async (data) => {
+    const onSubmit: SubmitHandler<VehicleSchema> = async (data) => {
         try {
             setIsUploading(pendingImages.length > 0);
 
-            // Generate a temporary ID for new cars to use as storage path
-            const carId = isEdit && initialData?.id ? initialData.id : `temp_${Date.now()}`;
+            // Generate a temporary ID for new vehicles to use as storage path
+            const vehicleId = isEdit && initialData?.id ? initialData.id : `temp_${Date.now()}`;
 
             // Upload pending images
             let allPhotos = [...(data.photos || [])];
             if (pendingImages.length > 0) {
                 const urls = await storageService.uploadMultipleImages(
-                    carId,
+                    vehicleId,
                     pendingImages.map(img => img.file),
                     (fileIndex, progress) => {
                         setPendingImages(prev => prev.map((img, i) =>
@@ -256,7 +256,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             }
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : 'An unexpected error occurred';
-            console.error('Error saving car:', error);
+            console.error('Error saving vehicle:', error);
             setSaveError(message);
         } finally {
             setIsUploading(false);
@@ -279,7 +279,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                     rows={8}
                     disabled={isViewer}
                     className="w-full rounded-md border-indigo-300 shadow-sm border p-3 text-sm font-mono focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50"
-                    placeholder={`Paste car listing data here...\n\nExample:\nFirst registration: 17/04/2018\nModel year: 2016\nMileage: 115,946 km\nFuel type: Petrol/Electric (HEV)\n...`}
+                    placeholder={`Paste vehicle listing data here...\n\nExample:\nFirst registration: 17/04/2018\nModel year: 2016\nMileage: 115,946 km\nFuel type: Petrol/Electric (HEV)\n...`}
                 />
                 <div className="flex items-center gap-4 mt-3">
                     <button
@@ -314,7 +314,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
             {/* Main Form */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow">
                 <fieldset disabled={isViewer} className="contents">
-                    <h2 className="text-2xl font-bold mb-6">{isEdit ? 'Edit Car' : 'Add New Car'}</h2>
+                    <h2 className="text-2xl font-bold mb-6">{isEdit ? 'Edit Vehicle' : 'Add New Vehicle'}</h2>
 
                     {saveError && (
                         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center justify-between">
@@ -473,7 +473,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                                     <SortableContext items={photoFields.map(f => f.id)} strategy={rectSortingStrategy}>
                                         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                             {photoFields.map((field, index) => {
-                                                const photo = field as unknown as CarPhoto & { id: string };
+                                                const photo = field as unknown as VehiclePhoto & { id: string };
                                                 return (
                                                     <SortablePhotoItem
                                                         key={field.id}
@@ -597,7 +597,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                     <div className="flex justify-end gap-4">
                         <button
                             type="button"
-                            onClick={() => navigate('/cars')}
+                            onClick={() => navigate('/vehicles')}
                             className="px-6 py-2.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium"
                         >
                             Cancel
@@ -612,7 +612,7 @@ export default function CarForm({ initialData, isEdit = false }: CarFormProps) {
                             ) : isSubmitting ? (
                                 <>Saving...</>
                             ) : (
-                                <>💾 {isViewer ? 'Read Only' : 'Save Car'}</>
+                                <>💾 {isViewer ? 'Read Only' : 'Save Vehicle'}</>
                             )}
                         </button>
                     </div>

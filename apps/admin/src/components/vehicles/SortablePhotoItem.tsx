@@ -1,9 +1,9 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { CarPhoto } from '@nextcar/shared';
+import type { VehiclePhoto } from '@nextcar/shared';
 
 interface SortablePhotoItemProps {
-    photo: CarPhoto & { id: string };
+    photo: VehiclePhoto & { id: string };
     index: number;
     onRemove: (index: number, url: string) => void;
 }
@@ -32,7 +32,7 @@ export function SortablePhotoItem({ photo, index, onRemove }: SortablePhotoItemP
         >
             <img
                 src={photo.url}
-                alt={`Car ${index + 1}`}
+                alt={`Vehicle ${index + 1}`}
                 className="w-full h-32 object-cover pointer-events-none"
             />
             {/* We stop propagation here so clicking the close button doesn't trigger drag */}

@@ -10,7 +10,7 @@ const Sidebar: React.FC = () => {
           <div className="font-display font-bold text-2xl tracking-tight uppercase dark:text-white">
             Nextcar<span className="text-slate-400">.</span>
           </div>
-          <div className="car-animation text-slate-400 flex items-center">
+          <div className="vehicle-animation text-slate-400 flex items-center">
             <span className="material-symbols-outlined text-4xl transform -scale-x-100">commute</span>
           </div>
         </div>
@@ -21,17 +21,17 @@ const Sidebar: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="flex -space-x-4 overflow-hidden">
               <img
-                alt="Car sale avatar"
+                alt="Vehicle sale avatar"
                 className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
                 src="https://picsum.photos/seed/car1/100/100"
               />
               <img
-                alt="Car sale avatar"
+                alt="Vehicle sale avatar"
                 className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
                 src="https://picsum.photos/seed/car2/100/100"
               />
               <img
-                alt="Car sale avatar"
+                alt="Vehicle sale avatar"
                 className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
                 src="https://picsum.photos/seed/car3/100/100"
               />
@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
             </div>
           </div>
           <p className="text-sm text-slate-500 italic dark:text-slate-400 leading-relaxed">
-            Your next car starting from <br />
+            Your next vehicle starting from <br />
             <span className="font-bold text-primary dark:text-white text-base not-italic">€18,900</span>
           </p>
         </div>

@@ -1,7 +1,7 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
 
 export const aiService = {
-    async parseCarListing(rawText: string) {
+    async parseVehicleListing(rawText: string) {
         const response = await fetch(`${BACKEND_URL}/api/ai/parse-listing`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

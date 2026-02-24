@@ -9,18 +9,18 @@ export interface UploadProgress {
 
 export const storageService = {
     /**
-     * Upload a car image to Firebase Storage.
+     * Upload a vehicle image to Firebase Storage.
      * Returns the download URL when complete.
      * Calls onProgress with upload percentage.
      */
-    async uploadCarImage(
-        carId: string,
+    async uploadVehicleImage(
+        vehicleId: string,
         file: File,
         onProgress?: (progress: number) => void
     ): Promise<string> {
         const timestamp = Date.now();
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
-        const storageRef = ref(storage, `vehicles/${carId}/${timestamp}_${safeName}`);
+        const storageRef = ref(storage, `vehicles/${vehicleId}/${timestamp}_${safeName}`);
 
         try {
             const options = {
@@ -56,9 +56,9 @@ export const storageService = {
     },
 
     /**
-     * Delete a car image from Firebase Storage by its download URL.
+     * Delete a vehicle image from Firebase Storage by its download URL.
      */
-    async deleteCarImage(imageUrl: string): Promise<void> {
+    async deleteVehicleImage(imageUrl: string): Promise<void> {
         try {
             const storageRef = ref(storage, imageUrl);
             await deleteObject(storageRef);
@@ -69,16 +69,16 @@ export const storageService = {
     },
 
     /**
-     * Upload multiple car images in parallel.
+     * Upload multiple vehicle images in parallel.
      * Returns an array of download URLs.
      */
     async uploadMultipleImages(
-        carId: string,
+        vehicleId: string,
         files: File[],
         onProgress?: (fileIndex: number, progress: number) => void
     ): Promise<string[]> {
         const uploads = files.map((file, index) =>
-            this.uploadCarImage(carId, file, (progress) => {
+            this.uploadVehicleImage(vehicleId, file, (progress) => {
                 onProgress?.(index, progress);
             })
         );

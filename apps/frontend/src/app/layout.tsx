@@ -8,7 +8,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Nextcar | Premium Curated Fleet',
-  description: 'The car that will save your time and money is just a few clicks away.',
+  description: 'The vehicle that will save your time and money is just a few clicks away.',
 };
 
 export default function RootLayout({

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { db } from '../config/firebase';
 import { withRole } from '../middleware/auth';
 import { asyncHandler, withValidation } from '../middleware/validate';
-import { carSchema, COLLECTIONS, type Car } from '@nextcar/shared';
+import { vehicleSchema, COLLECTIONS, type Vehicle } from '@nextcar/shared';
 import { AppError } from '../utils/AppError';
 import { successResponse } from '../utils/response';
 import { FieldValue } from 'firebase-admin/firestore';
@@ -13,14 +13,14 @@ const router = Router();
 router.get('/', withRole('Viewer'), asyncHandler(async (req, res) => {
     const limit = Number(req.query.limit) || 50;
 
-    const query = db.collection(COLLECTIONS.CARS)
+    const query = db.collection(COLLECTIONS.VEHICLES)
         .where('deleted', '==', false)
         .orderBy('createdAt', 'desc')
         .limit(limit);
 
     const snapshot = await query.get();
     const vehicles = snapshot.docs.map(doc => {
-        const data = doc.data() as Car;
+        const data = doc.data() as Vehicle;
         if (data.photos && Array.isArray(data.photos)) {
             data.photos.sort((a, b) => a.order - b.order);
         }
@@ -32,13 +32,13 @@ router.get('/', withRole('Viewer'), asyncHandler(async (req, res) => {
 
 // GET /api/admin/vehicles/:id
 router.get('/:id', withRole('Viewer'), asyncHandler(async (req, res) => {
-    const doc = await db.collection(COLLECTIONS.CARS).doc(req.params.id as string).get();
+    const doc = await db.collection(COLLECTIONS.VEHICLES).doc(req.params.id as string).get();
 
     if (!doc.exists) {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
     }
 
-    const data = doc.data() as Car;
+    const data = doc.data() as Vehicle;
     if (data.deleted === true) {
         throw new AppError('NOT_FOUND', 'Vehicle not found', 404);
     }
@@ -50,7 +50,7 @@ router.get('/:id', withRole('Viewer'), asyncHandler(async (req, res) => {
     successResponse(res, { id: doc.id, ...data });
 }));
 
-router.post('/', withRole('Editor'), withValidation(carSchema.omit({ status: true, deleted: true })), asyncHandler(async (req, res) => {
+router.post('/', withRole('Editor'), withValidation(vehicleSchema.omit({ status: true, deleted: true })), asyncHandler(async (req, res) => {
     const vehicleData = {
         ...req.body,
         status: 'draft',
@@ -59,14 +59,14 @@ router.post('/', withRole('Editor'), withValidation(carSchema.omit({ status: tru
         updatedAt: FieldValue.serverTimestamp(),
     };
 
-    const docRef = await db.collection(COLLECTIONS.CARS).add(vehicleData);
+    const docRef = await db.collection(COLLECTIONS.VEHICLES).add(vehicleData);
     const newDoc = await docRef.get();
     successResponse(res, { id: docRef.id, ...newDoc.data() }, 201);
 }));
 
 // PUT /api/admin/vehicles/:id
-router.put('/:id', withRole('Editor'), withValidation(carSchema.partial()), asyncHandler(async (req, res) => {
-    const docRef = db.collection(COLLECTIONS.CARS).doc(req.params.id as string);
+router.put('/:id', withRole('Editor'), withValidation(vehicleSchema.partial()), asyncHandler(async (req, res) => {
+    const docRef = db.collection(COLLECTIONS.VEHICLES).doc(req.params.id as string);
     const doc = await docRef.get();
 
     if (!doc.exists) {
@@ -92,7 +92,7 @@ router.put('/:id', withRole('Editor'), withValidation(carSchema.partial()), asyn
 
 // DELETE /api/admin/vehicles/:id
 router.delete('/:id', withRole('Editor'), asyncHandler(async (req, res) => {
-    const docRef = db.collection(COLLECTIONS.CARS).doc(req.params.id as string);
+    const docRef = db.collection(COLLECTIONS.VEHICLES).doc(req.params.id as string);
     const doc = await docRef.get();
 
     if (!doc.exists) {
