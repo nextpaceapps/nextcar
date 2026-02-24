@@ -28,9 +28,16 @@ const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <a
               className="text-slate-300 text-lg hover:text-white transition-colors flex items-center gap-2 group/link"
-              href="mailto:hi@nextcar.com"
+              href="mailto:hi@nextcar.lv"
             >
-              hi@nextcar.com
+              hi@nextcar.lv
+              <span className="material-symbols-outlined text-sm opacity-0 group-hover/link:opacity-100 transition-opacity">north_east</span>
+            </a>
+            <a
+              className="text-slate-300 text-lg hover:text-white transition-colors flex items-center gap-2 group/link"
+              href="tel:+37120399627"
+            >
+              +371 20399627
               <span className="material-symbols-outlined text-sm opacity-0 group-hover/link:opacity-100 transition-opacity">north_east</span>
             </a>
 
