@@ -55,3 +55,22 @@ firebase deploy --only storage
 ```
 
 To deploy specific apps (if hosting is configured), refer to the hosting configuration in `firebase.json`.
+
+## User Onboarding & Roles
+
+The admin panel supports three roles:
+- **Admin**: Full access, including user management and role assignment.
+- **Editor**: Can view all pages and perform all actions except user management.
+- **Viewer**: Read-only access to all dashboards and lists. Cannot create, edit, or delete items.
+
+### Onboarding a New User
+
+1.  **Firebase Console**: Go to **Authentication** > **Users** and click **Add User**.
+2.  **User Credentials**: Enter the email and password for the new administrator.
+3.  **Role Assignment**:
+    - Log in to the Admin Panel as an **Admin**.
+    - Navigate to the **Users** page from the navigation bar.
+    - Find the newly created user (identified by their email/UID).
+    - Select their role from the dropdown (defaults to Viewer).
+4.  The user can now log in with their credentials and will have permissions based on their assigned role.
+

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db } from '../config/firebase';
-import { requireAdmin } from '../middleware/auth';
+import { withRole } from '../middleware/auth';
 import { asyncHandler, withValidation } from '../middleware/validate';
 import { customerSchema, COLLECTIONS, type Customer } from '@nextcar/shared';
 import { AppError } from '../utils/AppError';
@@ -9,11 +9,8 @@ import { FieldValue } from 'firebase-admin/firestore';
 
 const router = Router();
 
-// requireAdmin for all routes
-router.use(requireAdmin);
-
 // GET /api/admin/customers
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', withRole('Viewer'), asyncHandler(async (req, res) => {
     const limit = Number(req.query.limit) || 50;
 
     const query = db.collection(COLLECTIONS.CUSTOMERS)
@@ -31,7 +28,7 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 // GET /api/admin/customers/:id
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/:id', withRole('Viewer'), asyncHandler(async (req, res) => {
     const docRef = db.collection(COLLECTIONS.CUSTOMERS).doc(req.params.id as string);
     const doc = await docRef.get();
 
@@ -48,7 +45,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
 }));
 
 // POST /api/admin/customers
-router.post('/', withValidation(customerSchema.omit({ deleted: true })), asyncHandler(async (req, res) => {
+router.post('/', withRole('Editor'), withValidation(customerSchema.omit({ deleted: true })), asyncHandler(async (req, res) => {
     const customerData = {
         ...req.body,
         deleted: false,
@@ -62,7 +59,7 @@ router.post('/', withValidation(customerSchema.omit({ deleted: true })), asyncHa
 }));
 
 // PUT /api/admin/customers/:id
-router.put('/:id', withValidation(customerSchema.partial()), asyncHandler(async (req, res) => {
+router.put('/:id', withRole('Editor'), withValidation(customerSchema.partial()), asyncHandler(async (req, res) => {
     const docRef = db.collection(COLLECTIONS.CUSTOMERS).doc(req.params.id as string);
     const doc = await docRef.get();
 
@@ -88,7 +85,7 @@ router.put('/:id', withValidation(customerSchema.partial()), asyncHandler(async 
 }));
 
 // DELETE /api/admin/customers/:id
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/:id', withRole('Editor'), asyncHandler(async (req, res) => {
     const docRef = db.collection(COLLECTIONS.CUSTOMERS).doc(req.params.id as string);
     const doc = await docRef.get();
 

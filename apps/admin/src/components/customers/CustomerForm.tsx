@@ -6,6 +6,7 @@ import { customerSchema, CUSTOMER_TAGS, type CustomerSchema, type Customer, type
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { customerService } from '../../services/customerService';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../lib/AuthContext';
 
 interface CustomerFormProps {
     initialData?: Customer;
@@ -13,6 +14,8 @@ interface CustomerFormProps {
 }
 
 export default function CustomerForm({ initialData, isEdit = false }: CustomerFormProps) {
+    const { role } = useAuth();
+    const isViewer = role === 'Viewer';
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const [saveError, setSaveError] = useState<string | null>(null);
@@ -80,7 +83,7 @@ export default function CustomerForm({ initialData, isEdit = false }: CustomerFo
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 bg-white p-6 rounded-lg shadow">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold">{isEdit ? 'Edit Customer' : 'Add New Customer'}</h2>
-                    {isEdit && initialData?.id && (
+                    {isEdit && initialData?.id && !isViewer && (
                         <button
                             type="button"
                             onClick={() => navigate(`/opportunities/new?customerId=${initialData.id}`)}
@@ -98,7 +101,7 @@ export default function CustomerForm({ initialData, isEdit = false }: CustomerFo
                     </div>
                 )}
 
-                <fieldset className="border border-gray-200 rounded-lg p-4 space-y-4">
+                <fieldset disabled={isViewer} className="border border-gray-200 rounded-lg p-4 space-y-4">
                     <legend className="text-sm font-semibold text-gray-600 px-2">Customer Details</legend>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -127,10 +130,11 @@ export default function CustomerForm({ initialData, isEdit = false }: CustomerFo
                                     key={tag}
                                     type="button"
                                     onClick={() => toggleTag(tag)}
+                                    disabled={isViewer}
                                     className={`px-3 py-1 rounded-full border text-sm font-medium transition-colors ${watchTags.includes(tag)
                                         ? 'bg-blue-100 border-blue-300 text-blue-800 hover:bg-blue-200'
                                         : 'bg-gray-100 border-gray-300 text-gray-600 hover:bg-gray-200'
-                                        }`}
+                                        } disabled:opacity-50`}
                                 >
                                     {tag}
                                 </button>
@@ -156,10 +160,10 @@ export default function CustomerForm({ initialData, isEdit = false }: CustomerFo
                     </button>
                     <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={isSubmitting || isViewer}
                         className="px-6 py-2.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 font-medium flex items-center gap-2"
                     >
-                        {isSubmitting ? 'Saving...' : '💾 Save Customer'}
+                        {isSubmitting ? 'Saving...' : `💾 ${isViewer ? 'Read Only' : 'Save Customer'}`}
                     </button>
                 </div>
             </form>

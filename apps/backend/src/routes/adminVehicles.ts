@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { db } from '../config/firebase';
-import { requireAdmin } from '../middleware/auth';
+import { withRole } from '../middleware/auth';
 import { asyncHandler, withValidation } from '../middleware/validate';
 import { carSchema, COLLECTIONS, type Car } from '@nextcar/shared';
 import { AppError } from '../utils/AppError';
@@ -9,11 +9,8 @@ import { FieldValue } from 'firebase-admin/firestore';
 
 const router = Router();
 
-// requireAdmin for all routes
-router.use(requireAdmin);
-
 // GET /api/admin/vehicles
-router.get('/', asyncHandler(async (req, res) => {
+router.get('/', withRole('Viewer'), asyncHandler(async (req, res) => {
     const limit = Number(req.query.limit) || 50;
 
     const query = db.collection(COLLECTIONS.CARS)
@@ -34,7 +31,7 @@ router.get('/', asyncHandler(async (req, res) => {
 }));
 
 // GET /api/admin/vehicles/:id
-router.get('/:id', asyncHandler(async (req, res) => {
+router.get('/:id', withRole('Viewer'), asyncHandler(async (req, res) => {
     const doc = await db.collection(COLLECTIONS.CARS).doc(req.params.id as string).get();
 
     if (!doc.exists) {
@@ -53,7 +50,7 @@ router.get('/:id', asyncHandler(async (req, res) => {
     successResponse(res, { id: doc.id, ...data });
 }));
 
-router.post('/', withValidation(carSchema.omit({ status: true, deleted: true })), asyncHandler(async (req, res) => {
+router.post('/', withRole('Editor'), withValidation(carSchema.omit({ status: true, deleted: true })), asyncHandler(async (req, res) => {
     const vehicleData = {
         ...req.body,
         status: 'draft',
@@ -68,7 +65,7 @@ router.post('/', withValidation(carSchema.omit({ status: true, deleted: true }))
 }));
 
 // PUT /api/admin/vehicles/:id
-router.put('/:id', withValidation(carSchema.partial()), asyncHandler(async (req, res) => {
+router.put('/:id', withRole('Editor'), withValidation(carSchema.partial()), asyncHandler(async (req, res) => {
     const docRef = db.collection(COLLECTIONS.CARS).doc(req.params.id as string);
     const doc = await docRef.get();
 
@@ -94,7 +91,7 @@ router.put('/:id', withValidation(carSchema.partial()), asyncHandler(async (req,
 }));
 
 // DELETE /api/admin/vehicles/:id
-router.delete('/:id', asyncHandler(async (req, res) => {
+router.delete('/:id', withRole('Editor'), asyncHandler(async (req, res) => {
     const docRef = db.collection(COLLECTIONS.CARS).doc(req.params.id as string);
     const doc = await docRef.get();
 

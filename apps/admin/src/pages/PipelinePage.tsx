@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DndContext, DragOverlay, useDroppable, useDraggable, type DragEndEvent, type DragStartEvent, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { opportunityService } from '../services/opportunityService';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../lib/AuthContext';
 import type { Opportunity, OpportunityStage } from '@nextcar/shared';
 import { OPPORTUNITY_STAGES } from '@nextcar/shared';
 
@@ -15,6 +16,8 @@ const STAGE_COLORS: Record<string, { bg: string; border: string; header: string 
 };
 
 export default function PipelinePage() {
+    const { role } = useAuth();
+    const canWrite = role === 'Admin' || role === 'Editor';
     const queryClient = useQueryClient();
     const [activeOpp, setActiveOpp] = useState<Opportunity | null>(null);
 
@@ -63,31 +66,41 @@ export default function PipelinePage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-900">Pipeline</h1>
-                <Link
-                    to="/opportunities/new"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium shadow-sm transition-colors"
-                >
-                    + Add Opportunity
-                </Link>
+                {canWrite && (
+                    <Link
+                        to="/opportunities/new"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium shadow-sm transition-colors"
+                    >
+                        + Add Opportunity
+                    </Link>
+                )}
             </div>
 
-            <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            {canWrite ? (
+                <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+                    <div className="flex gap-4 overflow-x-auto pb-4" style={{ minHeight: '70vh' }}>
+                        {OPPORTUNITY_STAGES.map(stage => (
+                            <StageColumn key={stage} stage={stage} opportunities={oppsByStage[stage]} canWrite={canWrite} />
+                        ))}
+                    </div>
+
+                    <DragOverlay>
+                        {activeOpp ? <OpportunityCardContent opportunity={activeOpp} isDragging canWrite={canWrite} /> : null}
+                    </DragOverlay>
+                </DndContext>
+            ) : (
                 <div className="flex gap-4 overflow-x-auto pb-4" style={{ minHeight: '70vh' }}>
                     {OPPORTUNITY_STAGES.map(stage => (
-                        <StageColumn key={stage} stage={stage} opportunities={oppsByStage[stage]} />
+                        <StageColumn key={stage} stage={stage} opportunities={oppsByStage[stage]} canWrite={canWrite} />
                     ))}
                 </div>
-
-                <DragOverlay>
-                    {activeOpp ? <OpportunityCardContent opportunity={activeOpp} isDragging /> : null}
-                </DragOverlay>
-            </DndContext>
+            )}
         </div>
     );
 }
 
-function StageColumn({ stage, opportunities }: { stage: string; opportunities: Opportunity[] }) {
-    const { setNodeRef, isOver } = useDroppable({ id: stage });
+function StageColumn({ stage, opportunities, canWrite }: { stage: string; opportunities: Opportunity[]; canWrite: boolean }) {
+    const { setNodeRef, isOver } = useDroppable({ id: stage, disabled: !canWrite });
     const colors = STAGE_COLORS[stage] || STAGE_COLORS.new;
 
     return (
@@ -101,16 +114,17 @@ function StageColumn({ stage, opportunities }: { stage: string; opportunities: O
             </div>
             <div className={`${colors.bg} flex-1 p-2 space-y-2 rounded-b-lg min-h-[100px]`}>
                 {opportunities.map(opp => (
-                    <DraggableCard key={opp.id} opportunity={opp} />
+                    <DraggableCard key={opp.id} opportunity={opp} canWrite={canWrite} />
                 ))}
             </div>
         </div>
     );
 }
 
-function DraggableCard({ opportunity }: { opportunity: Opportunity }) {
+function DraggableCard({ opportunity, canWrite }: { opportunity: Opportunity; canWrite: boolean }) {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: opportunity.id!,
+        disabled: !canWrite,
     });
 
     const style = transform
@@ -118,13 +132,13 @@ function DraggableCard({ opportunity }: { opportunity: Opportunity }) {
         : undefined;
 
     return (
-        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-            <OpportunityCardContent opportunity={opportunity} isDragging={isDragging} />
+        <div ref={setNodeRef} style={style} {...(canWrite ? listeners : {})} {...(canWrite ? attributes : {})}>
+            <OpportunityCardContent opportunity={opportunity} isDragging={isDragging} canWrite={canWrite} />
         </div>
     );
 }
 
-function OpportunityCardContent({ opportunity, isDragging }: { opportunity: Opportunity; isDragging?: boolean }) {
+function OpportunityCardContent({ opportunity, isDragging, canWrite }: { opportunity: Opportunity; isDragging?: boolean; canWrite: boolean }) {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const isOverdue = opportunity.nextActionDate
@@ -133,7 +147,8 @@ function OpportunityCardContent({ opportunity, isDragging }: { opportunity: Oppo
 
     return (
         <div
-            className={`bg-white rounded-lg p-3 shadow-sm border text-sm cursor-grab active:cursor-grabbing transition-shadow
+            className={`bg-white rounded-lg p-3 shadow-sm border text-sm transition-shadow
+                ${canWrite ? 'cursor-grab active:cursor-grabbing' : ''}
                 ${isDragging ? 'opacity-50 shadow-lg' : 'hover:shadow-md'}
                 ${isOverdue ? 'border-red-400 ring-1 ring-red-200' : 'border-gray-200'}
             `}
@@ -159,7 +174,7 @@ function OpportunityCardContent({ opportunity, isDragging }: { opportunity: Oppo
                     className="text-blue-600 hover:text-blue-800 text-xs"
                     onClick={(e) => e.stopPropagation()}
                 >
-                    Edit
+                    {canWrite ? 'Edit' : 'View'}
                 </Link>
             </div>
             {opportunity.nextActionDate && (

@@ -1,8 +1,11 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { customerService } from '../services/customerService';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../lib/AuthContext';
 
 export default function CustomersPage() {
+    const { role } = useAuth();
+    const canWrite = role === 'Admin' || role === 'Editor';
     const queryClient = useQueryClient();
 
     const { data: customers = [], isLoading, error } = useQuery({
@@ -28,12 +31,14 @@ export default function CustomersPage() {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-900">Customers</h1>
-                <Link
-                    to="/customers/new"
-                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium shadow-sm transition-colors"
-                >
-                    + Add Customer
-                </Link>
+                {canWrite && (
+                    <Link
+                        to="/customers/new"
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 font-medium shadow-sm transition-colors"
+                    >
+                        + Add Customer
+                    </Link>
+                )}
             </div>
 
             <div className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
@@ -85,19 +90,30 @@ export default function CustomersPage() {
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                            <Link
-                                                to={`/customers/${customer.id}/edit`}
-                                                className="text-indigo-600 hover:text-indigo-900 mr-4 transition-colors"
-                                            >
-                                                Edit
-                                            </Link>
-                                            <button
-                                                onClick={() => customer.id && handleDelete(customer.id, customer.name)}
-                                                className="text-red-600 hover:text-red-900 transition-colors"
-                                                disabled={deleteMutation.isPending}
-                                            >
-                                                {deleteMutation.isPending ? '...' : 'Delete'}
-                                            </button>
+                                            {canWrite ? (
+                                                <>
+                                                    <Link
+                                                        to={`/customers/${customer.id}/edit`}
+                                                        className="text-indigo-600 hover:text-indigo-900 mr-4 transition-colors"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                    <button
+                                                        onClick={() => customer.id && handleDelete(customer.id, customer.name)}
+                                                        className="text-red-600 hover:text-red-900 transition-colors"
+                                                        disabled={deleteMutation.isPending}
+                                                    >
+                                                        {deleteMutation.isPending ? '...' : 'Delete'}
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <Link
+                                                    to={`/customers/${customer.id}/edit`}
+                                                    className="text-indigo-600 hover:text-indigo-900 transition-colors"
+                                                >
+                                                    View Details
+                                                </Link>
+                                            )}
                                         </td>
                                     </tr>
                                 ))
