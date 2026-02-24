@@ -1,7 +1,7 @@
 {
   "name": "@nextcar/backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/functions.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon src/index.ts",
@@ -12,15 +12,19 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "engines": {
+    "node": "20"
+  },
   "description": "",
   "dependencies": {
     "@google/genai": "^1.42.0",
-    "@nextcar/shared": "^1.0.0",
+    "@nextcar/shared": "file:../../packages/shared",
     "@sentry/node": "^10.39.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "firebase-admin": "^13.6.1",
+    "firebase-functions": "^6.3.2",
     "zod": "^4.3.6"
   },
   "devDependencies": {
