@@ -4,6 +4,22 @@ import { withRole, type AuthRequest } from '../middleware/auth';
 
 const router = Router();
 
+// Rate limiting: 10 requests per minute per user
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000;
+const MAX_REQUESTS_PER_WINDOW = 10;
+
+let lastCleanupTime = Date.now();
+function cleanupRateLimitMap() {
+    const now = Date.now();
+    if (now - lastCleanupTime > RATE_LIMIT_WINDOW_MS) {
+        for (const [key, value] of rateLimitMap.entries()) {
+            if (now > value.resetTime) rateLimitMap.delete(key);
+        }
+        lastCleanupTime = now;
+    }
+}
+
 const PARSE_VEHICLE_PROMPT = `You are a vehicle listing data parser. Given raw text from a vehicle listing source, extract and return structured vehicle data as JSON.
 
 Rules:
@@ -76,9 +92,25 @@ const responseSchema = {
     required: ['make', 'model', 'year', 'mileage', 'fuelType', 'transmission', 'bodyType', 'color'],
 };
 
-// TODO: add rate limiting before deployment (#21)
 router.post('/parse-listing', withRole('Editor'), async (req: AuthRequest, res: Response): Promise<void> => {
     try {
+        // Rate limiting per authenticated user
+        const uid = req.user?.uid || 'unknown';
+        const now = Date.now();
+        cleanupRateLimitMap();
+
+        let rateLimit = rateLimitMap.get(uid);
+        if (!rateLimit || now > rateLimit.resetTime) {
+            rateLimit = { count: 0, resetTime: now + RATE_LIMIT_WINDOW_MS };
+        }
+        rateLimit.count++;
+        rateLimitMap.set(uid, rateLimit);
+
+        if (rateLimit.count > MAX_REQUESTS_PER_WINDOW) {
+            res.status(429).json({ error: 'Too many requests. Please try again later.' });
+            return;
+        }
+
         const { rawText } = req.body;
 
         if (!rawText || typeof rawText !== 'string') {
@@ -128,9 +160,9 @@ router.post('/parse-listing', withRole('Editor'), async (req: AuthRequest, res: 
         };
 
         res.json(result);
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('AI parsing error:', error);
-        res.status(500).json({ error: error.message || 'Failed to parse listing' });
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to parse listing' });
     }
 });
 

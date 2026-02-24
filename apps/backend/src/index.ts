@@ -3,8 +3,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { db } from './config/firebase';
+import { initSentry, Sentry } from './lib/sentry';
 
 dotenv.config({ path: path.join(__dirname, '../.env') });
+
+initSentry();
 
 const app = express();
 const port = process.env.PORT || 5000;
