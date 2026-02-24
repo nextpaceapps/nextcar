@@ -4,6 +4,7 @@ import { carService } from '../services/carService';
 import { opportunityService } from '../services/opportunityService';
 import { customerService } from '../services/customerService';
 import type { Car, Opportunity, Customer } from '@nextcar/shared';
+import { OPPORTUNITY_STAGES } from '@nextcar/shared';
 
 interface DashboardData {
     cars: Car[];
@@ -25,8 +26,8 @@ export default function DashboardPage() {
                     customerService.getCustomers(),
                 ]);
                 setData({ cars, opportunities, customers });
-            } catch (err: any) {
-                setError(err.message || 'Failed to load dashboard data');
+            } catch (err: unknown) {
+                setError(err instanceof Error ? err.message : 'Failed to load dashboard data');
             } finally {
                 setLoading(false);
             }
@@ -61,7 +62,7 @@ export default function DashboardPage() {
     ) as Record<string, number>;
 
     // --- Opportunity counts by stage ---
-    const stages = ['new', 'contacted', 'negotiation', 'won', 'lost'] as const;
+    const stages = OPPORTUNITY_STAGES;
     const stageCounts = Object.fromEntries(
         stages.map(s => [s, opportunities.filter(o => o.stage === s).length])
     ) as Record<string, number>;
