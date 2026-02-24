@@ -9,7 +9,7 @@
     "dev:frontend": "npm run dev --workspace=apps/frontend",
     "dev:backend": "npm run dev --workspace=apps/backend",
     "dev:admin": "npm run dev --workspace=apps/admin",
-    "build": "npm run build -w packages/shared && cp -r packages/shared apps/backend/shared && npm run build -w apps/admin && npm run build -w apps/backend && npm run build -w apps/frontend",
+    "build": "npm run build -w packages/shared && cp -r packages/shared apps/backend/shared && npm run build -w apps/admin && npm run build -w apps/backend && npm run build -w apps/frontend && ln -sf apps/frontend/.next .next",
     "test": "npm run test --workspaces",
     "create-owner": "npm run create-owner --workspace=apps/backend"
   },
