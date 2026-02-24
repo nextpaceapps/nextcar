@@ -3,6 +3,7 @@ import { useAuth } from './lib/AuthContext';
 import CarsPage from './pages/CarsPage';
 import EditCarPage from './pages/EditCarPage';
 import CarForm from './components/cars/CarForm';
+import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import CustomersPage from './pages/CustomersPage';
@@ -39,7 +40,7 @@ function App() {
       <main className={user ? "container mx-auto p-4" : ""}>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<ProtectedRoute><h1>Admin Dashboard</h1></ProtectedRoute>} />
+          <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route path="/cars" element={<ProtectedRoute><CarsPage /></ProtectedRoute>} />
           <Route path="/cars/new" element={<ProtectedRoute><CarForm /></ProtectedRoute>} />
           <Route path="/cars/:id/edit" element={<ProtectedRoute><EditCarPage /></ProtectedRoute>} />
