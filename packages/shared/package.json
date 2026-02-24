@@ -12,6 +12,7 @@
         }
     },
     "scripts": {
+        "prepare": "npm run build",
         "build": "tsc && tsc -p tsconfig.cjs.json && echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
         "dev": "tsc -w"
     },
