@@ -20,6 +20,8 @@ NextCar — monorepo for a used-vehicle dealership platform (public catalogue, a
 | [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md) | Type strategy (Zod-first), Firestore patterns, code quality rules |
 | [`docs/SECURITY.md`](docs/SECURITY.md) | Auth state, API key handling, CORS, production checklist |
 | [`docs/firebase-setup.md`](docs/firebase-setup.md) | Firebase project setup, emulators, env vars |
+| [`docs/PROJECT_MEMORY.md`](docs/PROJECT_MEMORY.md) | Live project memory: milestones, stack, current delivery context |
+| [`docs/WORK_RULES.md`](docs/WORK_RULES.md) | Safe execution rules: branch policy, no-main, quality gates |
 
 ## Tooling
 
