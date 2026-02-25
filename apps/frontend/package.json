@@ -6,7 +6,8 @@
     "dev": "next dev -p 5173",
     "build": "next build && ln -sf apps/frontend/.next .next/standalone/.next && echo 'require(\"./apps/frontend/server.js\")' > .next/standalone/server.js",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@nextcar/shared": "*",
