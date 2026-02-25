@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 5173",
-    "build": "next build && mkdir -p .next/standalone/.next && cp -r .next/standalone/apps/frontend/.next/* .next/standalone/.next/ && cp .next/standalone/apps/frontend/server.js .next/standalone/server.js && cp .next/standalone/apps/frontend/package.json .next/standalone/package.json",
+    "build": "next build && ln -sf apps/frontend/.next .next/standalone/.next && echo 'require(\"./apps/frontend/server.js\")' > .next/standalone/server.js",
     "start": "next start",
     "lint": "eslint"
   },
