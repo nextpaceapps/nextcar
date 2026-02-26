@@ -52,6 +52,27 @@ export default function VehiclesPage() {
         },
     });
 
+    const toggleFeaturedMutation = useMutation({
+        mutationFn: ({ id, featured }: { id: string; featured: boolean }) =>
+            vehicleService.updateVehicle(id, { featured }),
+        onMutate: async ({ id, featured }) => {
+            await queryClient.cancelQueries({ queryKey: ['vehicles'] });
+            const previousVehicles = queryClient.getQueryData<Vehicle[]>(['vehicles']);
+            queryClient.setQueryData<Vehicle[]>(['vehicles'], (old) =>
+                old?.map((vehicle) => vehicle.id === id ? { ...vehicle, featured } : vehicle)
+            );
+            return { previousVehicles };
+        },
+        onError: (_err, _variables, context) => {
+            if (context?.previousVehicles) {
+                queryClient.setQueryData(['vehicles'], context.previousVehicles);
+            }
+        },
+        onSettled: () => {
+            queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+        },
+    });
+
     const handleDelete = async (id: string) => {
         if (confirm('Are you sure you want to delete this vehicle?')) {
             await deleteMutation.mutateAsync(id);
@@ -228,6 +249,7 @@ export default function VehiclesPage() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
                             {canWrite && <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quick Actions</th>}
                             <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                         </tr>
@@ -235,7 +257,7 @@ export default function VehiclesPage() {
                     <tbody className="bg-white divide-y divide-gray-200">
                         {paginatedVehicles.length === 0 ? (
                             <tr>
-                                <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                                <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
                                     No vehicles found matching the given criteria.
                                 </td>
                             </tr>
@@ -260,6 +282,16 @@ export default function VehiclesPage() {
                                                         'bg-yellow-100 text-yellow-800'}`}>
                                             {vehicle.status}
                                         </span>
+                                    </td>
+                                    <td className="px-6 py-4 text-center">
+                                        <button
+                                            onClick={() => canWrite && toggleFeaturedMutation.mutate({ id: vehicle.id!, featured: !vehicle.featured })}
+                                            disabled={!canWrite || toggleFeaturedMutation.isPending}
+                                            className={`text-lg transition-opacity ${canWrite ? 'hover:opacity-70 cursor-pointer' : 'cursor-default opacity-60'}`}
+                                            title={vehicle.featured ? 'Remove from featured' : 'Mark as featured'}
+                                        >
+                                            {vehicle.featured ? '\u2605' : '\u2606'}
+                                        </button>
                                     </td>
                                     {canWrite && (
                                         <td className="px-6 py-4 flex gap-2 w-full text-sm">

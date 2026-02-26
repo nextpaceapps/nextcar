@@ -59,6 +59,7 @@ export const vehicleSchema = z.object({
     technicalInspection: z.string().optional(),
     condition: z.string().optional(),
     equipment: vehicleEquipmentSchema.optional(),
+    featured: z.boolean().optional(),
 });
 
 export type VehicleSchema = z.infer<typeof vehicleSchema>;
