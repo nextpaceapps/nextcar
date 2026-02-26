@@ -454,6 +454,17 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                                     <option value="archived">Archived</option>
                                 </select>
                             </div>
+                            <div className="flex items-center gap-3 mt-4">
+                                <input
+                                    type="checkbox"
+                                    id="featured"
+                                    {...register('featured')}
+                                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                                />
+                                <label htmlFor="featured" className="text-sm font-medium text-gray-700">
+                                    Featured on homepage
+                                </label>
+                            </div>
                         </div>
                         <div className="mt-4">
                             <label className="block text-sm font-medium text-gray-700">Description</label>
