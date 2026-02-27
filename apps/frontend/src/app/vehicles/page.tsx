@@ -3,6 +3,8 @@ import VehicleCard from '../../components/VehicleCard';
 import { Metadata } from 'next';
 import Link from 'next/link';
 
+export const revalidate = 60;
+
 export const metadata: Metadata = {
     title: 'Inventory | Nextcar',
     description: 'Browse our premium curated fleet of used vehicles ready for leasing or credit from 2.9%.',

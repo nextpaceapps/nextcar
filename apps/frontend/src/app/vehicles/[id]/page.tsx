@@ -6,6 +6,8 @@ import LeadCaptureForm from '../../../components/LeadCaptureForm';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
+export const revalidate = 60;
+
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const { id } = await params;
     const vehicle = await getPublishedVehicleById(id);
