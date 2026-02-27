@@ -5,13 +5,23 @@ import Link from 'next/link';
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const [featured, latest] = await Promise.all([
-    getFeaturedVehicles(6),
-    getPublishedVehicles(7),
-  ]);
+  let featured: any[] = [];
+  let latest: any[] = [];
+  let errorMsg = null;
+
+  try {
+    const res = await Promise.all([
+      getFeaturedVehicles(6),
+      getPublishedVehicles(7),
+    ]);
+    featured = res[0];
+    latest = res[1];
+  } catch (err: any) {
+    errorMsg = err.message;
+  }
 
   const latestNonFeatured = latest
-    .filter(v => !v.featured)
+    .filter((v: any) => !v.featured)
     .slice(0, 4);
 
   const hasFeatured = featured.length > 0;
@@ -19,6 +29,11 @@ export default async function HomePage() {
 
   return (
     <main className="max-w-4xl mx-auto p-6 lg:p-12 flex-grow w-full">
+      {errorMsg && (
+        <div className="bg-red-100 text-red-700 p-4 rounded mb-8">
+          Error fetching data: {errorMsg}
+        </div>
+      )}
       {/* Hero */}
       <section className="mb-16">
         <h1 className="text-4xl lg:text-5xl font-display font-bold leading-tight uppercase tracking-tighter dark:text-white">
