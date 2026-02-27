@@ -20,16 +20,19 @@ const Sidebar: React.FC = () => {
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Ongoing Sales</p>
           <div className="flex items-center gap-4">
             <div className="flex -space-x-4 overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt="Vehicle sale avatar"
                 className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
                 src="https://picsum.photos/seed/car1/100/100"
               />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt="Vehicle sale avatar"
                 className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
                 src="https://picsum.photos/seed/car2/100/100"
               />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 alt="Vehicle sale avatar"
                 className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
@@ -47,7 +50,7 @@ const Sidebar: React.FC = () => {
         {/* Actions and Info Cards */}
         <div className="space-y-6">
           <a href="?contact=true" className="w-full bg-primary dark:bg-white dark:text-primary text-white py-5 rounded-full font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]">
-            Let's talk
+            {"Let's talk"}
             <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
           </a>
 

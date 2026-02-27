@@ -136,8 +136,8 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
             });
             setParseSuccess(true);
             setRawText('');
-        } catch (err: any) {
-            setParseError(err.message || 'Failed to parse listing data');
+        } catch (err: unknown) {
+            setParseError(err instanceof Error ? err.message : 'Failed to parse listing data');
         } finally {
             setIsParsing(false);
         }
@@ -159,7 +159,7 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
     const handleDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault();
         handleFilesSelected(e.dataTransfer.files);
-    }, [pendingImages.length, photoFields.length]);
+    }, []);
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();

@@ -1,18 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [isDark, setIsDark] = useState(false);
-
-    useEffect(() => {
-        if (localStorage.theme === 'dark') {
-            setIsDark(true);
-        } else {
-            setIsDark(false);
-            localStorage.theme = 'light';
-        }
-    }, []);
+    const [isDark, setIsDark] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        if (!localStorage.theme) localStorage.theme = 'light';
+        return localStorage.theme === 'dark';
+    });
 
     const toggleDarkMode = () => {
         setIsDark(!isDark);
