@@ -1,10 +1,11 @@
-import { BACKEND_URL } from './api';
+import { BACKEND_URL, getAuthHeaders } from './api';
 
 export const aiService = {
     async parseVehicleListing(rawText: string) {
+        const headers = await getAuthHeaders();
         const response = await fetch(`${BACKEND_URL}/api/ai/parse-listing`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers,
             body: JSON.stringify({ rawText }),
         });
 
