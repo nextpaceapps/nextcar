@@ -1,6 +1,4 @@
 import * as readline from 'readline';
-import path from 'path';
-import fs from 'fs';
 import { COLLECTIONS } from '@nextcar/shared';
 
 // Force production environment if requested

@@ -27,6 +27,8 @@ if (!admin.apps.length) {
 
             if (fs.existsSync(absolutePath)) {
                 credential = admin.credential.cert(absolutePath);
+            } else {
+                console.warn(`⚠️ Warning: GOOGLE_APPLICATION_CREDENTIALS set but file not found at: ${absolutePath}. Falling back to Application Default Credentials.`);
             }
         }
 
