@@ -46,7 +46,7 @@ export default function LeadCaptureForm({ vehicleId }: LeadCaptureFormProps) {
                 setStatus('error');
                 setErrorMessage(result.error || 'Failed to submit inquiry. Please try again.');
             }
-        } catch (error) {
+        } catch {
             setStatus('error');
             setErrorMessage('An unexpected error occurred. Please try again.');
         }

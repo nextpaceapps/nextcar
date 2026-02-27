@@ -22,7 +22,7 @@ export default function UsersPage() {
             setUpdateMessage({ type: 'success', text: 'Role updated successfully' });
             setTimeout(() => setUpdateMessage(null), 3000);
         },
-        onError: (err: any) => {
+        onError: (err: Error & { response?: { data?: { error?: { message?: string } } } }) => {
             const msg = err.response?.data?.error?.message || err.message || 'Failed to update role';
             setUpdateMessage({ type: 'error', text: msg });
             setTimeout(() => setUpdateMessage(null), 5000);

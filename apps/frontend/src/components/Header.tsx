@@ -9,6 +9,7 @@ const HeaderContent: React.FC = () => {
   const [value, setValue] = useState(searchParams?.get('q') || '');
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(searchParams?.get('q') || '');
   }, [searchParams]);
 

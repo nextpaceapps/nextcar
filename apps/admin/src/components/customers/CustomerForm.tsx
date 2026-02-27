@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm, useWatch, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { customerSchema, CUSTOMER_TAGS, type CustomerSchema, type Customer, type CustomerTag } from '@nextcar/shared';
@@ -20,7 +20,7 @@ export default function CustomerForm({ initialData, isEdit = false }: CustomerFo
     const queryClient = useQueryClient();
     const [saveError, setSaveError] = useState<string | null>(null);
 
-    const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting } } = useForm<z.input<typeof customerSchema>>({
+    const { register, handleSubmit, setValue, control, formState: { errors, isSubmitting } } = useForm<z.input<typeof customerSchema>>({
         resolver: zodResolver(customerSchema),
         defaultValues: initialData ? {
             ...initialData,
@@ -35,7 +35,7 @@ export default function CustomerForm({ initialData, isEdit = false }: CustomerFo
         }
     });
 
-    const watchTags = watch('tags') || [];
+    const watchTags = useWatch({ control, name: 'tags' }) ?? [];
 
     const toggleTag = (tag: CustomerTag) => {
         const newTags = watchTags.includes(tag)

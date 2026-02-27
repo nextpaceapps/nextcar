@@ -11,6 +11,7 @@ function ContactModalContent() {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setMounted(true);
     }, []);
 
@@ -27,7 +28,7 @@ function ContactModalContent() {
         };
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, [pathname]);
+    }, [pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (!mounted || !isOpen) return null;
 

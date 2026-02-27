@@ -3,7 +3,7 @@ import { vehicleService } from '../services/vehicleService';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../lib/AuthContext';
 import type { Vehicle } from '@nextcar/shared';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 export default function VehiclesPage() {
     const { role } = useAuth();
@@ -37,8 +37,8 @@ export default function VehiclesPage() {
         onMutate: async ({ id, status }) => {
             await queryClient.cancelQueries({ queryKey: ['vehicles'] });
             const previousVehicles = queryClient.getQueryData(['vehicles']);
-            queryClient.setQueryData(['vehicles'], (old: any) =>
-                old?.map((vehicle: any) => vehicle.id === id ? { ...vehicle, status } : vehicle)
+            queryClient.setQueryData<Vehicle[]>(['vehicles'], (old) =>
+                old?.map((vehicle) => vehicle.id === id ? { ...vehicle, status } : vehicle)
             );
             return { previousVehicles };
         },
@@ -111,7 +111,8 @@ export default function VehiclesPage() {
     }, [vehicles, searchTerm, statusFilter, makeFilter, yearMin, yearMax, priceMin, priceMax]);
 
     // Reset page if filters change
-    useMemo(() => { setCurrentPage(1); }, [searchTerm, statusFilter, makeFilter, yearMin, yearMax, priceMin, priceMax]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    useEffect(() => { setCurrentPage(1); }, [searchTerm, statusFilter, makeFilter, yearMin, yearMax, priceMin, priceMax]);
 
     const totalPages = Math.ceil(filteredVehicles.length / ITEMS_PER_PAGE);
     const paginatedVehicles = filteredVehicles.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
