@@ -1,7 +1,7 @@
 {
     "indexes": [
         {
-            "collectionGroup": "vehicles",
+            "collectionGroup": "cars",
             "queryScope": "COLLECTION",
             "fields": [
                 {
@@ -19,7 +19,7 @@
             ]
         },
         {
-            "collectionGroup": "vehicles",
+            "collectionGroup": "cars",
             "queryScope": "COLLECTION",
             "fields": [
                 {
@@ -33,7 +33,7 @@
             ]
         },
         {
-            "collectionGroup": "vehicles",
+            "collectionGroup": "cars",
             "queryScope": "COLLECTION",
             "fields": [
                 {
