@@ -1,4 +1,4 @@
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:5001';
+import { BACKEND_URL } from './api';
 
 export const aiService = {
     async parseVehicleListing(rawText: string) {
