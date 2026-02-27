@@ -4,9 +4,10 @@ import { useState } from 'react';
 
 interface LeadCaptureFormProps {
     vehicleId?: string;
+    intent?: string;
 }
 
-export default function LeadCaptureForm({ vehicleId }: LeadCaptureFormProps) {
+export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormProps) {
     const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -68,11 +69,19 @@ export default function LeadCaptureForm({ vehicleId }: LeadCaptureFormProps) {
         );
     }
 
+    const getTitle = () => {
+        if (!vehicleId) return "Let's talk";
+        if (intent === 'test-drive') return "Schedule a Test Drive";
+        return "Contact us about this vehicle";
+    };
+
     return (
         <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 mt-12 mb-8" id="inquiry-form">
             <h3 className="text-2xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary dark:text-white">mail</span>
-                {vehicleId ? 'Interested in this vehicle?' : "Let's talk"}
+                <span className="material-symbols-outlined text-primary dark:text-white">
+                    {intent === 'test-drive' ? 'drive_eta' : 'mail'}
+                </span>
+                {getTitle()}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -129,7 +138,11 @@ export default function LeadCaptureForm({ vehicleId }: LeadCaptureFormProps) {
                         rows={4}
                         disabled={status === 'submitting'}
                         className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 rounded-xl focus:border-primary dark:focus:border-white focus:outline-none transition-colors"
-                        placeholder={vehicleId ? "I'm interested in the vehicle. Is it still available?" : "How can we help you?"}
+                        placeholder={
+                            vehicleId
+                                ? (intent === 'test-drive' ? "I'd like to schedule a test drive..." : "I'm interested in the vehicle. Is it still available?")
+                                : "How can we help you?"
+                        }
                     ></textarea>
                 </div>
 
