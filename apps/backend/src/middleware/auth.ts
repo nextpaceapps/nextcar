@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { auth, db } from '../config/firebase';
 import type { DecodedIdToken } from 'firebase-admin/auth';
 import { errorResponse } from '../utils/response';
+import { COLLECTIONS } from '@nextcar/shared';
 
 export interface AuthRequest extends Request {
     user?: DecodedIdToken;
@@ -31,7 +32,7 @@ export const withRole = (minRole: 'Admin' | 'Editor' | 'Viewer') => {
         try {
             const decodedToken = await auth.verifyIdToken(token);
 
-            const userDoc = await db.collection('users').doc(decodedToken.uid).get();
+            const userDoc = await db.collection(COLLECTIONS.USERS).doc(decodedToken.uid).get();
 
             if (!userDoc.exists) {
                 errorResponse(res, 'FORBIDDEN', 'User not found in database', 403);

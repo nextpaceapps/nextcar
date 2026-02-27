@@ -41,11 +41,11 @@
                     "order": "ASCENDING"
                 },
                 {
-                    "fieldPath": "status",
+                    "fieldPath": "featured",
                     "order": "ASCENDING"
                 },
                 {
-                    "fieldPath": "featured",
+                    "fieldPath": "status",
                     "order": "ASCENDING"
                 },
                 {
