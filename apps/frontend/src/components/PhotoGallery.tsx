@@ -51,18 +51,18 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
             </div>
 
             {sorted.length > 1 && (
-                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 overflow-x-auto pb-2 snap-x">
+                <div className="flex flex-nowrap overflow-x-auto gap-2 md:gap-4 pb-2 snap-x hide-scrollbar">
                     {sorted.slice(1).map((photo, i) => (
                         <div
                             key={photo.url}
-                            className="aspect-[4/3] min-w-[80px] sm:min-w-0 bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:opacity-90 relative snap-start shrink-0"
+                            className="aspect-[4/3] w-24 md:w-32 bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:opacity-90 relative snap-start shrink-0"
                             onClick={() => setIndex(i + 1)}
                         >
                             <Image
                                 src={photo.url}
                                 alt={`Gallery ${i}`}
                                 fill
-                                sizes="(max-width: 1024px) 25vw, 16vw"
+                                sizes="128px"
                                 className="object-cover"
                             />
                         </div>

@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 }
 
 function SpecRow({ label, value }: { label: string; value?: string | number | null }) {
-    if (!value) return null;
+    if (value === undefined || value === null || value === '') return null;
     return (
         <li className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800/50 last:border-0">
             <span className="text-slate-500 text-sm font-medium">{label}</span>
@@ -43,8 +43,20 @@ function SpecRow({ label, value }: { label: string; value?: string | number | nu
     );
 }
 
-export default async function VehicleDetailPage({ params }: { params: Promise<{ id: string }> }) {
+const formatCategory = (str: string) => str.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+
+export default async function VehicleDetailPage({
+    params,
+    searchParams
+}: {
+    params: Promise<{ id: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
     const { id } = await params;
+    const resolvedSearchParams = await searchParams;
+    const intentRaw = resolvedSearchParams?.intent;
+    const intent = typeof intentRaw === 'string' ? intentRaw : undefined;
+
     const vehicle = await getPublishedVehicleById(id);
 
     if (!vehicle) {
@@ -142,7 +154,6 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                         {Object.entries(vehicle.equipment).map(([category, items]) => {
                                             if (!items || items.length === 0) return null;
-                                            const formatCategory = (str: string) => str.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
                                             return (
                                                 <div key={category}>
                                                     <h4 className="font-bold text-slate-800 dark:text-slate-200 mb-4">{formatCategory(category)}</h4>
@@ -184,7 +195,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                                     </div>
                                 </div>
                                 <div className="mt-8">
-                                    <LeadCaptureForm vehicleId={id} />
+                                    <LeadCaptureForm vehicleId={id} intent={intent} />
                                 </div>
                             </div>
                         </div>
@@ -207,7 +218,7 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                                 <span className="material-symbols-outlined text-slate-400 block mb-2">speed</span>
-                                <div className="text-sm font-bold uppercase tracking-wider">{vehicle.mileage.toLocaleString()} mi</div>
+                                <div className="text-sm font-bold uppercase tracking-wider">{vehicle.mileage.toLocaleString()} km</div>
                                 <div className="text-[10px] text-slate-500 font-medium tracking-wide uppercase">Mileage</div>
                             </div>
                             <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
@@ -243,23 +254,22 @@ export default async function VehicleDetailPage({ params }: { params: Promise<{ 
                             <a href="#inquiry-form" className="block w-full text-center bg-primary dark:bg-white text-white dark:text-primary py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20 dark:shadow-white/10">
                                 I&apos;m Interested
                             </a>
-                            <a href="#inquiry-form" className="block w-full text-center bg-transparent border-2 border-slate-200 dark:border-slate-800 dark:text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:border-primary dark:hover:border-white transition-colors active:scale-95">
+                            <Link href="?intent=test-drive#inquiry-form" scroll={false} className="block w-full text-center bg-transparent border-2 border-slate-200 dark:border-slate-800 dark:text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:border-primary dark:hover:border-white transition-colors active:scale-95">
                                 <span className="flex items-center justify-center gap-2">
                                     <span className="material-symbols-outlined text-lg">drive_eta</span>
                                     Test Drive
                                 </span>
-                            </a>
-                        </div>
-
-                        {/* Mobile Sticky CTA Trigger */}
-                        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 lg:hidden z-40 transform translate-y-0 transition-transform">
-                            <a href="#inquiry-form" className="block w-full text-center bg-primary text-white py-4 rounded-full font-bold uppercase tracking-widest text-sm shadow-xl shadow-primary/20">
-                                Contact Sales
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
 
+                {/* Mobile Sticky CTA Trigger - moved outside positional parent */}
+                <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 lg:hidden z-40 transform translate-y-0 transition-transform">
+                    <a href="#inquiry-form" className="block w-full text-center bg-primary text-white py-4 rounded-full font-bold uppercase tracking-widest text-sm shadow-xl shadow-primary/20">
+                        Contact Sales
+                    </a>
+                </div>
             </main>
         </>
     );
