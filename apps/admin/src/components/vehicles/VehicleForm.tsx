@@ -59,7 +59,8 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
         defaultValues: initialData ? {
             ...initialData,
             features: initialData.features || [],
-            photos: initialData.photos || []
+            photos: initialData.photos || [],
+            featured: !!initialData.featured
         } : {
             status: 'draft' as const,
             features: [],
@@ -73,6 +74,7 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
             transmission: 'Automatic' as const,
             bodyType: 'Sedan' as const,
             color: '',
+            featured: false,
         }
     });
 
