@@ -2,6 +2,10 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Lightbox from 'yet-another-react-lightbox';
+import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
+import 'yet-another-react-lightbox/styles.css';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
 
 interface Photo {
     url: string;
@@ -9,7 +13,7 @@ interface Photo {
 }
 
 export default function PhotoGallery({ photos }: { photos: Photo[] }) {
-    const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+    const [index, setIndex] = useState(-1);
 
     if (!photos || photos.length === 0) {
         return (
@@ -22,11 +26,14 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
     // Ensure they are sorted; though we already sort in the data layer
     const sorted = [...photos].sort((a, b) => a.order - b.order);
 
+    // Map to lightbox format
+    const slides = sorted.map(photo => ({ src: photo.url }));
+
     return (
         <div className="space-y-4">
             <div
-                className="w-full h-[60vh] bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden cursor-pointer shadow-lg group relative"
-                onClick={() => setSelectedPhoto(sorted[0].url)}
+                className="w-full h-[30vh] md:h-[60vh] bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden cursor-pointer shadow-lg group relative"
+                onClick={() => setIndex(0)}
             >
                 <Image
                     src={sorted[0].url}
@@ -37,18 +44,19 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
-                <span className="absolute bottom-4 right-4 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-md">
+                <div className="absolute bottom-4 right-4 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-md flex items-center gap-2">
+                    <span className="material-symbols-outlined text-sm">fullscreen</span>
                     Enlarge
-                </span>
+                </div>
             </div>
 
             {sorted.length > 1 && (
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 overflow-x-auto pb-2 snap-x">
                     {sorted.slice(1).map((photo, i) => (
                         <div
                             key={photo.url}
-                            className="aspect-[4/3] bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:opacity-90 relative"
-                            onClick={() => setSelectedPhoto(photo.url)}
+                            className="aspect-[4/3] min-w-[80px] sm:min-w-0 bg-slate-200 dark:bg-slate-800 rounded-xl overflow-hidden cursor-pointer hover:opacity-90 relative snap-start shrink-0"
+                            onClick={() => setIndex(i + 1)}
                         >
                             <Image
                                 src={photo.url}
@@ -62,23 +70,13 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
                 </div>
             )}
 
-            {selectedPhoto && (
-                <div
-                    className="fixed inset-0 z-50 bg-black/90 p-8 flex items-center justify-center backdrop-blur-sm"
-                    onClick={() => setSelectedPhoto(null)}
-                >
-                    <Image
-                        src={selectedPhoto}
-                        alt="Enlarged"
-                        fill
-                        sizes="100vw"
-                        className="object-contain shadow-2xl rounded-sm p-4 md:p-8"
-                    />
-                    <button className="fixed top-8 right-8 text-white/50 hover:text-white p-2 z-10">
-                        <span className="material-symbols-outlined text-4xl leading-none">close</span>
-                    </button>
-                </div>
-            )}
+            <Lightbox
+                open={index >= 0}
+                index={index}
+                close={() => setIndex(-1)}
+                slides={slides}
+                plugins={[Thumbnails]}
+            />
         </div>
     );
 }
