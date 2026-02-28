@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getPublishedVehicleById } from '@/lib/data/vehicles';
 import HeroGallery from '@/components/HeroGallery';
+import PdpHeader from '@/components/PdpHeader';
 import YoutubeEmbed from '@/components/YoutubeEmbed';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
 import CarVerticalRequestForm from '@/components/CarVerticalRequestForm';
@@ -90,9 +91,12 @@ export default async function VehicleDetailPage({
           </Link>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-12 items-start">
-          <div className="w-full lg:w-2/3 space-y-16">
-            <HeroGallery photos={vehicle.photos || []} />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+          <div className="lg:col-span-2 space-y-16">
+            <section className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,380px)] gap-8 lg:gap-10 items-start" aria-label="Vehicle hero and header">
+              <HeroGallery photos={vehicle.photos || []} />
+              <PdpHeader vehicle={vehicle} />
+            </section>
 
             <div className="space-y-16">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -250,21 +254,6 @@ export default async function VehicleDetailPage({
           </div>
 
           <div className="w-full lg:w-1/3 space-y-8 sticky top-32">
-            <div>
-              <h1 className="text-4xl lg:text-5xl font-display font-bold leading-tight uppercase tracking-tighter dark:text-white mb-2">
-                {vehicle.year} {vehicle.make} <br />
-                <span className="text-slate-400">{vehicle.model}</span>
-              </h1>
-              <div className="mt-6">
-                <span className="text-sm font-semibold uppercase tracking-widest text-slate-500 block mb-1">
-                  {t('price')}
-                </span>
-                <div className="text-5xl font-bold text-primary dark:text-white font-display">
-                  ${vehicle.price.toLocaleString()}
-                </div>
-              </div>
-            </div>
-
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                 <span className="material-symbols-outlined text-slate-400 block mb-2">speed</span>
@@ -314,25 +303,6 @@ export default async function VehicleDetailPage({
                   </div>
                 </div>
               )}
-            </div>
-
-            <div className="pt-8 border-t border-slate-100 dark:border-slate-800 space-y-4">
-              <a
-                href="#inquiry-form"
-                className="block w-full text-center bg-primary dark:bg-white text-white dark:text-primary py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20 dark:shadow-white/10"
-              >
-                {t('imInterested')}
-              </a>
-              <Link
-                href="?intent=test-drive#inquiry-form"
-                scroll={false}
-                className="block w-full text-center bg-transparent border-2 border-slate-200 dark:border-slate-800 dark:text-white py-5 rounded-full font-bold uppercase tracking-widest text-sm hover:border-primary dark:hover:border-white transition-colors active:scale-95"
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <span className="material-symbols-outlined text-lg">drive_eta</span>
-                  {t('testDrive')}
-                </span>
-              </Link>
             </div>
           </div>
         </div>
