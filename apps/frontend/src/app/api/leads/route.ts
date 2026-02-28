@@ -23,15 +23,22 @@ function cleanupRateLimitMap() {
 }
 
 const leadSchema = z.object({
-    name: z.string().min(1, 'Name is required'),
+    type: z.literal('carvertical').optional(),
+    name: z.string().min(1, 'Name is required').optional(),
     phone: z.string().optional(),
     email: z.string().email('Invalid email').or(z.literal('')).optional(),
     message: z.string().optional(),
     vehicleId: z.string().optional(),
-}).refine(data => data.email || data.phone, {
-    message: 'Either email or phone must be provided',
-    path: ['email'],
-});
+}).refine(
+    (data) => data.type !== 'carvertical' || !!data.email?.trim(),
+    { message: 'Email is required', path: ['email'] }
+).refine(
+    (data) => data.type === 'carvertical' || !!(data.email || data.phone),
+    { message: 'Either email or phone must be provided', path: ['email'] }
+).refine(
+    (data) => data.type === 'carvertical' || !!data.name?.trim(),
+    { message: 'Name is required', path: ['name'] }
+);
 
 export async function POST(request: Request) {
     try {
@@ -59,14 +66,16 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, error: parseResult.error.issues[0].message }, { status: 400 });
         }
 
-        const { name, phone, email, message, vehicleId } = parseResult.data;
+        const { type, name, phone, email, message, vehicleId } = parseResult.data;
+        const isCarVertical = type === 'carvertical';
 
         // 1. Customer matching/creation
         let customerId: string | null = null;
+        const effectiveEmail = email?.trim() || '';
 
-        if (email) {
+        if (effectiveEmail) {
             const customerQuery = await db.collection(COLLECTIONS.CUSTOMERS)
-                .where('email', '==', email)
+                .where('email', '==', effectiveEmail)
                 .where('deleted', '==', false)
                 .limit(1)
                 .get();
@@ -79,13 +88,14 @@ export async function POST(request: Request) {
         if (!customerId) {
             const customerRef = db.collection(COLLECTIONS.CUSTOMERS).doc();
             customerId = customerRef.id;
+            const customerName = isCarVertical ? (name?.trim() || effectiveEmail || 'CarVertical request') : (name!.trim());
             const newCustomer = {
                 id: customerId,
-                name,
-                email: email || '',
-                phone: phone || '',
+                name: customerName,
+                email: effectiveEmail,
+                phone: phone?.trim() || '',
                 tags: ['lead'],
-                notes: 'Created via web lead form',
+                notes: isCarVertical ? 'Created via CarVertical report request' : 'Created via web lead form',
                 deleted: false,
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
                 updatedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -95,17 +105,18 @@ export async function POST(request: Request) {
 
         // 2. Opportunity creation
         const oppRef = db.collection(COLLECTIONS.OPPORTUNITIES).doc();
+        const oppNotes = isCarVertical ? 'CarVertical report request' : (message || '');
+        const oppSource = isCarVertical
+            ? { page: 'carvertical', vehicleId: vehicleId || null, submittedAt: admin.firestore.FieldValue.serverTimestamp() }
+            : { page: vehicleId ? `/vehicles/${vehicleId}` : '/vehicles', vehicleId: vehicleId || null, submittedAt: admin.firestore.FieldValue.serverTimestamp() };
+
         const newOpp = {
             id: oppRef.id,
             customerId,
             vehicleId: vehicleId || null,
             stage: 'new',
-            notes: message || '',
-            source: {
-                page: vehicleId ? `/vehicles/${vehicleId}` : '/vehicles',
-                vehicleId: vehicleId || null,
-                submittedAt: admin.firestore.FieldValue.serverTimestamp(),
-            },
+            notes: oppNotes,
+            source: oppSource,
             deleted: false,
             createdAt: admin.firestore.FieldValue.serverTimestamp(),
             updatedAt: admin.firestore.FieldValue.serverTimestamp(),
