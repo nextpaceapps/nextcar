@@ -75,7 +75,11 @@ export function DefectIndicator({ defects, photoLabel, className = '' }: DefectI
                         </span>
                         <button
                             type="button"
-                            onClick={() => setOpen(false)}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setOpen(false);
+                            }}
                             aria-label="Close defect list"
                             className="text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-amber-100 text-sm font-bold leading-none"
                         >

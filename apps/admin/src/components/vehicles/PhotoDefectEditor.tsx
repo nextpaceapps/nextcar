@@ -8,7 +8,7 @@ interface PhotoDefectEditorProps {
 }
 
 export function PhotoDefectEditor({ photoIndex, disabled }: PhotoDefectEditorProps) {
-    const { control } = useFormContext<VehicleSchema>();
+    const { control, formState: { errors } } = useFormContext<VehicleSchema>();
     const { fields, append, remove } = useFieldArray({
         control,
         name: `photos.${photoIndex}.defects`,
@@ -28,24 +28,32 @@ export function PhotoDefectEditor({ photoIndex, disabled }: PhotoDefectEditorPro
             </button>
             {isOpen && (
                 <div className="px-2 pb-2 space-y-2">
-                    {fields.map((field, defectIndex) => (
-                        <div key={field.id} className="flex gap-1">
-                            <input
-                                {...control.register(`photos.${photoIndex}.defects.${defectIndex}.description`)}
-                                placeholder="Defect description"
-                                disabled={disabled}
-                                className="flex-1 rounded border border-gray-300 px-2 py-1 text-xs"
-                            />
-                            <button
+                    {fields.map((field, defectIndex) => {
+                        const fieldError = errors?.photos?.[photoIndex]?.defects?.[defectIndex]?.description;
+                        return (
+                        <div key={field.id} className="flex flex-col gap-0.5">
+                            <div className="flex gap-1">
+                                <input
+                                    {...control.register(`photos.${photoIndex}.defects.${defectIndex}.description`)}
+                                    placeholder="Defect description (max 500 chars)"
+                                    disabled={disabled}
+                                    className={`flex-1 rounded border px-2 py-1 text-xs ${fieldError ? 'border-red-500' : 'border-gray-300'}`}
+                                />
+                                <button
                                 type="button"
                                 onClick={() => remove(defectIndex)}
                                 disabled={disabled}
                                 className="text-red-600 hover:text-red-800 px-1 text-sm font-bold disabled:opacity-50"
                             >
                                 ×
-                            </button>
+                                </button>
+                            </div>
+                            {fieldError?.message && (
+                                <p className="text-xs text-red-600">{fieldError.message}</p>
+                            )}
                         </div>
-                    ))}
+                        );
+                    })}
                     <button
                         type="button"
                         onClick={() => append({ description: '' })}

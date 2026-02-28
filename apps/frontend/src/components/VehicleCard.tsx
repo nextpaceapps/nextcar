@@ -29,7 +29,6 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
                         <DefectIndicator
                             defects={coverPhoto.defects}
                             photoLabel={`${vehicle.make} ${vehicle.model}`}
-                            className="pointer-events-auto"
                         />
                     ) : null}
                 </div>
