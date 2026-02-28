@@ -1,15 +1,18 @@
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter as useLocaleRouter } from '@/i18n/navigation';
 
 const HeaderContent: React.FC = () => {
-  const router = useRouter();
+  const router = useLocaleRouter(); // locale-aware router from next-intl
   const searchParams = useSearchParams();
   const [value, setValue] = useState(searchParams?.get('q') || '');
+  const t = useTranslations('header');
+  const tCommon = useTranslations('common');
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(searchParams?.get('q') || '');
   }, [searchParams]);
 
@@ -17,7 +20,7 @@ const HeaderContent: React.FC = () => {
     if (value.trim()) {
       router.push(`/vehicles?q=${encodeURIComponent(value)}`);
     } else {
-      router.push(`/vehicles`);
+      router.push('/vehicles');
     }
   };
 
@@ -29,13 +32,15 @@ const HeaderContent: React.FC = () => {
     <div className="sticky top-0 z-30 bg-white/90 dark:bg-[#0a0c10]/90 backdrop-blur-xl p-6 lg:p-8 transition-colors duration-300">
       <div className="max-w-4xl mx-auto flex gap-4">
         <div className="flex-1 relative">
-          <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">search</span>
+          <span className="absolute left-5 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">
+            search
+          </span>
           <input
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={onKeyDown}
             className="w-full pl-14 pr-6 py-4 rounded-full border-none bg-slate-100/50 dark:bg-slate-900/50 focus:ring-2 ring-primary/20 text-sm lg:text-base dark:text-white dark:placeholder:text-slate-600 transition-all"
-            placeholder="Search make, model, year..."
+            placeholder={t('searchPlaceholder')}
             type="text"
           />
         </div>
@@ -43,7 +48,7 @@ const HeaderContent: React.FC = () => {
           onClick={handleSearch}
           className="px-10 bg-slate-950 dark:bg-white dark:text-slate-950 text-white rounded-full font-bold text-sm transition-all active:scale-95 hover:bg-slate-800 dark:hover:bg-slate-100 shadow-sm"
         >
-          Search
+          {tCommon('search')}
         </button>
       </div>
     </div>
