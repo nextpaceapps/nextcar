@@ -33,27 +33,22 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
                             {vehicle.make} {vehicle.model}
                         </h3>
                     </Link>
-                    {vehicle.description ? (
+                    {vehicle.description && (
                         <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
                             {vehicle.description}
                         </p>
-                    ) : (
-                        <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
-                            Experience the purity of driving with this exceptional {vehicle.year} {vehicle.make}.
-                            Every vehicle undergoes a rigorous multi-point inspection.
-                        </p>
                     )}
 
-                    <div className="flex gap-3 flex-wrap">
+                    <div className="flex gap-3 flex-wrap items-center">
                         <span className="px-4 py-1.5 border border-gray-200 dark:border-gray-800 rounded-full text-[10px] font-bold text-gray-600 dark:text-gray-400 tracking-wider">
                             {vehicle.year}
-                        </span>
-                        <span className="px-4 py-1.5 border border-gray-200 dark:border-gray-800 rounded-full text-[10px] font-bold text-gray-600 dark:text-gray-400 tracking-wider">
-                            CERTIFIED PRE-OWNED
                         </span>
                         <span className="px-4 py-1.5 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-full text-[10px] font-bold tracking-wider">
                             ${vehicle.price.toLocaleString()}
                         </span>
+                        <Link href={`/vehicles/${vehicle.id}`} className="ml-auto px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap">
+                            View Details
+                        </Link>
                     </div>
                 </div>
 
@@ -68,7 +63,7 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
                     </div>
                     <div>
                         <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">Mileage</div>
-                        <div className="text-xs font-semibold text-gray-900 dark:text-white">{vehicle.mileage.toLocaleString()} km</div>
+                        <div className="text-xs font-semibold text-gray-900 dark:text-white">{vehicle.mileage.toLocaleString()} miles</div>
                     </div>
                 </div>
             </div>

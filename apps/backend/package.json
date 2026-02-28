@@ -4,7 +4,7 @@
   "main": "dist/functions.js",
   "scripts": {
     "test": "node -e \"console.log('No backend tests configured yet')\"",
-    "dev": "nodemon src/index.ts",
+    "dev": "PORT=5001 nodemon src/index.ts",
     "build": "tsc",
     "typecheck": "tsc --noEmit",
     "start": "node dist/index.js",

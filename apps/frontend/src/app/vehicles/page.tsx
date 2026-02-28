@@ -49,7 +49,7 @@ export default async function VehiclesPage({
             <main className="max-w-4xl mx-auto p-6 lg:p-12 flex-grow w-full">
                 <div className="flex flex-col gap-32">
                     {filteredVehicles.length === 0 ? (
-                        <div className="flex items-center justify-center py-20 col-span-full">
+                        <div className="flex items-center justify-center py-20">
                             <div className="text-slate-400 text-lg">
                                 {q ? 'No vehicles match your search.' : 'No vehicles in inventory yet.'}
                             </div>
