@@ -88,7 +88,7 @@ export async function POST(request: Request) {
         if (!customerId) {
             const customerRef = db.collection(COLLECTIONS.CUSTOMERS).doc();
             customerId = customerRef.id;
-            const customerName = isCarVertical ? (name?.trim() || 'CarVertical request') : (name!.trim());
+            const customerName = isCarVertical ? (name?.trim() || effectiveEmail || 'CarVertical request') : (name!.trim());
             const newCustomer = {
                 id: customerId,
                 name: customerName,

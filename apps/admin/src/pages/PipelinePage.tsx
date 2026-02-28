@@ -153,8 +153,8 @@ function OpportunityCardContent({ opportunity, isDragging, canWrite }: { opportu
                 ${isOverdue ? 'border-red-400 ring-1 ring-red-200' : 'border-gray-200'}
             `}
         >
-            <div className="font-medium text-gray-900 truncate flex items-center gap-1.5">
-                {opportunity.customerName || 'Unknown'}
+            <div className="font-medium text-gray-900 flex items-center gap-1.5 min-w-0">
+                <span className="truncate">{opportunity.customerName || 'Unknown'}</span>
                 {opportunity.source?.page === 'carvertical' && (
                     <span className="shrink-0 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-100 text-amber-800">
                         CarVertical
