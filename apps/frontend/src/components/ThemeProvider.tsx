@@ -8,10 +8,13 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
 
     React.useEffect(() => {
         setMounted(true);
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.theme === 'dark') {
             setIsDark(true);
+            document.documentElement.classList.add('dark');
         } else {
             setIsDark(false);
+            localStorage.theme = 'light';
+            document.documentElement.classList.remove('dark');
         }
     }, []);
 
