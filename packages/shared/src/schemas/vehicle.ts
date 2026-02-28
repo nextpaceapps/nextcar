@@ -5,9 +5,14 @@ export const fuelTypeSchema = z.enum(['Petrol', 'Diesel', 'Electric', 'Hybrid', 
 export const transmissionSchema = z.enum(['Manual', 'Automatic']);
 export const bodyTypeSchema = z.enum(['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Truck']);
 
+export const vehiclePhotoDefectSchema = z.object({
+    description: z.string().min(1).max(500),
+});
+
 export const vehiclePhotoSchema = z.object({
     url: z.string().url(),
     order: z.number().int().min(0),
+    defects: z.array(vehiclePhotoDefectSchema).optional(),
 });
 
 export const vehicleEquipmentSchema = z.object({

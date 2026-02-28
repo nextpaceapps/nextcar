@@ -2,6 +2,7 @@ import { z } from 'zod';
 import {
     vehicleSchema,
     vehiclePhotoSchema,
+    vehiclePhotoDefectSchema,
     vehicleEquipmentSchema,
     vehicleStatusSchema,
     fuelTypeSchema,
@@ -15,6 +16,7 @@ export type FuelType = z.infer<typeof fuelTypeSchema>;
 export type Transmission = z.infer<typeof transmissionSchema>;
 export type BodyType = z.infer<typeof bodyTypeSchema>;
 export type VehiclePhoto = z.infer<typeof vehiclePhotoSchema>;
+export type VehiclePhotoDefect = z.infer<typeof vehiclePhotoDefectSchema>;
 export type VehicleEquipment = z.infer<typeof vehicleEquipmentSchema>;
 
 // Vehicle extends the schema type with Firestore-managed fields
