@@ -19,6 +19,8 @@ interface SidebarVehiclePreviewsProps {
 export default function SidebarVehiclePreviews({ vehicles, totalCount }: SidebarVehiclePreviewsProps) {
   const ringClass = 'ring-[6px] ring-background-light dark:ring-background-dark';
   const circleClass = `inline-block h-14 w-14 rounded-full ${ringClass} object-cover overflow-hidden shrink-0`;
+  const shown = vehicles.slice(0, 3).length;
+  const remaining = Math.max(0, totalCount - shown);
 
   return (
     <div className="flex items-center gap-4">
@@ -74,7 +76,7 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
           className={`flex items-center justify-center ${circleClass} bg-slate-100 dark:bg-slate-800 text-[10px] font-extrabold dark:text-white min-w-[3.5rem] min-h-[3.5rem]`}
           aria-label="View all vehicles"
         >
-          {totalCount > 0 ? `+${totalCount}` : '0'}
+          {remaining > 0 ? `+${remaining}` : '0'}
         </Link>
       </div>
     </div>

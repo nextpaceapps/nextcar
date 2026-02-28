@@ -31,7 +31,7 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
               <>
                 Your next vehicle starting from <br />
                 <span className="font-bold text-primary dark:text-white text-base not-italic">
-                  €{lowestPrice.toLocaleString()}
+                  ${lowestPrice.toLocaleString()}
                 </span>
               </>
             ) : (

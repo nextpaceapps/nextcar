@@ -82,6 +82,8 @@ export const getSidebarVehiclePreview = cache(async (): Promise<{
         getPublishedVehiclesCount(),
         getLowestPublishedPrice().catch(() => null),
     ]);
+    // When getLowestPublishedPrice fails (e.g. Firestore index not deployed), fall back to min of
+    // the 3 preview vehicles only — approximate until firestore.indexes.json is deployed.
     const lowestPrice = lowestPriceResult ?? (vehicles.length > 0
         ? Math.min(...vehicles.map(v => v.price))
         : null);

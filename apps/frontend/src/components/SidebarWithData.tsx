@@ -1,16 +1,11 @@
+import type { Vehicle } from '@nextcar/shared';
 import { getSidebarVehiclePreview } from '../lib/data/vehicles';
 import Sidebar from './Sidebar';
 
-const emptyPreview = {
-  vehicles: [] as const,
-  totalCount: 0,
-  lowestPrice: null as number | null,
-};
-
 export default async function SidebarWithData() {
-  let vehicles = emptyPreview.vehicles;
-  let totalCount = emptyPreview.totalCount;
-  let lowestPrice = emptyPreview.lowestPrice;
+  let vehicles: Vehicle[] = [];
+  let totalCount = 0;
+  let lowestPrice: number | null = null;
 
   try {
     const preview = await getSidebarVehiclePreview();
