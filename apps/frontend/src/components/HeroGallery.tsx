@@ -92,7 +92,7 @@ export default function HeroGallery({ photos, badge }: HeroGalleryProps) {
               >
                 <Image
                   src={photo.url}
-                  alt={`${t('mainPhoto')} ${globalIndex + 1}`}
+                  alt={t('photo', { number: globalIndex + 1 })}
                   fill
                   sizes="280px"
                   className="object-cover group-hover/thumb:scale-[1.03] transition-transform duration-300"
@@ -101,7 +101,7 @@ export default function HeroGallery({ photos, badge }: HeroGalleryProps) {
                   <div onClick={(e) => e.stopPropagation()}>
                     <DefectIndicator
                       defects={photo.defects}
-                      photoLabel={`${t('mainPhoto')} ${globalIndex + 1}`}
+                      photoLabel={t('photo', { number: globalIndex + 1 })}
                     />
                   </div>
                 ) : null}
