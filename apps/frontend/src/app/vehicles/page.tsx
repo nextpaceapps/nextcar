@@ -47,7 +47,7 @@ export default async function VehiclesPage({
     return (
         <>
             <main className="max-w-4xl mx-auto p-6 lg:p-12 flex-grow w-full">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="flex flex-col gap-32">
                     {filteredVehicles.length === 0 ? (
                         <div className="flex items-center justify-center py-20 col-span-full">
                             <div className="text-slate-400 text-lg">
