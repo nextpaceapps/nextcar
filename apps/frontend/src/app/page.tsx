@@ -1,12 +1,13 @@
 import { getFeaturedVehicles, getPublishedVehicles } from '../lib/data/vehicles';
 import VehicleCard from '../components/VehicleCard';
 import Link from 'next/link';
+import type { Vehicle } from '@nextcar/shared';
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  let featured: any[] = [];
-  let latest: any[] = [];
+  let featured: Vehicle[] = [];
+  let latest: Vehicle[] = [];
   let errorMsg = null;
 
   try {
@@ -14,14 +15,18 @@ export default async function HomePage() {
       getFeaturedVehicles(6),
       getPublishedVehicles(7),
     ]);
-    featured = res[0];
-    latest = res[1];
-  } catch (err: any) {
-    errorMsg = err.message;
+    featured = res[0] as Vehicle[];
+    latest = res[1] as Vehicle[];
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      errorMsg = err.message;
+    } else {
+      errorMsg = String(err);
+    }
   }
 
   const latestNonFeatured = latest
-    .filter((v: any) => !v.featured)
+    .filter((v: Vehicle) => !v.featured)
     .slice(0, 4);
 
   const hasFeatured = featured.length > 0;
@@ -62,7 +67,7 @@ export default async function HomePage() {
               Featured Vehicles
             </h2>
           </div>
-          <div className="space-y-32">
+          <div className="flex flex-col gap-32">
             {featured.map((vehicle, i) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} priority={i < 2} />
             ))}
@@ -85,7 +90,7 @@ export default async function HomePage() {
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>
-          <div className="space-y-32">
+          <div className="flex flex-col gap-32">
             {latestNonFeatured.map((vehicle, i) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} priority={i < 2} />
             ))}
