@@ -52,6 +52,44 @@ export const getFeaturedVehicles = cache(async (limit = 10): Promise<Vehicle[]> 
     });
 });
 
+export const getPublishedVehiclesCount = cache(async (): Promise<number> => {
+    const query = db.collection(COLLECTIONS.VEHICLES)
+        .where('deleted', '==', false)
+        .where('status', '==', 'published');
+    const snapshot = await query.count().get();
+    return snapshot.data().count;
+});
+
+export const getLowestPublishedPrice = cache(async (): Promise<number | null> => {
+    const query = db.collection(COLLECTIONS.VEHICLES)
+        .where('deleted', '==', false)
+        .where('status', '==', 'published')
+        .orderBy('price', 'asc')
+        .limit(1);
+    const snapshot = await query.get();
+    if (snapshot.empty) return null;
+    const data = snapshot.docs[0].data() as Vehicle;
+    return typeof data.price === 'number' ? data.price : null;
+});
+
+export const getSidebarVehiclePreview = cache(async (): Promise<{
+    vehicles: Vehicle[];
+    totalCount: number;
+    lowestPrice: number | null;
+}> => {
+    const [vehicles, totalCount, lowestPriceResult] = await Promise.all([
+        getPublishedVehicles(3),
+        getPublishedVehiclesCount(),
+        getLowestPublishedPrice().catch(() => null),
+    ]);
+    // When getLowestPublishedPrice fails (e.g. Firestore index not deployed), fall back to min of
+    // the 3 preview vehicles only — approximate until firestore.indexes.json is deployed.
+    const lowestPrice = lowestPriceResult ?? (vehicles.length > 0
+        ? Math.min(...vehicles.map(v => v.price))
+        : null);
+    return { vehicles, totalCount, lowestPrice };
+});
+
 export const getPublishedVehicleById = cache(async (id: string): Promise<Vehicle | null> => {
     const doc = await db.collection(COLLECTIONS.VEHICLES).doc(id).get();
 
