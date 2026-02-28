@@ -31,7 +31,7 @@ export default function ImportPage() {
           <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
             Process steps
           </h2>
-          <ol className="space-y-6 list-none counter-reset">
+          <ol className="space-y-6 list-none">
             <li className="flex gap-4">
               <span className="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 dark:bg-white/10 text-primary dark:text-white font-bold flex items-center justify-center text-sm">1</span>
               <div>
