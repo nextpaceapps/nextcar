@@ -1,7 +1,14 @@
-
 import React from 'react';
+import type { Vehicle } from '@nextcar/shared';
+import SidebarVehiclePreviews from './SidebarVehiclePreviews';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  vehicles: Vehicle[];
+  totalCount: number;
+  lowestPrice: number | null;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) => {
   return (
     <aside className="w-full lg:w-[380px] lg:h-screen lg:sticky top-0 p-8 lg:p-12 flex flex-col justify-between bg-background-light dark:bg-background-dark z-40 transition-colors duration-300">
       <div className="space-y-16">
@@ -18,32 +25,18 @@ const Sidebar: React.FC = () => {
         {/* Ongoing Sales */}
         <div className="space-y-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Ongoing Sales</p>
-          <div className="flex items-center gap-4">
-            <div className="flex -space-x-4 overflow-hidden">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt="Vehicle sale avatar"
-                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
-                src="https://picsum.photos/seed/car1/100/100"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt="Vehicle sale avatar"
-                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
-                src="https://picsum.photos/seed/car2/100/100"
-              />
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                alt="Vehicle sale avatar"
-                className="inline-block h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark object-cover"
-                src="https://picsum.photos/seed/car3/100/100"
-              />
-              <div className="flex items-center justify-center h-14 w-14 rounded-full ring-[6px] ring-background-light dark:ring-background-dark bg-slate-100 dark:bg-slate-800 text-[10px] font-extrabold dark:text-white">+12</div>
-            </div>
-          </div>
+          <SidebarVehiclePreviews vehicles={vehicles} totalCount={totalCount} />
           <p className="text-sm text-slate-500 italic dark:text-slate-400 leading-relaxed">
-            Your next vehicle starting from <br />
-            <span className="font-bold text-primary dark:text-white text-base not-italic">€18,900</span>
+            {lowestPrice !== null ? (
+              <>
+                Your next vehicle starting from <br />
+                <span className="font-bold text-primary dark:text-white text-base not-italic">
+                  €{lowestPrice.toLocaleString()}
+                </span>
+              </>
+            ) : (
+              <>Browse our inventory</>
+            )}
           </p>
         </div>
 
