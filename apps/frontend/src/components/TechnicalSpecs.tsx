@@ -2,10 +2,6 @@ import { getTranslations } from 'next-intl/server';
 import type { Vehicle } from '@nextcar/shared';
 import SpecCard from './SpecCard';
 
-function formatMileage(km: number): string {
-  return `${km.toLocaleString()} km`;
-}
-
 function formatEngineSize(engineSize: string): string {
   const trimmed = engineSize.trim();
   return trimmed.endsWith('L') ? trimmed : `${trimmed}L`;
@@ -49,7 +45,7 @@ export default async function TechnicalSpecs({ vehicle }: { vehicle: Vehicle }) 
     specs.push({
       icon: 'speed',
       label: t('mileage'),
-      value: formatMileage(vehicle.mileage),
+      value: `${vehicle.mileage.toLocaleString()} ${t('km')}`,
     });
   }
 
@@ -101,7 +97,7 @@ export default async function TechnicalSpecs({ vehicle }: { vehicle: Vehicle }) 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
         {specs.map((spec) => (
           <SpecCard
-            key={spec.label}
+            key={spec.icon}
             icon={spec.icon}
             label={spec.label}
             value={spec.value}

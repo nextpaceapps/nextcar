@@ -1,5 +1,3 @@
-'use client';
-
 export interface SpecCardProps {
   /** Material Symbols icon name (e.g. "speed", "engineering") */
   icon: string;
