@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import { getPublishedVehicleById } from '@/lib/data/vehicles';
-import PhotoGallery from '@/components/PhotoGallery';
+import HeroGallery from '@/components/HeroGallery';
 import YoutubeEmbed from '@/components/YoutubeEmbed';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
 import CarVerticalRequestForm from '@/components/CarVerticalRequestForm';
@@ -92,7 +92,7 @@ export default async function VehicleDetailPage({
 
         <div className="flex flex-col lg:flex-row gap-12 items-start">
           <div className="w-full lg:w-2/3 space-y-16">
-            <PhotoGallery photos={vehicle.photos || []} />
+            <HeroGallery photos={vehicle.photos || []} />
 
             <div className="space-y-16">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

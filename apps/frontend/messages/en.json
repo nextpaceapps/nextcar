@@ -86,7 +86,9 @@
   "photoGallery": {
     "noPhotos": "No photos available",
     "enlarge": "Enlarge",
-    "mainPhoto": "Main photo"
+    "mainPhoto": "Main photo",
+    "morePhotos": "+{count} photos",
+    "viewAllPhotos": "View all {count} photos"
   },
   "leadForm": {
     "letsTalk": "Let's talk",

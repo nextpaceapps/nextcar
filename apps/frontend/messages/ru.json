@@ -86,7 +86,9 @@
   "photoGallery": {
     "noPhotos": "Нет доступных фото",
     "enlarge": "Увеличить",
-    "mainPhoto": "Основное фото"
+    "mainPhoto": "Основное фото",
+    "morePhotos": "+{count} фото",
+    "viewAllPhotos": "Смотреть все {count} фото"
   },
   "leadForm": {
     "letsTalk": "Давайте поговорим",
