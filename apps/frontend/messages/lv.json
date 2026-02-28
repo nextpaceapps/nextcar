@@ -86,7 +86,9 @@
   "photoGallery": {
     "noPhotos": "Nav pieejamu foto",
     "enlarge": "Palielināt",
-    "mainPhoto": "Galvenā fotogrāfija"
+    "mainPhoto": "Galvenā fotogrāfija",
+    "morePhotos": "+{count} fotogrāfijas",
+    "viewAllPhotos": "Skatīt visas {count} fotogrāfijas"
   },
   "leadForm": {
     "letsTalk": "Parunāsim",

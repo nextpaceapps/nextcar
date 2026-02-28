@@ -86,7 +86,9 @@
   "photoGallery": {
     "noPhotos": "Nėra prieinamų nuotraukų",
     "enlarge": "Padidinti",
-    "mainPhoto": "Pagrindinė nuotrauka"
+    "mainPhoto": "Pagrindinė nuotrauka",
+    "morePhotos": "+{count} nuotraukų",
+    "viewAllPhotos": "Peržiūrėti visas {count} nuotraukas"
   },
   "leadForm": {
     "letsTalk": "Pasikalbėkime",

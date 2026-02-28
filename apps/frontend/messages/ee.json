@@ -86,7 +86,9 @@
   "photoGallery": {
     "noPhotos": "Fotosid pole saadaval",
     "enlarge": "Suurenda",
-    "mainPhoto": "Peamine foto"
+    "mainPhoto": "Peamine foto",
+    "morePhotos": "+{count} fotot",
+    "viewAllPhotos": "Vaata kõik {count} fotot"
   },
   "leadForm": {
     "letsTalk": "Räägime",
