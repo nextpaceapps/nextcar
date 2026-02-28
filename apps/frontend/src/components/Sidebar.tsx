@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Vehicle } from '@nextcar/shared';
 import SidebarVehiclePreviews from './SidebarVehiclePreviews';
+import SidebarPageLinks from './SidebarPageLinks';
 
 interface SidebarProps {
   vehicles: Vehicle[];
@@ -59,6 +60,8 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
               <p className="text-[10px] text-slate-500 font-medium">Fast approval</p>
             </div>
           </div>
+
+          <SidebarPageLinks />
         </div>
       </div>
 
