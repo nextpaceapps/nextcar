@@ -13,7 +13,9 @@ const HeaderContent: React.FC = () => {
   const tCommon = useTranslations('common');
 
   useEffect(() => {
-    setValue(searchParams?.get('q') || '');
+    const q = searchParams?.get('q') || '';
+    const id = requestAnimationFrame(() => setValue(q));
+    return () => cancelAnimationFrame(id);
   }, [searchParams]);
 
   const handleSearch = () => {

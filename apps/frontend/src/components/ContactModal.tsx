@@ -14,7 +14,8 @@ function ContactModalContent() {
   const t = useTranslations('leadForm');
 
   useEffect(() => {
-    setMounted(true);
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
   }, []);
 
   const isOpen = searchParams?.get('contact') === 'true';
