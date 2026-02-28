@@ -82,7 +82,8 @@
     "scheduleTestDrive": "Schedule Test Drive",
     "testDrive": "Test Drive",
     "contactSales": "Contact Sales",
-    "used": "Used"
+    "used": "Used",
+    "year": "Year"
   },
   "photoGallery": {
     "noPhotos": "No photos available",
