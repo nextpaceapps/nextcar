@@ -1,6 +1,4 @@
-'use client';
-
-import { useTranslations } from 'next-intl';
+import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import type { Vehicle } from '@nextcar/shared';
 
@@ -11,8 +9,8 @@ export interface PdpHeaderProps {
   >;
 }
 
-export default function PdpHeader({ vehicle }: PdpHeaderProps) {
-  const t = useTranslations('vehicles');
+export default async function PdpHeader({ vehicle }: PdpHeaderProps) {
+  const t = await getTranslations('vehicles');
 
   const subtitleParts = [vehicle.bodyType, vehicle.fuelType, vehicle.transmission].filter(Boolean);
   const subtitle = subtitleParts.join(' · ');

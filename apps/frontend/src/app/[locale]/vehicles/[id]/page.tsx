@@ -253,7 +253,7 @@ export default async function VehicleDetailPage({
             </div>
           </div>
 
-          <div className="w-full lg:w-1/3 space-y-8 sticky top-32">
+          <div className="w-full space-y-8 sticky top-32">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
                 <span className="material-symbols-outlined text-slate-400 block mb-2">speed</span>
