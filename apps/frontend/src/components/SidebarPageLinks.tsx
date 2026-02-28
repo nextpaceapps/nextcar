@@ -1,28 +1,31 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Link, usePathname } from '@/i18n/navigation';
 
-const PAGES = [
-  { href: '/about', label: 'About Nextcar' },
-  { href: '/import', label: 'Import Service' },
-  { href: '/how-it-works', label: 'How It Works' },
-  { href: '/contacts', label: 'Contacts' },
-] as const;
+const PAGE_KEYS = ['about', 'import', 'howItWorks', 'contacts'] as const;
+const PATH_MAP: Record<(typeof PAGE_KEYS)[number], string> = {
+  about: '/about',
+  import: '/import',
+  howItWorks: '/how-it-works',
+  contacts: '/contacts',
+};
 
 export default function SidebarPageLinks() {
+  const t = useTranslations('nav');
   const pathname = usePathname();
 
   return (
     <nav className="space-y-1" aria-label="Informational pages">
       <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 mb-3">
-        Info
+        {t('info')}
       </p>
-      {PAGES.map(({ href, label }) => {
+      {PAGE_KEYS.map((key) => {
+        const href = PATH_MAP[key];
         const isActive = pathname === href;
         return (
           <Link
-            key={href}
+            key={key}
             href={href}
             className={`block py-2 text-sm font-medium transition-colors rounded-lg px-3 -mx-3 ${
               isActive
@@ -30,7 +33,7 @@ export default function SidebarPageLinks() {
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
             }`}
           >
-            {label}
+            {t(key)}
           </Link>
         );
       })}

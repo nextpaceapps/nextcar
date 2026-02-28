@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import type { Vehicle } from '@nextcar/shared';
 
 const PLACEHOLDER_IMAGE = 'https://placehold.co/200x200?text=No+Image';
@@ -17,6 +20,7 @@ interface SidebarVehiclePreviewsProps {
 }
 
 export default function SidebarVehiclePreviews({ vehicles, totalCount }: SidebarVehiclePreviewsProps) {
+  const tNav = useTranslations('nav');
   const ringClass = 'ring-[6px] ring-background-light dark:ring-background-dark';
   const circleClass = `inline-block h-14 w-14 rounded-full ${ringClass} object-cover overflow-hidden shrink-0`;
   const shown = vehicles.slice(0, 3).length;
@@ -34,7 +38,7 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
               key={vehicle.id}
               href={href}
               className={`group relative ${circleClass}`}
-              aria-label={`View ${label}`}
+              aria-label={label}
             >
               <span className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-full">
                 <Image
@@ -74,7 +78,7 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
         <Link
           href="/vehicles"
           className={`flex items-center justify-center ${circleClass} bg-slate-100 dark:bg-slate-800 text-[10px] font-extrabold dark:text-white min-w-[3.5rem] min-h-[3.5rem]`}
-          aria-label="View all vehicles"
+          aria-label={tNav('viewAllVehicles')}
         >
           {remaining > 0 ? `+${remaining}` : '0'}
         </Link>

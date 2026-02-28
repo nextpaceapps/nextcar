@@ -1,8 +1,3 @@
-import ThemeProvider from '../components/ThemeProvider';
-import SidebarWithData from '../components/SidebarWithData';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import ContactModal from '../components/ContactModal';
 import '../app/globals.css';
 import { Metadata } from 'next';
 
@@ -14,10 +9,10 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -40,20 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-[#f8f9fa] dark:bg-[#0f1115] text-slate-900 dark:text-slate-100 transition-colors duration-300">
-        <ThemeProvider>
-          {/* Centered Main Wrapper */}
-          <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row relative bg-white dark:bg-[#0a0c10] shadow-sm min-h-screen">
-            {/* Sidebar */}
-            <SidebarWithData />
-
-            <div className="flex-1 flex flex-col min-h-screen border-l border-slate-100 dark:border-slate-800/50 relative">
-              <Header />
-              {children}
-              <Footer />
-              <ContactModal />
-            </div>
-          </div>
-        </ThemeProvider>
+        {children}
       </body>
     </html>
   );
