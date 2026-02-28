@@ -3,11 +3,17 @@
 import React, { useState } from 'react';
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-    const [isDark, setIsDark] = useState(() => {
-        if (typeof window === 'undefined') return false;
-        if (!localStorage.theme) localStorage.theme = 'light';
-        return localStorage.theme === 'dark';
-    });
+    const [mounted, setMounted] = React.useState(false);
+    const [isDark, setIsDark] = useState(false);
+
+    React.useEffect(() => {
+        setMounted(true);
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            setIsDark(true);
+        } else {
+            setIsDark(false);
+        }
+    }, []);
 
     const toggleDarkMode = () => {
         setIsDark(!isDark);
@@ -23,17 +29,19 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     return (
         <>
             {children}
-            <button
-                onClick={toggleDarkMode}
-                className="fixed bottom-6 right-6 z-[100] p-4 bg-white dark:bg-slate-900 rounded-full shadow-2xl border border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:scale-110 transition-transform flex items-center justify-center group"
-                aria-label="Toggle dark mode"
-            >
-                {isDark ? (
-                    <span className="material-symbols-outlined group-hover:rotate-12 transition-transform">light_mode</span>
-                ) : (
-                    <span className="material-symbols-outlined group-hover:rotate-12 transition-transform">dark_mode</span>
-                )}
-            </button>
+            {mounted && (
+                <button
+                    onClick={toggleDarkMode}
+                    className="fixed bottom-6 right-6 z-[100] p-4 bg-white dark:bg-slate-900 rounded-full shadow-2xl border border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:scale-110 transition-transform flex items-center justify-center group"
+                    aria-label="Toggle dark mode"
+                >
+                    {isDark ? (
+                        <span className="material-symbols-outlined group-hover:rotate-12 transition-transform">light_mode</span>
+                    ) : (
+                        <span className="material-symbols-outlined group-hover:rotate-12 transition-transform">dark_mode</span>
+                    )}
+                </button>
+            )}
         </>
     );
 }
