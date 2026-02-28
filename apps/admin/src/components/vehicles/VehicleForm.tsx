@@ -54,15 +54,21 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
     const [newVideoLink, setNewVideoLink] = useState('');
     const [videoLinkError, setVideoLinkError] = useState<string | null>(null);
 
-    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<VehicleSchema>({
-        resolver: zodResolver(vehicleSchema),
-        defaultValues: initialData ? {
+    const normalizedPhotos: VehicleSchema['photos'] = (initialData?.photos || []).map((p) => ({
+        url: p.url,
+        order: p.order,
+        defects: p.defects ?? [],
+    }));
+
+    const defaultValues = initialData
+        ? {
             ...initialData,
             features: initialData.features || [],
-            photos: initialData.photos || [],
-            featured: !!initialData.featured
-        } : {
-            status: 'draft' as const,
+            photos: normalizedPhotos,
+            featured: !!initialData.featured,
+        }
+        : {
+            status: 'draft',
             features: [],
             photos: [],
             year: new Date().getFullYear(),
@@ -70,12 +76,16 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
             mileage: 0,
             make: '',
             model: '',
-            fuelType: 'Petrol' as const,
-            transmission: 'Automatic' as const,
-            bodyType: 'Sedan' as const,
+            fuelType: 'Petrol',
+            transmission: 'Automatic',
+            bodyType: 'Sedan',
             color: '',
             featured: false,
-        }
+        } as VehicleSchema;
+
+    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<VehicleSchema>({
+        resolver: zodResolver(vehicleSchema),
+        defaultValues,
     });
 
     // Helper for optional number fields — converts empty string to undefined instead of NaN
@@ -242,12 +252,17 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                 const newPhotos = urls.map((url, i) => ({
                     url,
                     order: startOrder + i,
+                    defects: [],
                 }));
 
                 allPhotos = [...allPhotos, ...newPhotos];
             }
 
-            allPhotos = allPhotos.map((p, i) => ({ ...p, order: i }));
+            allPhotos = allPhotos.map((p, i) => ({
+                ...p,
+                order: i,
+                defects: (p.defects ?? []).filter((d) => (d.description ?? '').trim().length > 0),
+            }));
 
             const finalData = { ...data, photos: allPhotos, videoLinks };
 
@@ -493,6 +508,7 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                                                         photo={photo}
                                                         index={index}
                                                         onRemove={handleRemoveExistingPhoto}
+                                                        disabled={isViewer}
                                                     />
                                                 );
                                             })}

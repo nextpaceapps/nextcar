@@ -6,13 +6,10 @@ import Lightbox from 'yet-another-react-lightbox';
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
 import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
+import type { VehiclePhoto } from '@nextcar/shared';
+import { DefectIndicator } from './DefectIndicator';
 
-interface Photo {
-    url: string;
-    order: number;
-}
-
-export default function PhotoGallery({ photos }: { photos: Photo[] }) {
+export default function PhotoGallery({ photos }: { photos: VehiclePhoto[] }) {
     const [index, setIndex] = useState(-1);
 
     if (!photos || photos.length === 0) {
@@ -44,6 +41,11 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
                 />
                 <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                {sorted[0].defects?.length ? (
+                    <div onClick={(e) => e.stopPropagation()}>
+                        <DefectIndicator defects={sorted[0].defects} photoLabel="Main photo" />
+                    </div>
+                ) : null}
                 <div className="absolute bottom-4 right-4 bg-black/60 text-white px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-md flex items-center gap-2">
                     <span className="material-symbols-outlined text-sm">fullscreen</span>
                     Enlarge
@@ -60,11 +62,16 @@ export default function PhotoGallery({ photos }: { photos: Photo[] }) {
                         >
                             <Image
                                 src={photo.url}
-                                alt={`Gallery ${i}`}
+                                alt={`Gallery ${i + 1}`}
                                 fill
                                 sizes="128px"
                                 className="object-cover"
                             />
+                            {photo.defects?.length ? (
+                                <div onClick={(e) => e.stopPropagation()}>
+                                    <DefectIndicator defects={photo.defects} photoLabel={`Photo ${i + 2}`} />
+                                </div>
+                            ) : null}
                         </div>
                     ))}
                 </div>

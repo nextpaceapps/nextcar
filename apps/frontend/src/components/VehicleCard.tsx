@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Vehicle } from '@nextcar/shared';
+import { DefectIndicator } from './DefectIndicator';
 
 interface VehicleCardProps {
     vehicle: Vehicle;
@@ -9,7 +10,8 @@ interface VehicleCardProps {
 
 export default function VehicleCard({ vehicle, priority = false }: VehicleCardProps) {
     const sortedPhotos = [...vehicle.photos].sort((a, b) => a.order - b.order);
-    const imageUrl = sortedPhotos[0]?.url || 'https://placehold.co/600x400?text=No+Image';
+    const coverPhoto = sortedPhotos[0];
+    const imageUrl = coverPhoto?.url || 'https://placehold.co/600x400?text=No+Image';
 
     return (
         <div className="group flex flex-col gap-6">
@@ -23,6 +25,12 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
                         priority={priority}
                         className="object-cover group-hover:scale-105 transition-transform duration-700"
                     />
+                    {coverPhoto?.defects?.length ? (
+                        <DefectIndicator
+                            defects={coverPhoto.defects}
+                            photoLabel={`${vehicle.make} ${vehicle.model}`}
+                        />
+                    ) : null}
                 </div>
             </Link>
 
