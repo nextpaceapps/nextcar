@@ -3,6 +3,7 @@ import { getPublishedVehicleById } from '../../../lib/data/vehicles';
 import PhotoGallery from '../../../components/PhotoGallery';
 import YoutubeEmbed from '../../../components/YoutubeEmbed';
 import LeadCaptureForm from '../../../components/LeadCaptureForm';
+import CarVerticalRequestForm from '../../../components/CarVerticalRequestForm';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
@@ -184,6 +185,28 @@ export default async function VehicleDetailPage({
                                     <YoutubeEmbed links={vehicle.videoLinks} />
                                 </div>
                             )}
+
+                            {/* CarVertical report request */}
+                            <div id="carvertical-request" className="mt-12 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 lg:p-8 scroll-mt-32">
+                                <div className="flex items-center gap-4 mb-6">
+                                    <span className="material-symbols-outlined p-3 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl text-3xl">history_edu</span>
+                                    <div>
+                                        <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100">
+                                            Vehicle history report
+                                        </h3>
+                                        <p className="text-slate-500 dark:text-slate-400 text-sm">Request a CarVertical report for this vehicle. We&apos;ll email it to you.</p>
+                                    </div>
+                                </div>
+                                <CarVerticalRequestForm
+                                    vehicleId={id}
+                                    vehicleContext={{
+                                        make: vehicle.make,
+                                        model: vehicle.model,
+                                        year: vehicle.year,
+                                        vin: vehicle.vin ?? null,
+                                    }}
+                                />
+                            </div>
 
                             {/* Inquiry Form */}
                             <div id="inquiry-form" className="mt-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 lg:p-10 shadow-xl scroll-mt-32">
