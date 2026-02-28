@@ -127,7 +127,8 @@
     "requestCarVerticalReport": "Užsakyti CarVertical ataskaitą",
     "sending": "Siunčiama...",
     "emailInvalid": "Įveskite tinkamą el. pašto adresą",
-    "emailRequiredValidation": "El. paštas būtinas"
+    "emailRequiredValidation": "El. paštas būtinas",
+    "requestFailed": "Kažkas nutiko. Bandykite dar kartą."
   },
   "home": {
     "title": "Parinktas parkas",

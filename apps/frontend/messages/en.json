@@ -127,7 +127,8 @@
     "requestCarVerticalReport": "Request CarVertical report",
     "sending": "Sending...",
     "emailInvalid": "Please enter a valid email address",
-    "emailRequiredValidation": "Email is required"
+    "emailRequiredValidation": "Email is required",
+    "requestFailed": "Something went wrong. Please try again."
   },
   "home": {
     "title": "Premium Curated Fleet",

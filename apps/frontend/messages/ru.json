@@ -127,7 +127,8 @@
     "requestCarVerticalReport": "Заказать отчёт CarVertical",
     "sending": "Отправка...",
     "emailInvalid": "Введите корректный email",
-    "emailRequiredValidation": "Email обязателен"
+    "emailRequiredValidation": "Email обязателен",
+    "requestFailed": "Что-то пошло не так. Попробуйте ещё раз."
   },
   "home": {
     "title": "Подобранный парк",

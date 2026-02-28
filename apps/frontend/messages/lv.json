@@ -127,7 +127,8 @@
     "requestCarVerticalReport": "Pieprasīt CarVertical atskaiti",
     "sending": "Nosūta...",
     "emailInvalid": "Lūdzu, ievadiet derīgu e-pasta adresi",
-    "emailRequiredValidation": "E-pasts ir obligāts"
+    "emailRequiredValidation": "E-pasts ir obligāts",
+    "requestFailed": "Kaut kas nogāja greizi. Lūdzu, mēģiniet vēlreiz."
   },
   "home": {
     "title": "Izvēlēta flote",

@@ -127,7 +127,8 @@
     "requestCarVerticalReport": "Tellige CarVerticali aruanne",
     "sending": "Saadan...",
     "emailInvalid": "Sisestage kehtiv e-posti aadress",
-    "emailRequiredValidation": "E-post on nõutud"
+    "emailRequiredValidation": "E-post on nõutud",
+    "requestFailed": "Midagi läks valesti. Palun proovige uuesti."
   },
   "home": {
     "title": "Valitud park",

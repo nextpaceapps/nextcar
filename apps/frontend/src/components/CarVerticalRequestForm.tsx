@@ -47,8 +47,14 @@ export default function CarVerticalRequestForm({
     if (!parseResult.success) {
       const first = parseResult.error.issues[0];
       const path = first.path[0] as string;
-      setFieldErrors(path === 'email' ? { email: first.message } : {});
-      setErrorMessage(first.message);
+      const emailMsg =
+        path === 'email'
+          ? first.code === 'too_small' || first.code === 'invalid_type'
+            ? t('emailRequiredValidation')
+            : t('emailInvalid')
+          : undefined;
+      setFieldErrors(path === 'email' ? { email: emailMsg } : {});
+      setErrorMessage(emailMsg ?? first.message);
       setStatus('error');
       return;
     }
@@ -72,11 +78,11 @@ export default function CarVerticalRequestForm({
         (e.target as HTMLFormElement).reset();
       } else {
         setStatus('error');
-        setErrorMessage(result.error || t('requestReceivedMessage'));
+        setErrorMessage(result.error || t('requestFailed'));
       }
     } catch {
       setStatus('error');
-      setErrorMessage(t('requestReceivedMessage'));
+      setErrorMessage(t('requestFailed'));
     }
   }
 
