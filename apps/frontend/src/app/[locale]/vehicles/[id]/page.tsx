@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getPublishedVehicleById } from '@/lib/data/vehicles';
 import HeroGallery from '@/components/HeroGallery';
 import PdpHeader from '@/components/PdpHeader';
+import TechnicalSpecs from '@/components/TechnicalSpecs';
 import YoutubeEmbed from '@/components/YoutubeEmbed';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
 import CarVerticalRequestForm from '@/components/CarVerticalRequestForm';
@@ -100,20 +101,7 @@ export default async function VehicleDetailPage({
 
             <div className="space-y-16">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <div>
-                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-                    <span className="material-symbols-outlined text-primary">engineering</span>
-                    {t('technicalSpecs')}
-                  </h3>
-                  <ul className="space-y-3">
-                    <SpecRow label={t('power')} value={vehicle.power} />
-                    <SpecRow label={t('engineSize')} value={vehicle.engineSize} />
-                    <SpecRow label={t('doors')} value={vehicle.doors} />
-                    <SpecRow label={t('seats')} value={vehicle.seats} />
-                    <SpecRow label={t('co2Standard')} value={vehicle.co2Standard} />
-                    <SpecRow label={t('interiorColor')} value={vehicle.interiorColor} />
-                  </ul>
-                </div>
+                <TechnicalSpecs vehicle={vehicle} />
 
                 <div>
                   <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
