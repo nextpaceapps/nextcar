@@ -62,7 +62,7 @@ export default async function HomePage() {
               Featured Vehicles
             </h2>
           </div>
-          <div className="space-y-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {featured.map((vehicle, i) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} priority={i < 2} />
             ))}
@@ -85,7 +85,7 @@ export default async function HomePage() {
               <span className="material-symbols-outlined text-sm">arrow_forward</span>
             </Link>
           </div>
-          <div className="space-y-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {latestNonFeatured.map((vehicle, i) => (
               <VehicleCard key={vehicle.id} vehicle={vehicle} priority={i < 2} />
             ))}
