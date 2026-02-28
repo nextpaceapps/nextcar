@@ -79,6 +79,7 @@
     "interestedContactUs": "Huvitatud? Võtke ühendust",
     "fastResponseGuaranteed": "Kiire vastus garanteeritud meie müügimeeskonna poolt.",
     "imInterested": "Olen huvitatud",
+    "scheduleTestDrive": "Broneeri proovisõit",
     "testDrive": "Proovisõit",
     "contactSales": "Võta ühendust müügiga",
     "used": "Kasutatud"
@@ -87,6 +88,7 @@
     "noPhotos": "Fotosid pole saadaval",
     "enlarge": "Suurenda",
     "mainPhoto": "Peamine foto",
+    "photo": "Foto {number}",
     "morePhotos": "+{count} fotot",
     "viewAllPhotos": "Vaata kõik {count} fotot"
   },

@@ -79,6 +79,7 @@
     "interestedContactUs": "Interested? Contact Us",
     "fastResponseGuaranteed": "Fast response guaranteed by our sales team.",
     "imInterested": "I'm Interested",
+    "scheduleTestDrive": "Schedule Test Drive",
     "testDrive": "Test Drive",
     "contactSales": "Contact Sales",
     "used": "Used"
@@ -87,6 +88,7 @@
     "noPhotos": "No photos available",
     "enlarge": "Enlarge",
     "mainPhoto": "Main photo",
+    "photo": "Photo {number}",
     "morePhotos": "+{count} photos",
     "viewAllPhotos": "View all {count} photos"
   },

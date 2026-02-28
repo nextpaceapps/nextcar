@@ -79,6 +79,7 @@
     "interestedContactUs": "Interesē? Sazinieties ar mums",
     "fastResponseGuaranteed": "Ātra atbilde garantēta no mūsu pārdošanas komandas.",
     "imInterested": "Esmu ieinteresēts",
+    "scheduleTestDrive": "Rezervēt testa braucienu",
     "testDrive": "Testa brauciens",
     "contactSales": "Sazināties ar pārdošanu",
     "used": "Lietots"
@@ -87,8 +88,9 @@
     "noPhotos": "Nav pieejamu foto",
     "enlarge": "Palielināt",
     "mainPhoto": "Galvenā fotogrāfija",
-    "morePhotos": "+{count} fotogrāfijas",
-    "viewAllPhotos": "Skatīt visas {count} fotogrāfijas"
+    "photo": "Fotogrāfija {number}",
+    "morePhotos": "{count, plural, one {+# fotogrāfija} few {+# fotogrāfijas} other {+# fotogrāfiju}}",
+    "viewAllPhotos": "{count, plural, one {Skatīt # fotogrāfiju} few {Skatīt visas # fotogrāfijas} other {Skatīt visas # fotogrāfijas}}"
   },
   "leadForm": {
     "letsTalk": "Parunāsim",

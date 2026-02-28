@@ -79,6 +79,7 @@
     "interestedContactUs": "Domina? Susisiekite su mumis",
     "fastResponseGuaranteed": "Greitas atsakymas garantuojamas iš mūsų pardavimų komandos.",
     "imInterested": "Domiuosi",
+    "scheduleTestDrive": "Užsakyti testinę važiuojamąją",
     "testDrive": "Testinė važiuojamoji",
     "contactSales": "Susisiekti su pardavimais",
     "used": "Naudotas"
@@ -87,8 +88,9 @@
     "noPhotos": "Nėra prieinamų nuotraukų",
     "enlarge": "Padidinti",
     "mainPhoto": "Pagrindinė nuotrauka",
-    "morePhotos": "+{count} nuotraukų",
-    "viewAllPhotos": "Peržiūrėti visas {count} nuotraukas"
+    "photo": "Nuotrauka {number}",
+    "morePhotos": "{count, plural, one {+# nuotrauka} few {+# nuotraukos} other {+# nuotraukų}}",
+    "viewAllPhotos": "{count, plural, one {Peržiūrėti # nuotrauką} few {Peržiūrėti visas # nuotraukas} other {Peržiūrėti visas # nuotraukų}}"
   },
   "leadForm": {
     "letsTalk": "Pasikalbėkime",

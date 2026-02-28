@@ -36,6 +36,7 @@ export const vehicleSchema = z.object({
     model: z.string().min(1, 'Model is required'),
     year: z.number().int().min(1900).max(new Date().getFullYear() + 1),
     price: z.number().min(0),
+    oldPrice: z.number().min(0).optional(),
     mileage: z.number().min(0),
     fuelType: fuelTypeSchema,
     transmission: transmissionSchema,
