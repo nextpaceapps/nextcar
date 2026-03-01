@@ -63,6 +63,8 @@
     "featuredHighlights": "Peamised omadused",
     "description": "Kirjeldus",
     "equipmentDetails": "Varustuse üksikasjad",
+    "equipmentCategories": {"airConditioning": "Kliimaseade", "infotainment": "Infotehnoloogia ja ühenduvus", "mirrors": "Peeglid", "parkingAid": "Parkimine ja abistamine", "safety": "Ohutus", "seats": "Istmed ja mugavus", "steeringWheel": "Rool", "wheels": "Rattad ja rehvid", "windows": "Aknad ja klaas", "other": "Muud funktsioonid"},
+    "additionalFeatures": "Täiendavad funktsioonid",
     "vehicleVideo": "Sõiduki video",
     "power": "Võimsus",
     "engineSize": "Mootori maht",

@@ -3,6 +3,7 @@ import { getPublishedVehicleById } from '@/lib/data/vehicles';
 import HeroGallery from '@/components/HeroGallery';
 import PdpHeader from '@/components/PdpHeader';
 import TechnicalSpecs from '@/components/TechnicalSpecs';
+import FeaturesSection from '@/components/FeaturesSection';
 import YoutubeEmbed from '@/components/YoutubeEmbed';
 import LeadCaptureForm from '@/components/LeadCaptureForm';
 import CarVerticalRequestForm from '@/components/CarVerticalRequestForm';
@@ -54,8 +55,6 @@ function SpecRow({ label, value }: { label: string; value?: string | number | nu
     </li>
   );
 }
-
-const formatCategory = (str: string) => str.replace(/([A-Z])/g, ' $1').replace(/^./, (s) => s.toUpperCase());
 
 export default async function VehicleDetailPage({
   params,
@@ -118,24 +117,7 @@ export default async function VehicleDetailPage({
                 </div>
               </div>
 
-              {vehicle.features && vehicle.features.length > 0 && (
-                <div>
-                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-                    <span className="material-symbols-outlined text-primary">star</span>
-                    {t('featuredHighlights')}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {vehicle.features.map((feature, i) => (
-                      <span
-                        key={i}
-                        className="px-4 py-2 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-full text-sm font-medium border border-slate-200 dark:border-slate-700"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <FeaturesSection vehicle={vehicle} />
 
               {vehicle.description && (
                 <div>
@@ -145,40 +127,6 @@ export default async function VehicleDetailPage({
                   </h3>
                   <div className="prose dark:prose-invert prose-lg text-slate-600 dark:text-slate-400 break-words whitespace-pre-wrap max-w-none">
                     {vehicle.description}
-                  </div>
-                </div>
-              )}
-
-              {vehicle.equipment && Object.keys(vehicle.equipment).length > 0 && (
-                <div>
-                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-                    <span className="material-symbols-outlined text-primary">build_circle</span>
-                    {t('equipmentDetails')}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    {Object.entries(vehicle.equipment).map(([category, items]) => {
-                      if (!items || items.length === 0) return null;
-                      return (
-                        <div key={category}>
-                          <h4 className="font-bold text-slate-800 dark:text-slate-200 mb-4">
-                            {formatCategory(category)}
-                          </h4>
-                          <ul className="space-y-3">
-                            {items.map((item, i) => (
-                              <li
-                                key={i}
-                                className="text-sm text-slate-600 dark:text-slate-400 flex items-start gap-3 leading-tight"
-                              >
-                                <span className="material-symbols-outlined text-primary text-base shrink-0">
-                                  check
-                                </span>
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      );
-                    })}
                   </div>
                 </div>
               )}
