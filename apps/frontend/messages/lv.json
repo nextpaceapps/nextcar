@@ -85,6 +85,8 @@
     "testDrive": "Testa brauciens",
     "contactSales": "Sazināties ar pārdošanu",
     "used": "Lietots",
+    "verified": "Pārbaudīts",
+    "verifiedBadge": "Pārbaudīts sludinājums",
     "year": "Gads",
     "historyCardLabel": "VĒSTURE",
     "historyCardReport": "Atskaite",
@@ -220,6 +222,10 @@
     "email": "E-pasts",
     "phone": "Tālrunis",
     "respondWithinDay": "Parasti atbildam vienas darba dienas laikā. Steidzamiem jautājumiem zvaniet."
+  },
+  "breadcrumb": {
+    "home": "Sākums",
+    "vehicles": "Transportlīdzekļi"
   },
   "metadata": {
     "siteTitle": "Nextcar | Izvēlēta flote",
