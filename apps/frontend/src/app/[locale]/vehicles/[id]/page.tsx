@@ -95,32 +95,28 @@ export default async function VehicleDetailPage({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
-          <div className="lg:col-span-2 space-y-16">
-            <section className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,380px)] gap-8 lg:gap-10 items-start" aria-label="Vehicle hero and header">
-              <HeroGallery
-                photos={vehicle.photos || []}
-                badge={vehicle.verified ? <VerificationBadge /> : undefined}
-              />
-              <PdpHeader vehicle={vehicle} />
-            </section>
+          <div className="lg:col-span-2 space-y-8">
+            <HeroGallery
+              photos={vehicle.photos || []}
+              badge={vehicle.verified ? <VerificationBadge /> : undefined}
+            />
+            <PdpHeader vehicle={vehicle} />
 
-            <div className="space-y-16">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <TechnicalSpecs vehicle={vehicle} />
+            <div className="space-y-16 pt-4">
+              <TechnicalSpecs vehicle={vehicle} />
 
-                <div>
-                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-                    <span className="material-symbols-outlined text-primary">history</span>
-                    {t('historyProvenance')}
-                  </h3>
-                  <ul className="space-y-3">
-                    <SpecRow label={t('firstRegistration')} value={vehicle.firstRegistration} />
-                    <SpecRow label={t('technicalInspection')} value={vehicle.technicalInspection} />
-                    <SpecRow label={t('condition')} value={vehicle.condition} />
-                    <SpecRow label={t('numberOfKeys')} value={vehicle.numberOfKeys} />
-                    <SpecRow label={t('vin')} value={vehicle.vin} />
-                  </ul>
-                </div>
+              <div>
+                <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                  <span className="material-symbols-outlined text-primary">history</span>
+                  {t('historyProvenance')}
+                </h3>
+                <ul className="space-y-3">
+                  <SpecRow label={t('firstRegistration')} value={vehicle.firstRegistration} />
+                  <SpecRow label={t('technicalInspection')} value={vehicle.technicalInspection} />
+                  <SpecRow label={t('condition')} value={vehicle.condition} />
+                  <SpecRow label={t('numberOfKeys')} value={vehicle.numberOfKeys} />
+                  <SpecRow label={t('vin')} value={vehicle.vin} />
+                </ul>
               </div>
 
               <FeaturesSection vehicle={vehicle} />
@@ -195,59 +191,12 @@ export default async function VehicleDetailPage({
             </div>
           </div>
 
-          <div className="w-full space-y-8 sticky top-32">
+          <div className="space-y-4 sticky top-32">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1">
+              History &amp; Review
+            </p>
             <HistoryCard />
             <ReviewCard videoLinks={vehicle.videoLinks ?? []} />
-            <div className="grid grid-cols-2 gap-4">
-              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                <span className="material-symbols-outlined text-slate-400 block mb-2">speed</span>
-                <div className="text-sm font-bold uppercase tracking-wider">
-                  {vehicle.mileage.toLocaleString()} km
-                </div>
-                <div className="text-[10px] text-slate-500 font-medium tracking-wide uppercase">
-                  {t('mileage')}
-                </div>
-              </div>
-              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                <span className="material-symbols-outlined text-slate-400 block mb-2">local_gas_station</span>
-                <div className="text-sm font-bold uppercase tracking-wider">{vehicle.fuelType}</div>
-                <div className="text-[10px] text-slate-500 font-medium tracking-wide uppercase">
-                  {t('fuelType')}
-                </div>
-              </div>
-              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                <span className="material-symbols-outlined text-slate-400 block mb-2">settings</span>
-                <div className="text-sm font-bold uppercase tracking-wider">{vehicle.transmission}</div>
-                <div className="text-[10px] text-slate-500 font-medium tracking-wide uppercase">
-                  {t('transmission')}
-                </div>
-              </div>
-              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                <span className="material-symbols-outlined text-slate-400 block mb-2">directions_car</span>
-                <div className="text-sm font-bold uppercase tracking-wider truncate">{vehicle.bodyType}</div>
-                <div className="text-[10px] text-slate-500 font-medium tracking-wide uppercase">
-                  {t('body')}
-                </div>
-              </div>
-              <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                <span className="material-symbols-outlined text-slate-400 block mb-2">palette</span>
-                <div className="text-sm font-bold uppercase tracking-wider truncate">{vehicle.color}</div>
-                <div className="text-[10px] text-slate-500 font-medium tracking-wide uppercase">
-                  {t('color')}
-                </div>
-              </div>
-              {(vehicle.condition || vehicle.vin) && (
-                <div className="bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <span className="material-symbols-outlined text-slate-400 block mb-2">sell</span>
-                  <div className="text-sm font-bold uppercase tracking-wider truncate">
-                    {vehicle.condition || t('used')}
-                  </div>
-                  <div className="text-[10px] text-slate-500 font-medium tracking-wide uppercase">
-                    {t('condition')}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </div>
 
