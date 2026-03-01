@@ -85,7 +85,15 @@
     "testDrive": "Proovisõit",
     "contactSales": "Võta ühendust müügiga",
     "used": "Kasutatud",
-    "year": "Aasta"
+    "year": "Aasta",
+    "historyCardLabel": "AUTO AJALUGU",
+    "historyCardReport": "Aruanne",
+    "historyCardCta": "Tellige CarVerticali aruanne",
+    "reviewCardLabel": "VIDEO ÜLEVAADE",
+    "reviewCardWatch": "Vaata video ülevaadet",
+    "reviewCardWatchOnYouTube": "Vaata YouTube'is",
+    "reviewCardViewAllVideos": "Vaata kõik {count} videot",
+    "reviewCardCloseModal": "Sulge video"
   },
   "photoGallery": {
     "noPhotos": "Fotosid pole saadaval",

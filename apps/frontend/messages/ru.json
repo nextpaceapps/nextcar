@@ -85,7 +85,15 @@
     "testDrive": "Тест-драйв",
     "contactSales": "Связаться с продажей",
     "used": "С пробегом",
-    "year": "Год"
+    "year": "Год",
+    "historyCardLabel": "ИСТОРИЯ АВТО",
+    "historyCardReport": "Отчёт",
+    "historyCardCta": "Заказать отчёт CarVertical",
+    "reviewCardLabel": "ВИДЕООБЗОР",
+    "reviewCardWatch": "Смотреть видеообзор",
+    "reviewCardWatchOnYouTube": "Смотреть на YouTube",
+    "reviewCardViewAllVideos": "Смотреть все {count} видео",
+    "reviewCardCloseModal": "Закрыть видео"
   },
   "photoGallery": {
     "noPhotos": "Нет доступных фото",

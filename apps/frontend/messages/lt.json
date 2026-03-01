@@ -85,7 +85,15 @@
     "testDrive": "Testinė važiuojamoji",
     "contactSales": "Susisiekti su pardavimais",
     "used": "Naudotas",
-    "year": "Metai"
+    "year": "Metai",
+    "historyCardLabel": "AUTOMOBILIO ISTORIJA",
+    "historyCardReport": "Ataskaita",
+    "historyCardCta": "Užsakyti CarVertical ataskaitą",
+    "reviewCardLabel": "VAIZDO APŽVALGA",
+    "reviewCardWatch": "Žiūrėti vaizdo apžvalgą",
+    "reviewCardWatchOnYouTube": "Žiūrėti YouTube",
+    "reviewCardViewAllVideos": "Peržiūrėti visus {count} vaizdo įrašus",
+    "reviewCardCloseModal": "Uždaryti vaizdo įrašą"
   },
   "photoGallery": {
     "noPhotos": "Nėra prieinamų nuotraukų",
