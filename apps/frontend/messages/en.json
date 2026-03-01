@@ -63,6 +63,8 @@
     "featuredHighlights": "Featured Highlights",
     "description": "Description",
     "equipmentDetails": "Equipment Details",
+    "equipmentCategories": {"airConditioning": "Climate Control", "infotainment": "Infotainment & Connectivity", "mirrors": "Mirrors", "parkingAid": "Parking & Assistance", "safety": "Safety", "seats": "Seats & Comfort", "steeringWheel": "Steering", "wheels": "Wheels & Tires", "windows": "Windows & Glass", "other": "Other Features"},
+    "additionalFeatures": "Additional Features",
     "vehicleVideo": "Vehicle Video",
     "power": "Power",
     "engineSize": "Engine Size",

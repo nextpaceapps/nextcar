@@ -63,6 +63,8 @@
     "featuredHighlights": "Pagrindinės savybės",
     "description": "Aprašymas",
     "equipmentDetails": "Įrangos detalės",
+    "equipmentCategories": {"airConditioning": "Klimato valdymas", "infotainment": "Infotelektronika ir ryšiai", "mirrors": "Veidrodžiai", "parkingAid": "Parkavimas ir pagalba", "safety": "Saugumas", "seats": "Sėdynės ir komfortas", "steeringWheel": "Vairas", "wheels": "Ratai ir padangos", "windows": "Langai ir stiklas", "other": "Kitos savybės"},
+    "additionalFeatures": "Papildomos savybės",
     "vehicleVideo": "Transporto priemonės vaizdo įrašas",
     "power": "Galia",
     "engineSize": "Variklio tūris",
