@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import type { Vehicle } from '@nextcar/shared';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -23,12 +24,18 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
     <aside className="w-full lg:w-[380px] lg:h-screen lg:sticky top-0 p-8 lg:p-12 flex flex-col justify-between bg-background-light z-40">
       <div className="space-y-16">
         <div className="flex items-center justify-between">
-          <div className="font-display font-bold text-2xl tracking-tight uppercase">
-            Nextcar<span className="text-slate-400">.</span>
-          </div>
-          <div className="vehicle-animation text-slate-400 flex items-center">
-            <span className="material-symbols-outlined text-4xl transform -scale-x-100">commute</span>
-          </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image
+              src="/car-logo.png"
+              alt="Nextcar logo"
+              width={56}
+              height={42}
+              className="object-contain"
+            />
+            <span className="font-display font-bold text-2xl tracking-tight uppercase group-hover:opacity-80 transition-opacity">
+              Nextcar<span className="text-slate-400">.</span>
+            </span>
+          </Link>
         </div>
 
         <div className="space-y-6">
@@ -82,10 +89,8 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
         <div className="flex flex-col gap-4">
           <a
             className="text-xl font-semibold tracking-tight hover:underline"
-            href="tel:+37120000000"
-          >
-            +371 2000 0000
-          </a>
+            href="tel:+37120399627"
+          > +371 20399627</a>
           <div className="flex gap-4 uppercase text-[10px] font-extrabold tracking-[0.2em] text-slate-400">
             {routing.locales.map((loc) => {
               const isActive = locale === loc;
