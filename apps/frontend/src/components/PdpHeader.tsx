@@ -34,11 +34,11 @@ export default async function PdpHeader({ vehicle }: PdpHeaderProps) {
       <div className="flex flex-wrap items-center justify-between gap-6 mt-4">
         <div className="flex flex-wrap items-baseline gap-3">
           <span className="text-4xl sm:text-5xl font-bold text-primary font-display tabular-nums">
-            ${vehicle.price.toLocaleString()}
+            €{vehicle.price.toLocaleString()}
           </span>
           {showOldPrice && (
             <span className="text-xl sm:text-2xl text-slate-400 line-through font-display">
-              ${vehicle.oldPrice!.toLocaleString()}
+              €{vehicle.oldPrice!.toLocaleString()}
             </span>
           )}
         </div>

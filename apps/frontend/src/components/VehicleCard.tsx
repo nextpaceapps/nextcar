@@ -56,7 +56,7 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
               {vehicle.year}
             </span>
             <span className="px-4 py-1.5 bg-gray-50 text-gray-900 rounded-full text-[10px] font-bold tracking-wider">
-              ${vehicle.price.toLocaleString()}
+              €{vehicle.price.toLocaleString()}
             </span>
             <Link
               href={`/vehicles/${vehicle.id}`}

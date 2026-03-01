@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     return { title: t('notFound') };
   }
 
-  const title = `${vehicle.year} ${vehicle.make} ${vehicle.model} — $${vehicle.price.toLocaleString()}`;
+  const title = `${vehicle.year} ${vehicle.make} ${vehicle.model} — €${vehicle.price.toLocaleString()}`;
   const description = vehicle.description ? vehicle.description.substring(0, 160) : `Check out this premium ${vehicle.year} ${vehicle.make} ${vehicle.model}.`;
   const image = vehicle.photos && vehicle.photos.length > 0 ? vehicle.photos[0].url : '';
 

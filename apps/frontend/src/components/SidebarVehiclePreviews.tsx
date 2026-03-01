@@ -69,7 +69,7 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
                   {vehicle.year} {vehicle.make} {vehicle.model}
                 </p>
                 <p className="text-primary font-bold text-sm mt-0.5">
-                  ${vehicle.price.toLocaleString()}
+                  €{vehicle.price.toLocaleString()}
                 </p>
               </span>
             </Link>
