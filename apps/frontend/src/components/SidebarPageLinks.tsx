@@ -29,8 +29,8 @@ export default function SidebarPageLinks() {
             href={href}
             className={`block py-2 text-sm font-medium transition-colors rounded-lg px-3 -mx-3 ${
               isActive
-                ? 'text-primary dark:text-white bg-slate-100 dark:bg-slate-800/70'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800/50'
+                ? 'text-primary bg-slate-100'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
             }`}
           >
             {t(key)}

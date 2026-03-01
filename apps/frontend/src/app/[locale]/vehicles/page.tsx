@@ -74,7 +74,7 @@ export default async function VehiclesPage({ searchParams, params }: Props) {
           <div className="mt-16 text-center">
             <Link
               href={`/vehicles?limit=${currentLimit + 20}${q ? `&q=${q}` : ''}`}
-              className="inline-block bg-primary text-white dark:bg-white dark:text-primary px-8 py-4 rounded-full font-bold hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20"
+              className="inline-block bg-primary text-white px-8 py-4 rounded-full font-bold hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20"
               scroll={false}
             >
               {t('loadMore')}

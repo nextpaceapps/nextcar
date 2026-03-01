@@ -24,7 +24,7 @@ export default function HeroGallery({ photos, badge }: HeroGalleryProps) {
 
   if (!photos || photos.length === 0) {
     return (
-      <div className="w-full aspect-[4/3] max-h-[60vh] bg-slate-100 dark:bg-slate-800 rounded-2xl flex items-center justify-center text-slate-500 dark:text-slate-400">
+      <div className="w-full aspect-[4/3] max-h-[60vh] bg-slate-100 rounded-2xl flex items-center justify-center text-slate-500">
         {t('noPhotos')}
       </div>
     );
@@ -49,7 +49,7 @@ export default function HeroGallery({ photos, badge }: HeroGalleryProps) {
       >
         {/* Main image */}
         <div
-          className="relative w-full h-full min-h-[280px] bg-slate-200 dark:bg-slate-800 cursor-pointer group overflow-hidden"
+          className="relative w-full h-full min-h-[280px] bg-slate-200 cursor-pointer group overflow-hidden"
           onClick={() => setIndex(0)}
         >
           <Image
@@ -87,7 +87,7 @@ export default function HeroGallery({ photos, badge }: HeroGalleryProps) {
             return (
               <div
                 key={photo.url}
-                className="relative flex-1 min-h-0 rounded-xl overflow-hidden cursor-pointer hover:opacity-95 bg-slate-200 dark:bg-slate-800 group/thumb"
+                className="relative flex-1 min-h-0 rounded-xl overflow-hidden cursor-pointer hover:opacity-95 bg-slate-200 group/thumb"
                 onClick={() => setIndex(globalIndex)}
               >
                 <Image
@@ -120,7 +120,7 @@ export default function HeroGallery({ photos, badge }: HeroGalleryProps) {
       {/* Mobile: single main image + gallery entry */}
       <div className="md:hidden space-y-3">
         <div
-          className="relative w-full aspect-[4/3] max-h-[50vh] bg-slate-200 dark:bg-slate-800 rounded-2xl overflow-hidden cursor-pointer group"
+          className="relative w-full aspect-[4/3] max-h-[50vh] bg-slate-200 rounded-2xl overflow-hidden cursor-pointer group"
           onClick={() => setIndex(0)}
         >
           <Image
@@ -151,7 +151,7 @@ export default function HeroGallery({ photos, badge }: HeroGalleryProps) {
           <button
             type="button"
             onClick={() => setIndex(0)}
-            className="w-full py-3 px-4 rounded-xl border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 font-semibold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors"
+            className="w-full py-3 px-4 rounded-xl border-2 border-slate-200 text-slate-700 font-semibold text-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors"
           >
             <span className="material-symbols-outlined text-lg">photo_library</span>
             {t('viewAllPhotos', { count: sorted.length })}

@@ -17,7 +17,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
   return (
     <nav aria-label="breadcrumb" className="mb-4">
       <ol
-        className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-slate-600 dark:text-slate-400"
+        className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm font-medium text-slate-600"
         itemScope
         itemType="https://schema.org/BreadcrumbList"
       >
@@ -32,13 +32,13 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
               itemType="https://schema.org/ListItem"
             >
               {i > 0 && (
-                <span className="text-slate-400 dark:text-slate-500 select-none" aria-hidden>
+                <span className="text-slate-400 select-none" aria-hidden>
                   /
                 </span>
               )}
               {isLast || !item.href ? (
                 <span
-                  className="uppercase tracking-wider text-slate-800 dark:text-slate-200"
+                  className="uppercase tracking-wider text-slate-800"
                   itemProp="name"
                 >
                   {item.label}
@@ -46,7 +46,7 @@ export default function Breadcrumb({ items }: BreadcrumbProps) {
               ) : (
                 <Link
                   href={item.href}
-                  className="uppercase tracking-wider hover:text-primary dark:hover:text-primary transition-colors"
+                  className="uppercase tracking-wider hover:text-primary transition-colors"
                   itemProp="item"
                 >
                   <span itemProp="name">{item.label}</span>

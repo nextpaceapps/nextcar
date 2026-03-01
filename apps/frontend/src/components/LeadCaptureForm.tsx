@@ -57,7 +57,7 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
 
   if (status === 'success') {
     return (
-      <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-6 rounded-2xl border border-green-200 dark:border-green-800 text-center animate-fade-in">
+      <div className="bg-green-50 text-green-800 p-6 rounded-2xl border border-green-200 text-center animate-fade-in">
         <span className="material-symbols-outlined text-4xl mb-4 text-green-500">check_circle</span>
         <h3 className="text-xl font-bold mb-2">{t('successTitle')}</h3>
         <p>{t('successMessage')}</p>
@@ -85,11 +85,11 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
 
   return (
     <div
-      className="bg-slate-50 dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 mt-12 mb-8"
+      className="bg-slate-50 p-6 rounded-2xl border border-slate-200 mt-12 mb-8"
       id="inquiry-form"
     >
-      <h3 className="text-2xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary dark:text-white">
+      <h3 className="text-2xl font-bold font-display uppercase tracking-tight text-slate-800 mb-6 flex items-center gap-2">
+        <span className="material-symbols-outlined text-primary">
           {intent === 'test-drive' ? 'drive_eta' : 'mail'}
         </span>
         {getTitle()}
@@ -97,7 +97,7 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {status === 'error' && (
-          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm border border-red-200 dark:border-red-800">
+          <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm border border-red-200">
             {errorMessage}
           </div>
         )}
@@ -112,7 +112,7 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
             name="name"
             required
             disabled={status === 'submitting'}
-            className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 rounded-xl focus:border-primary dark:focus:border-white focus:outline-none transition-colors"
+            className="w-full bg-white border-2 border-slate-200 p-3 rounded-xl focus:border-primary focus:outline-none transition-colors"
             placeholder={t('placeholderName')}
           />
         </div>
@@ -127,7 +127,7 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
               id="email"
               name="email"
               disabled={status === 'submitting'}
-              className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 rounded-xl focus:border-primary dark:focus:border-white focus:outline-none transition-colors"
+              className="w-full bg-white border-2 border-slate-200 p-3 rounded-xl focus:border-primary focus:outline-none transition-colors"
               placeholder={t('placeholderEmail')}
             />
           </div>
@@ -140,7 +140,7 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
               id="phone"
               name="phone"
               disabled={status === 'submitting'}
-              className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 rounded-xl focus:border-primary dark:focus:border-white focus:outline-none transition-colors"
+              className="w-full bg-white border-2 border-slate-200 p-3 rounded-xl focus:border-primary focus:outline-none transition-colors"
               placeholder={t('placeholderPhone')}
             />
           </div>
@@ -155,7 +155,7 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
             name="message"
             rows={4}
             disabled={status === 'submitting'}
-            className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 rounded-xl focus:border-primary dark:focus:border-white focus:outline-none transition-colors"
+            className="w-full bg-white border-2 border-slate-200 p-3 rounded-xl focus:border-primary focus:outline-none transition-colors"
             placeholder={getMessagePlaceholder()}
           />
         </div>
@@ -163,7 +163,7 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="w-full bg-primary dark:bg-white text-white dark:text-primary py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20 dark:shadow-white/10 disabled:opacity-70 disabled:hover:transform-none mt-2 flex items-center justify-center gap-2"
+          className="w-full bg-primary text-white py-4 rounded-xl font-bold uppercase tracking-widest text-sm hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20 disabled:opacity-70 disabled:hover:transform-none mt-2 flex items-center justify-center gap-2"
         >
           {status === 'submitting' ? (
             <>

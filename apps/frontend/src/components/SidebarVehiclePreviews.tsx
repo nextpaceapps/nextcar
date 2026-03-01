@@ -21,7 +21,7 @@ interface SidebarVehiclePreviewsProps {
 
 export default function SidebarVehiclePreviews({ vehicles, totalCount }: SidebarVehiclePreviewsProps) {
   const tNav = useTranslations('nav');
-  const ringClass = 'ring-[6px] ring-background-light dark:ring-background-dark';
+  const ringClass = 'ring-[6px] ring-background-light';
   const circleClass = `inline-block h-14 w-14 rounded-full ${ringClass} object-cover overflow-hidden shrink-0`;
   const shown = vehicles.slice(0, 3).length;
   const remaining = Math.max(0, totalCount - shown);
@@ -40,7 +40,7 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
               className={`group relative ${circleClass}`}
               aria-label={label}
             >
-              <span className="absolute inset-0 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-full">
+              <span className="absolute inset-0 flex items-center justify-center bg-slate-100 rounded-full">
                 <Image
                   src={imageUrl}
                   alt=""
@@ -52,10 +52,10 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
               </span>
               {/* Desktop hover preview */}
               <span
-                className="absolute left-0 bottom-full mb-2 hidden lg:block w-48 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50 pointer-events-none"
+                className="absolute left-0 bottom-full mb-2 hidden lg:block w-48 p-3 rounded-xl bg-white border border-slate-200 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50 pointer-events-none"
                 aria-hidden
               >
-                <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-2 bg-slate-100 dark:bg-slate-800">
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden mb-2 bg-slate-100">
                   <Image
                     src={imageUrl}
                     alt=""
@@ -65,10 +65,10 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
                     unoptimized={imageUrl === PLACEHOLDER_IMAGE}
                   />
                 </div>
-                <p className="font-semibold text-slate-900 dark:text-white text-sm truncate">
+                <p className="font-semibold text-slate-900 text-sm truncate">
                   {vehicle.year} {vehicle.make} {vehicle.model}
                 </p>
-                <p className="text-primary dark:text-white font-bold text-sm mt-0.5">
+                <p className="text-primary font-bold text-sm mt-0.5">
                   ${vehicle.price.toLocaleString()}
                 </p>
               </span>
@@ -77,7 +77,7 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
         })}
         <Link
           href="/vehicles"
-          className={`flex items-center justify-center ${circleClass} bg-slate-100 dark:bg-slate-800 text-[10px] font-extrabold dark:text-white min-w-[3.5rem] min-h-[3.5rem]`}
+          className={`flex items-center justify-center ${circleClass} bg-slate-100 text-[10px] font-extrabold min-w-[3.5rem] min-h-[3.5rem]`}
           aria-label={tNav('viewAllVehicles')}
         >
           {remaining > 0 ? `+${remaining}` : '0'}

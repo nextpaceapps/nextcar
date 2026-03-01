@@ -99,7 +99,7 @@ export default function CarVerticalRequestForm({
 
   if (status === 'success') {
     return (
-      <div className="bg-green-50 dark:bg-green-900/20 text-green-800 dark:text-green-200 p-6 rounded-2xl border border-green-200 dark:border-green-800 text-center animate-fade-in">
+      <div className="bg-green-50 text-green-800 p-6 rounded-2xl border border-green-200 text-center animate-fade-in">
         <span className="material-symbols-outlined text-4xl mb-4 text-green-500">check_circle</span>
         <h3 className="text-xl font-bold mb-2">{t('requestReceived')}</h3>
         <p className="mb-1">{t('requestReceivedMessage')}</p>
@@ -117,11 +117,11 @@ export default function CarVerticalRequestForm({
 
   return (
     <div className="space-y-4">
-      <p className="text-slate-600 dark:text-slate-400 text-sm">
+      <p className="text-slate-600 text-sm">
         {t('requestReport')}{' '}
-        <strong className="text-slate-800 dark:text-slate-200">{vehicleLabel}</strong>
+        <strong className="text-slate-800">{vehicleLabel}</strong>
         {vehicleContext.vin && (
-          <span className="block mt-1 text-slate-500 dark:text-slate-500 font-mono text-xs">
+          <span className="block mt-1 text-slate-500 font-mono text-xs">
             VIN: {vehicleContext.vin}
           </span>
         )}
@@ -129,7 +129,7 @@ export default function CarVerticalRequestForm({
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {status === 'error' && (
-          <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm border border-red-200 dark:border-red-800 flex items-center justify-between gap-2">
+          <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm border border-red-200 flex items-center justify-between gap-2">
             <span>{errorMessage}</span>
             <button
               type="button"
@@ -138,7 +138,7 @@ export default function CarVerticalRequestForm({
                 setErrorMessage('');
                 setFieldErrors({});
               }}
-              className="text-red-700 dark:text-red-300 font-semibold text-xs uppercase hover:underline"
+              className="text-red-700 font-semibold text-xs uppercase hover:underline"
             >
               {tCommon('retry')}
             </button>
@@ -159,14 +159,14 @@ export default function CarVerticalRequestForm({
             required
             disabled={status === 'submitting'}
             onBlur={handleEmailBlur}
-            className={`w-full bg-white dark:bg-slate-800 border-2 p-3 rounded-xl focus:outline-none transition-colors disabled:opacity-70
-              ${fieldErrors.email ? 'border-red-400 dark:border-red-600 focus:border-red-500' : 'border-slate-200 dark:border-slate-700 focus:border-primary dark:focus:border-white'}`}
+            className={`w-full bg-white border-2 p-3 rounded-xl focus:outline-none transition-colors disabled:opacity-70
+              ${fieldErrors.email ? 'border-red-400 focus:border-red-500' : 'border-slate-200 focus:border-primary'}`}
             placeholder={t('placeholderEmail')}
             aria-invalid={!!fieldErrors.email}
             aria-describedby={fieldErrors.email ? 'carvertical-email-error' : undefined}
           />
           {fieldErrors.email && (
-            <p id="carvertical-email-error" className="text-red-600 dark:text-red-400 text-sm">
+            <p id="carvertical-email-error" className="text-red-600 text-sm">
               {fieldErrors.email}
             </p>
           )}
@@ -184,7 +184,7 @@ export default function CarVerticalRequestForm({
             id="carvertical-name"
             name="name"
             disabled={status === 'submitting'}
-            className="w-full bg-white dark:bg-slate-800 border-2 border-slate-200 dark:border-slate-700 p-3 rounded-xl focus:border-primary dark:focus:border-white focus:outline-none transition-colors disabled:opacity-70"
+            className="w-full bg-white border-2 border-slate-200 p-3 rounded-xl focus:border-primary focus:outline-none transition-colors disabled:opacity-70"
             placeholder={t('placeholderName')}
           />
         </div>
@@ -192,7 +192,7 @@ export default function CarVerticalRequestForm({
         <button
           type="submit"
           disabled={status === 'submitting'}
-          className="w-full bg-primary dark:bg-white text-white dark:text-primary py-3 rounded-xl font-bold uppercase tracking-widest text-sm hover:-translate-y-0.5 transition-transform active:scale-[0.98] shadow-lg shadow-primary/20 dark:shadow-white/10 disabled:opacity-70 disabled:hover:transform-none flex items-center justify-center gap-2"
+          className="w-full bg-primary text-white py-3 rounded-xl font-bold uppercase tracking-widest text-sm hover:-translate-y-0.5 transition-transform active:scale-[0.98] shadow-lg shadow-primary/20 disabled:opacity-70 disabled:hover:transform-none flex items-center justify-center gap-2"
         >
           {status === 'submitting' ? (
             <>

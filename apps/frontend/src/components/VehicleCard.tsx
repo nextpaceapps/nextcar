@@ -41,26 +41,26 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 px-2">
         <div className="md:col-span-7">
           <Link href={`/vehicles/${vehicle.id}`} className="block w-fit">
-            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 hover:opacity-80 transition-opacity">
+            <h3 className="text-2xl font-bold text-gray-900 mb-3 hover:opacity-80 transition-opacity">
               {vehicle.make} {vehicle.model}
             </h3>
           </Link>
           {vehicle.description && (
-            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
+            <p className="text-gray-500 text-sm leading-relaxed mb-6 line-clamp-3">
               {vehicle.description}
             </p>
           )}
 
           <div className="flex gap-3 flex-wrap items-center">
-            <span className="px-4 py-1.5 border border-gray-200 dark:border-gray-800 rounded-full text-[10px] font-bold text-gray-600 dark:text-gray-400 tracking-wider">
+            <span className="px-4 py-1.5 border border-gray-200 rounded-full text-[10px] font-bold text-gray-600 tracking-wider">
               {vehicle.year}
             </span>
-            <span className="px-4 py-1.5 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white rounded-full text-[10px] font-bold tracking-wider">
+            <span className="px-4 py-1.5 bg-gray-50 text-gray-900 rounded-full text-[10px] font-bold tracking-wider">
               ${vehicle.price.toLocaleString()}
             </span>
             <Link
               href={`/vehicles/${vehicle.id}`}
-              className="ml-auto px-6 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-bold rounded-full hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap"
+              className="ml-auto px-6 py-2 bg-gray-900 text-white text-xs font-bold rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap"
             >
               {t('viewDetails')}
             </Link>
@@ -72,19 +72,19 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
             <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
               {t('engine')}
             </div>
-            <div className="text-xs font-semibold text-gray-900 dark:text-white">{vehicle.fuelType}</div>
+            <div className="text-xs font-semibold text-gray-900">{vehicle.fuelType}</div>
           </div>
           <div>
             <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
               {t('gearbox')}
             </div>
-            <div className="text-xs font-semibold text-gray-900 dark:text-white">{vehicle.transmission}</div>
+            <div className="text-xs font-semibold text-gray-900">{vehicle.transmission}</div>
           </div>
           <div>
             <div className="text-[8px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
               {t('mileage')}
             </div>
-            <div className="text-xs font-semibold text-gray-900 dark:text-white">
+            <div className="text-xs font-semibold text-gray-900">
               {vehicle.mileage.toLocaleString()} {t('miles')}
             </div>
           </div>

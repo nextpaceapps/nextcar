@@ -16,7 +16,7 @@ export default function HistoryCard() {
     <button
       type="button"
       onClick={handleClick}
-      className="w-full text-left flex items-center gap-4 p-5 rounded-2xl bg-slate-900 dark:bg-slate-800 border border-slate-800 dark:border-slate-700 hover:bg-slate-800 dark:hover:bg-slate-700 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 group"
+      className="w-full text-left flex items-center gap-4 p-5 rounded-2xl bg-slate-900 border border-slate-800 hover:bg-slate-800 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500 focus-visible:ring-offset-2 group"
       aria-label={t('historyCardCta')}
     >
       <div className="shrink-0 w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">

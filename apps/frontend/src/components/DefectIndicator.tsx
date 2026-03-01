@@ -67,10 +67,10 @@ export function DefectIndicator({ defects, photoLabel, className = '' }: DefectI
                     ref={popoverRef}
                     role="dialog"
                     aria-label="Defect details"
-                    className="absolute left-0 top-full mt-2 min-w-[200px] max-w-[320px] rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/90 dark:border-amber-800 shadow-lg p-3 z-20"
+                    className="absolute left-0 top-full mt-2 min-w-[200px] max-w-[320px] rounded-lg border border-amber-200 bg-amber-50 shadow-lg p-3 z-20"
                 >
                     <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="text-xs font-semibold text-amber-800 dark:text-amber-200 uppercase tracking-wide">
+                        <span className="text-xs font-semibold text-amber-800 uppercase tracking-wide">
                             Defects
                         </span>
                         <button
@@ -81,12 +81,12 @@ export function DefectIndicator({ defects, photoLabel, className = '' }: DefectI
                                 setOpen(false);
                             }}
                             aria-label="Close defect list"
-                            className="text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-amber-100 text-sm font-bold leading-none"
+                            className="text-amber-700 hover:text-amber-900 text-sm font-bold leading-none"
                         >
                             ×
                         </button>
                     </div>
-                    <ul className="list-disc list-inside space-y-1 text-sm text-amber-900 dark:text-amber-100">
+                    <ul className="list-disc list-inside space-y-1 text-sm text-amber-900">
                         {defects.map((d, i) => (
                             <li key={i}>{d.description}</li>
                         ))}
