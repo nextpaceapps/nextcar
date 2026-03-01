@@ -50,16 +50,16 @@ export default async function HomePage({ params }: Props) {
         </div>
       )}
       <section className="mb-16">
-        <h1 className="text-4xl lg:text-5xl font-display font-bold leading-tight uppercase tracking-tighter dark:text-white">
+        <h1 className="text-4xl lg:text-5xl font-display font-bold leading-tight uppercase tracking-tighter">
           {t('title')}
         </h1>
-        <p className="mt-4 text-lg text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
+        <p className="mt-4 text-lg text-slate-500 max-w-xl leading-relaxed">
           {t('subtitle')}
         </p>
         <div className="mt-8 flex gap-4">
           <Link
             href="/vehicles"
-            className="inline-flex items-center gap-2 bg-primary dark:bg-white dark:text-primary text-white px-8 py-4 rounded-full font-bold hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20 dark:shadow-white/10"
+            className="inline-flex items-center gap-2 bg-primary text-white px-8 py-4 rounded-full font-bold hover:-translate-y-1 transition-transform active:scale-95 shadow-xl shadow-primary/20"
           >
             {tNav('viewAllInventory')}
             <span className="material-symbols-outlined text-sm">arrow_forward</span>
@@ -90,7 +90,7 @@ export default async function HomePage({ params }: Props) {
             </h2>
             <Link
               href="/vehicles"
-              className="text-xs font-bold uppercase tracking-[0.15em] text-primary dark:text-white hover:opacity-70 transition-opacity flex items-center gap-1"
+              className="text-xs font-bold uppercase tracking-[0.15em] text-primary hover:opacity-70 transition-opacity flex items-center gap-1"
             >
               {tNav('seeAll')}
               <span className="material-symbols-outlined text-sm">arrow_forward</span>

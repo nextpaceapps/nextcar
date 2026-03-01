@@ -52,9 +52,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 function SpecRow({ label, value }: { label: string; value?: string | number | null }) {
   if (value === undefined || value === null || value === '') return null;
   return (
-    <li className="flex justify-between items-center py-2 border-b border-slate-100 dark:border-slate-800/50 last:border-0">
+    <li className="flex justify-between items-center py-2 border-b border-slate-100 last:border-0">
       <span className="text-slate-500 text-sm font-medium">{label}</span>
-      <span className="text-slate-900 dark:text-slate-100 font-semibold">{value}</span>
+      <span className="text-slate-900 font-semibold">{value}</span>
     </li>
   );
 }
@@ -106,7 +106,7 @@ export default async function VehicleDetailPage({
               <TechnicalSpecs vehicle={vehicle} />
 
               <div>
-                <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-200 pb-3">
                   <span className="material-symbols-outlined text-primary">history</span>
                   {t('historyProvenance')}
                 </h3>
@@ -123,11 +123,11 @@ export default async function VehicleDetailPage({
 
               {vehicle.description && (
                 <div>
-                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-200 pb-3">
                     <span className="material-symbols-outlined text-primary">description</span>
                     {t('description')}
                   </h3>
-                  <div className="prose dark:prose-invert prose-lg text-slate-600 dark:text-slate-400 break-words whitespace-pre-wrap max-w-none">
+                  <div className="prose prose-lg text-slate-600 break-words whitespace-pre-wrap max-w-none">
                     {vehicle.description}
                   </div>
                 </div>
@@ -135,7 +135,7 @@ export default async function VehicleDetailPage({
 
               {vehicle.videoLinks && vehicle.videoLinks.length > 0 && (
                 <div>
-                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
+                  <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-200 pb-3">
                     <span className="material-symbols-outlined text-primary">smart_display</span>
                     {t('vehicleVideo')}
                   </h3>
@@ -145,17 +145,17 @@ export default async function VehicleDetailPage({
 
               <div
                 id="carvertical-request"
-                className="mt-12 bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 lg:p-8 scroll-mt-32"
+                className="mt-12 bg-slate-50 border border-slate-200 rounded-3xl p-6 lg:p-8 scroll-mt-32"
               >
                 <div className="flex items-center gap-4 mb-6">
-                  <span className="material-symbols-outlined p-3 bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl text-3xl">
+                  <span className="material-symbols-outlined p-3 bg-amber-500/10 text-amber-600 rounded-xl text-3xl">
                     history_edu
                   </span>
                   <div>
-                    <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100">
+                    <h3 className="text-xl font-bold font-display uppercase tracking-tight text-slate-800">
                       {t('vehicleHistoryReport')}
                     </h3>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm">{t('vehicleHistoryReportDesc')}</p>
+                    <p className="text-slate-500 text-sm">{t('vehicleHistoryReportDesc')}</p>
                   </div>
                 </div>
                 <CarVerticalRequestForm
@@ -171,14 +171,14 @@ export default async function VehicleDetailPage({
 
               <div
                 id="inquiry-form"
-                className="mt-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 lg:p-10 shadow-xl scroll-mt-32"
+                className="mt-12 bg-white border border-slate-200 rounded-3xl p-6 lg:p-10 shadow-xl scroll-mt-32"
               >
                 <div className="flex items-center gap-4 mb-2">
                   <span className="material-symbols-outlined p-3 bg-primary/10 text-primary rounded-xl text-3xl">
                     mail
                   </span>
                   <div>
-                    <h3 className="text-2xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100">
+                    <h3 className="text-2xl font-bold font-display uppercase tracking-tight text-slate-800">
                       {t('interestedContactUs')}
                     </h3>
                     <p className="text-slate-500">{t('fastResponseGuaranteed')}</p>
@@ -192,7 +192,7 @@ export default async function VehicleDetailPage({
           </div>
 
           <div className="space-y-4 sticky top-32">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-1">
               History &amp; Review
             </p>
             <HistoryCard />
@@ -200,7 +200,7 @@ export default async function VehicleDetailPage({
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 lg:hidden z-40 transform translate-y-0 transition-transform">
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-slate-200 lg:hidden z-40 transform translate-y-0 transition-transform">
           <a
             href="#inquiry-form"
             className="block w-full text-center bg-primary text-white py-4 rounded-full font-bold uppercase tracking-widest text-sm shadow-xl shadow-primary/20"

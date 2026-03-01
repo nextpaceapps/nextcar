@@ -89,7 +89,7 @@ export default async function TechnicalSpecs({ vehicle }: { vehicle: Vehicle }) 
     <section aria-labelledby="technical-specs-heading">
       <h2
         id="technical-specs-heading"
-        className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3"
+        className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-200 pb-3"
       >
         <span className="material-symbols-outlined text-primary">engineering</span>
         {t('technicalSpecs')}

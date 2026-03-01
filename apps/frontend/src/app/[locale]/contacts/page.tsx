@@ -26,10 +26,10 @@ export default async function ContactsPage({ params }: Props) {
   return (
     <StaticPageLayout>
       <article>
-        <h1 className="text-4xl lg:text-5xl font-display font-bold leading-tight uppercase tracking-tighter dark:text-white mb-6">
+        <h1 className="text-4xl lg:text-5xl font-display font-bold leading-tight uppercase tracking-tighter mb-6">
           {t('title')}
         </h1>
-        <p className="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mb-12 leading-relaxed">
+        <p className="text-lg text-slate-500 max-w-2xl mb-12 leading-relaxed">
           {t('intro')}
         </p>
 
@@ -40,38 +40,38 @@ export default async function ContactsPage({ params }: Props) {
           <div className="flex flex-col sm:flex-row gap-8">
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="flex items-center gap-4 p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group"
+              className="flex items-center gap-4 p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors group"
             >
-              <span className="material-symbols-outlined text-2xl text-primary dark:text-white">
+              <span className="material-symbols-outlined text-2xl text-primary">
                 mail
               </span>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   {t('email')}
                 </p>
-                <p className="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-white transition-colors">
+                <p className="text-lg font-semibold text-slate-900 group-hover:text-primary transition-colors">
                   {CONTACT_EMAIL}
                 </p>
               </div>
             </a>
             <a
               href={`tel:${CONTACT_PHONE_TEL}`}
-              className="flex items-center gap-4 p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 transition-colors group"
+              className="flex items-center gap-4 p-6 rounded-2xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition-colors group"
             >
-              <span className="material-symbols-outlined text-2xl text-primary dark:text-white">
+              <span className="material-symbols-outlined text-2xl text-primary">
                 phone
               </span>
               <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <p className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   {t('phone')}
                 </p>
-                <p className="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-primary dark:group-hover:text-white transition-colors">
+                <p className="text-lg font-semibold text-slate-900 group-hover:text-primary transition-colors">
                   {CONTACT_PHONE}
                 </p>
               </div>
             </a>
           </div>
-          <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">{t('respondWithinDay')}</p>
+          <p className="mt-4 text-sm text-slate-500">{t('respondWithinDay')}</p>
         </section>
 
         <section aria-label="Contact form">

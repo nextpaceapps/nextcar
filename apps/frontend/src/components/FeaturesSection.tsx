@@ -62,7 +62,7 @@ export default async function FeaturesSection({ vehicle }: { vehicle: Vehicle })
     <section aria-labelledby="features-section-heading">
       <h2
         id="features-section-heading"
-        className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-6 flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3"
+        className="text-xl font-bold font-display uppercase tracking-tight text-slate-800 mb-6 flex items-center gap-2 border-b border-slate-200 pb-3"
       >
         <span className="material-symbols-outlined text-primary">build_circle</span>
         {t('equipmentDetails')}

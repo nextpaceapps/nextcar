@@ -12,7 +12,7 @@ export default function FeatureCategory({ icon, title, items }: FeatureCategoryP
 
   return (
     <div className="flex flex-col">
-      <h4 className="font-bold font-display uppercase tracking-tight text-slate-800 dark:text-slate-100 mb-3 flex items-center gap-2">
+      <h4 className="font-bold font-display uppercase tracking-tight text-slate-800 mb-3 flex items-center gap-2">
         <span className="material-symbols-outlined text-primary text-xl" aria-hidden>
           {icon}
         </span>
@@ -22,7 +22,7 @@ export default function FeatureCategory({ icon, title, items }: FeatureCategoryP
         {items.map((item, i) => (
           <li
             key={`${item}-${i}`}
-            className="text-sm text-slate-600 dark:text-slate-400 flex items-start gap-2 leading-tight"
+            className="text-sm text-slate-600 flex items-start gap-2 leading-tight"
           >
             <span className="material-symbols-outlined text-primary text-base shrink-0 mt-0.5" aria-hidden>
               check

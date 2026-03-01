@@ -55,7 +55,7 @@ export default function ReviewCard({ videoLinks }: ReviewCardProps) {
         ref={triggerRef}
         type="button"
         onClick={openModal}
-        className="w-full text-left rounded-xl overflow-hidden border-2 border-slate-200 dark:border-slate-700 hover:border-red-400 dark:hover:border-red-600 bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 transition-colors group"
+        className="w-full text-left rounded-xl overflow-hidden border-2 border-slate-200 hover:border-red-400 bg-slate-900 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 transition-colors group"
         aria-label={t('reviewCardWatch')}
       >
         <div className="relative aspect-video w-full">
@@ -75,7 +75,7 @@ export default function ReviewCard({ videoLinks }: ReviewCardProps) {
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-3 p-4 bg-red-600 dark:bg-red-700 text-white">
+        <div className="flex items-center justify-between gap-3 p-4 bg-red-600 text-white">
           <div className="min-w-0">
             <span className="block text-xs font-bold uppercase tracking-wider text-red-100">
               {t('reviewCardLabel')}

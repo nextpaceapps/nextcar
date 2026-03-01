@@ -43,10 +43,10 @@ function ContactModalContent() {
         className="relative w-full max-w-2xl overflow-y-auto max-h-[90vh] pb-4"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-white dark:bg-[#0a0c10] rounded-3xl shadow-2xl relative pt-4 px-2">
+        <div className="bg-white rounded-3xl shadow-2xl relative pt-4 px-2">
           <button
             onClick={close}
-            className="absolute top-8 right-8 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
+            className="absolute top-8 right-8 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors"
             aria-label={t('closeModal')}
           >
             <span className="material-symbols-outlined">close</span>
