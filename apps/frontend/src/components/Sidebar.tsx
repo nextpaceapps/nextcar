@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
 import type { Vehicle } from '@nextcar/shared';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/navigation';
@@ -25,11 +24,11 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
       <div className="space-y-16">
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
-            <Image
+            <img
               src="/car-logo.png"
               alt="Nextcar logo"
-              width={56}
-              height={42}
+              width={60}
+              height={40}
               className="object-contain"
             />
             <span className="font-display font-bold text-2xl tracking-tight uppercase group-hover:opacity-80 transition-opacity">
