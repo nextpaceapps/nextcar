@@ -69,7 +69,6 @@ export default async function VehicleDetailPage({
   const { locale, id } = await params;
   setRequestLocale(locale);
   const t = await getTranslations('vehicles');
-  const tNav = await getTranslations('nav');
   const tBreadcrumb = await getTranslations('breadcrumb');
 
   const resolvedSearchParams = await searchParams;
