@@ -63,6 +63,8 @@
     "featuredHighlights": "Основные характеристики",
     "description": "Описание",
     "equipmentDetails": "Комплектация",
+    "equipmentCategories": {"airConditioning": "Климат-контроль", "infotainment": "Мультимедиа и связь", "mirrors": "Зеркала", "parkingAid": "Парковка и помощь", "safety": "Безопасность", "seats": "Сиденья и комфорт", "steeringWheel": "Рулевое управление", "wheels": "Колёса и шины", "windows": "Окна и стёкла", "other": "Другие функции"},
+    "additionalFeatures": "Дополнительные функции",
     "vehicleVideo": "Видео автомобиля",
     "power": "Мощность",
     "engineSize": "Объём двигателя",

@@ -63,6 +63,8 @@
     "featuredHighlights": "Galvenās īpašības",
     "description": "Apraksts",
     "equipmentDetails": "Aprīkojuma detaļas",
+    "equipmentCategories": {"airConditioning": "Klimata vadība", "infotainment": "Infotehnoloģija un savienojamība", "mirrors": "Spoguļi", "parkingAid": "Parkēšana un palīdzība", "safety": "Drošība", "seats": "Sēdvietas un komforts", "steeringWheel": "Stūre", "wheels": "Rati un riepas", "windows": "Logi un stikls", "other": "Citas funkcijas"},
+    "additionalFeatures": "Papildu funkcijas",
     "vehicleVideo": "Transportlīdzekļa video",
     "power": "Jauda",
     "engineSize": "Dzinēja tilpums",

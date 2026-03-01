@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import type { Vehicle } from '@nextcar/shared';
-import type { VehicleEquipment } from '@nextcar/shared';
+import type { Vehicle, VehicleEquipment } from '@nextcar/shared';
 import FeatureCategory from './FeatureCategory';
 
 const EQUIPMENT_ORDER: (keyof VehicleEquipment)[] = [
@@ -19,11 +18,11 @@ const EQUIPMENT_ORDER: (keyof VehicleEquipment)[] = [
 const CATEGORY_ICONS: Record<keyof VehicleEquipment, string> = {
   airConditioning: 'ac_unit',
   infotainment: 'wifi',
-  mirrors: 'rear',
+  mirrors: 'rearview_mirror',
   parkingAid: 'local_parking',
   safety: 'shield',
   seats: 'event_seat',
-  steeringWheel: 'steering',
+  steeringWheel: 'rotate_right',
   wheels: 'tire_repair',
   windows: 'window',
   other: 'tune',
