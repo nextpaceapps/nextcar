@@ -29,6 +29,10 @@ const nextConfig: NextConfig = {
         protocol: 'http',
         hostname: 'localhost',
         port: '9199',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
       }
     ],
   },

@@ -85,7 +85,17 @@
     "testDrive": "Testa brauciens",
     "contactSales": "Sazināties ar pārdošanu",
     "used": "Lietots",
-    "year": "Gads"
+    "year": "Gads",
+    "historyCardLabel": "VĒSTURE",
+    "historyCardReport": "Atskaite",
+    "historyCardCta": "Pieprasīt CarVertical atskaiti",
+    "reviewCardLabel": "VIDEO APSKATS",
+    "reviewCardWatch": "Skatīt video apskatā",
+    "reviewCardWatchOnYouTube": "Skatīt YouTube",
+    "reviewCardViewAllVideos": "Skatīt visus {count} video",
+    "reviewCardCloseModal": "Aizvērt video",
+    "reviewCardPrevVideo": "Iepriekšējais video",
+    "reviewCardNextVideo": "Nākamais video"
   },
   "photoGallery": {
     "noPhotos": "Nav pieejamu foto",

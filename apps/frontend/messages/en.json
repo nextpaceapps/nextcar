@@ -85,7 +85,17 @@
     "testDrive": "Test Drive",
     "contactSales": "Contact Sales",
     "used": "Used",
-    "year": "Year"
+    "year": "Year",
+    "historyCardLabel": "CAR HISTORY",
+    "historyCardReport": "Report",
+    "historyCardCta": "Request CarVertical report",
+    "reviewCardLabel": "VIDEO REVIEW",
+    "reviewCardWatch": "Watch video review",
+    "reviewCardWatchOnYouTube": "Watch on YouTube",
+    "reviewCardViewAllVideos": "View all {count} videos",
+    "reviewCardCloseModal": "Close video",
+    "reviewCardPrevVideo": "Previous video",
+    "reviewCardNextVideo": "Next video"
   },
   "photoGallery": {
     "noPhotos": "No photos available",
