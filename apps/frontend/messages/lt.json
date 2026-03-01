@@ -85,6 +85,8 @@
     "testDrive": "Testinė važiuojamoji",
     "contactSales": "Susisiekti su pardavimais",
     "used": "Naudotas",
+    "verified": "Patvirtinta",
+    "verifiedBadge": "Patvirtintas skelbimas",
     "year": "Metai",
     "historyCardLabel": "AUTOMOBILIO ISTORIJA",
     "historyCardReport": "Ataskaita",
@@ -220,6 +222,10 @@
     "email": "El. paštas",
     "phone": "Telefonas",
     "respondWithinDay": "Paprastai atsakome per vieną darbo dieną. Skubūs klausimai — skambinkite."
+  },
+  "breadcrumb": {
+    "home": "Pradžia",
+    "vehicles": "Transporto priemonės"
   },
   "metadata": {
     "siteTitle": "Nextcar | Parinktas parkas",

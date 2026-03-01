@@ -85,6 +85,8 @@
     "testDrive": "Test Drive",
     "contactSales": "Contact Sales",
     "used": "Used",
+    "verified": "Verified",
+    "verifiedBadge": "Verified listing",
     "year": "Year",
     "historyCardLabel": "CAR HISTORY",
     "historyCardReport": "Report",
@@ -220,6 +222,10 @@
     "email": "Email",
     "phone": "Phone",
     "respondWithinDay": "We typically respond within one business day. For urgent inquiries, please call."
+  },
+  "breadcrumb": {
+    "home": "Home",
+    "vehicles": "Vehicles"
   },
   "metadata": {
     "siteTitle": "Nextcar | Premium Curated Fleet",

@@ -85,6 +85,8 @@
     "testDrive": "Proovisõit",
     "contactSales": "Võta ühendust müügiga",
     "used": "Kasutatud",
+    "verified": "Kinnitatud",
+    "verifiedBadge": "Kinnitatud kuulutus",
     "year": "Aasta",
     "historyCardLabel": "AUTO AJALUGU",
     "historyCardReport": "Aruanne",
@@ -220,6 +222,10 @@
     "email": "E-post",
     "phone": "Telefon",
     "respondWithinDay": "Tavaliselt vastame ühe tööpäeva jooksul. Kiireloomuliste päringute puhul helistage."
+  },
+  "breadcrumb": {
+    "home": "Avaleht",
+    "vehicles": "Sõidukid"
   },
   "metadata": {
     "siteTitle": "Nextcar | Valitud park",

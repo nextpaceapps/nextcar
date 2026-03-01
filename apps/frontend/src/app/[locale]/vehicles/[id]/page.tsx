@@ -2,6 +2,8 @@ import { notFound } from 'next/navigation';
 import { getPublishedVehicleById } from '@/lib/data/vehicles';
 import HeroGallery from '@/components/HeroGallery';
 import PdpHeader from '@/components/PdpHeader';
+import Breadcrumb from '@/components/Breadcrumb';
+import VerificationBadge from '@/components/VerificationBadge';
 import TechnicalSpecs from '@/components/TechnicalSpecs';
 import FeaturesSection from '@/components/FeaturesSection';
 import YoutubeEmbed from '@/components/YoutubeEmbed';
@@ -9,7 +11,6 @@ import LeadCaptureForm from '@/components/LeadCaptureForm';
 import CarVerticalRequestForm from '@/components/CarVerticalRequestForm';
 import HistoryCard from '@/components/HistoryCard';
 import ReviewCard from '@/components/ReviewCard';
-import { Link } from '@/i18n/navigation';
 import { Metadata } from 'next';
 import { setRequestLocale } from 'next-intl/server';
 import { getTranslations } from 'next-intl/server';
@@ -69,6 +70,7 @@ export default async function VehicleDetailPage({
   setRequestLocale(locale);
   const t = await getTranslations('vehicles');
   const tNav = await getTranslations('nav');
+  const tBreadcrumb = await getTranslations('breadcrumb');
 
   const resolvedSearchParams = await searchParams;
   const intentRaw = resolvedSearchParams?.intent;
@@ -80,23 +82,26 @@ export default async function VehicleDetailPage({
     notFound();
   }
 
+  const breadcrumbItems = [
+    { label: tBreadcrumb('home'), href: '/' },
+    { label: tBreadcrumb('vehicles'), href: '/vehicles' },
+    { label: `${vehicle.year} ${vehicle.make} ${vehicle.model}` },
+  ];
+
   return (
     <>
       <main className="max-w-5xl mx-auto p-6 lg:p-12 w-full flex-grow">
-        <div className="mb-8">
-          <Link
-            href="/vehicles"
-            className="inline-flex items-center text-sm font-semibold text-primary dark:text-white hover:opacity-70 transition-opacity uppercase tracking-wider"
-          >
-            <span className="material-symbols-outlined mr-2">arrow_back</span>
-            {tNav('backToInventory')}
-          </Link>
+        <div className="mb-4 hidden sm:block">
+          <Breadcrumb items={breadcrumbItems} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
           <div className="lg:col-span-2 space-y-16">
             <section className="grid grid-cols-1 lg:grid-cols-[1fr_minmax(0,380px)] gap-8 lg:gap-10 items-start" aria-label="Vehicle hero and header">
-              <HeroGallery photos={vehicle.photos || []} />
+              <HeroGallery
+                photos={vehicle.photos || []}
+                badge={vehicle.verified ? <VerificationBadge /> : undefined}
+              />
               <PdpHeader vehicle={vehicle} />
             </section>
 

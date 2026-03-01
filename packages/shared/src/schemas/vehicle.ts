@@ -66,6 +66,8 @@ export const vehicleSchema = z.object({
     condition: z.string().optional(),
     equipment: vehicleEquipmentSchema.optional(),
     featured: z.boolean().optional(),
+    /** When true, show verification badge on PDP (e.g. manual flag or derived from CarVertical report). */
+    verified: z.boolean().optional(),
 });
 
 export type VehicleSchema = z.infer<typeof vehicleSchema>;
