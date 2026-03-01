@@ -93,7 +93,9 @@
     "reviewCardWatch": "Žiūrėti vaizdo apžvalgą",
     "reviewCardWatchOnYouTube": "Žiūrėti YouTube",
     "reviewCardViewAllVideos": "Peržiūrėti visus {count} vaizdo įrašus",
-    "reviewCardCloseModal": "Uždaryti vaizdo įrašą"
+    "reviewCardCloseModal": "Uždaryti vaizdo įrašą",
+    "reviewCardPrevVideo": "Ankstesnis vaizdo įrašas",
+    "reviewCardNextVideo": "Kitas vaizdo įrašas"
   },
   "photoGallery": {
     "noPhotos": "Nėra prieinamų nuotraukų",

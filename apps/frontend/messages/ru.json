@@ -93,7 +93,9 @@
     "reviewCardWatch": "Смотреть видеообзор",
     "reviewCardWatchOnYouTube": "Смотреть на YouTube",
     "reviewCardViewAllVideos": "Смотреть все {count} видео",
-    "reviewCardCloseModal": "Закрыть видео"
+    "reviewCardCloseModal": "Закрыть видео",
+    "reviewCardPrevVideo": "Предыдущее видео",
+    "reviewCardNextVideo": "Следующее видео"
   },
   "photoGallery": {
     "noPhotos": "Нет доступных фото",

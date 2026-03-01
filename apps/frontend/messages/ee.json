@@ -93,7 +93,9 @@
     "reviewCardWatch": "Vaata video ülevaadet",
     "reviewCardWatchOnYouTube": "Vaata YouTube'is",
     "reviewCardViewAllVideos": "Vaata kõik {count} videot",
-    "reviewCardCloseModal": "Sulge video"
+    "reviewCardCloseModal": "Sulge video",
+    "reviewCardPrevVideo": "Eelmine video",
+    "reviewCardNextVideo": "Järgmine video"
   },
   "photoGallery": {
     "noPhotos": "Fotosid pole saadaval",

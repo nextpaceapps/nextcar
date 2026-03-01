@@ -93,7 +93,9 @@
     "reviewCardWatch": "Watch video review",
     "reviewCardWatchOnYouTube": "Watch on YouTube",
     "reviewCardViewAllVideos": "View all {count} videos",
-    "reviewCardCloseModal": "Close video"
+    "reviewCardCloseModal": "Close video",
+    "reviewCardPrevVideo": "Previous video",
+    "reviewCardNextVideo": "Next video"
   },
   "photoGallery": {
     "noPhotos": "No photos available",
