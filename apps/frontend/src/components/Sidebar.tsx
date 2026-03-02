@@ -7,6 +7,7 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
 import SidebarVehiclePreviews from './SidebarVehiclePreviews';
 import SidebarPageLinks from './SidebarPageLinks';
+import carLogo from '@/assets/car-logo.png';
 
 interface SidebarProps {
   vehicles: Vehicle[];
@@ -25,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
         <div className="flex items-center justify-between">
           <Link href="/" className="flex items-center gap-3 group">
             <img
-              src="/car-logo.png"
+              src={carLogo.src}
               alt="Nextcar logo"
               width={60}
               height={40}
