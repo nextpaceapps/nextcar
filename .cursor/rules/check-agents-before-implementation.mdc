@@ -1,0 +1,17 @@
+---
+description: Read AGENTS.md before implementing any task
+alwaysApply: true
+---
+
+# Check AGENTS.md Before Implementation
+
+Before implementing any change or writing code:
+
+1. **Read [AGENTS.md](AGENTS.md)** at the project root for:
+   - Working process (branch policy, no AI attribution in commits/PRs)
+   - Relevant docs (ARCHITECTURE, CONVENTIONS, SECURITY, etc.)
+   - Key invariants (Zod-first types, COLLECTIONS, soft delete, indexes)
+
+2. **Apply it**: Create a new branch when starting a task; follow conventions and invariants; never add AI/editor attribution to commits or PRs.
+
+Do not skip this step. If you have not read AGENTS.md in this session, read it before making edits or running non-readonly commands.

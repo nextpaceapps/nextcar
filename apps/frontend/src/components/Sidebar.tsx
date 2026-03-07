@@ -23,7 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
   return (
     <aside className="w-full lg:w-[380px] lg:h-screen lg:sticky top-0 p-8 lg:p-12 flex flex-col justify-between bg-background-light z-40">
       <div className="space-y-16">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4">
           <Link href="/" className="flex items-center gap-3 group">
             <img
               src={carLogo.src}
@@ -36,6 +36,30 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
               Nextcar<span className="text-slate-400">.</span>
             </span>
           </Link>
+          <div className="flex items-center justify-between uppercase text-[10px] font-extrabold tracking-[0.2em] text-slate-400">
+            <div className="flex gap-4">
+              {routing.locales.map((loc) => {
+                const isActive = locale === loc;
+                return (
+                  <Link
+                    key={loc}
+                    href={pathname}
+                    locale={loc}
+                    className={
+                      isActive
+                        ? 'text-primary border-b-2 border-primary pb-0.5'
+                        : 'hover:text-slate-900 transition-colors'
+                    }
+                  >
+                    {loc.toUpperCase()}
+                  </Link>
+                );
+              })}
+            </div>
+            <span className="material-symbols-outlined text-xs text-slate-400">
+              public
+            </span>
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -90,26 +114,9 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
           <a
             className="text-xl font-semibold tracking-tight hover:underline"
             href="tel:+37120399627"
-          > +371 20399627</a>
-          <div className="flex gap-4 uppercase text-[10px] font-extrabold tracking-[0.2em] text-slate-400">
-            {routing.locales.map((loc) => {
-              const isActive = locale === loc;
-              return (
-                <Link
-                  key={loc}
-                  href={pathname}
-                  locale={loc}
-                  className={
-                    isActive
-                      ? 'text-primary border-b-2 border-primary pb-0.5'
-                      : 'hover:text-slate-900 transition-colors'
-                  }
-                >
-                  {loc.toUpperCase()}
-                </Link>
-              );
-            })}
-          </div>
+          >
+            +371 20399627
+          </a>
         </div>
       </div>
     </aside>

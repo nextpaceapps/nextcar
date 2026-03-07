@@ -3,11 +3,15 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { useRouter as useLocaleRouter } from '@/i18n/navigation';
+import { useRouter as useLocaleRouter, usePathname } from '@/i18n/navigation';
 
 const HeaderContent: React.FC = () => {
   const router = useLocaleRouter(); // locale-aware router from next-intl
+  const pathname = usePathname();
   const searchParams = useSearchParams();
+
+  const isVehicleDetailPage = /^\/vehicles\/[^/]+$/.test(pathname ?? '');
+  if (isVehicleDetailPage) return null;
   const [value, setValue] = useState(searchParams?.get('q') || '');
   const t = useTranslations('header');
   const tCommon = useTranslations('common');
