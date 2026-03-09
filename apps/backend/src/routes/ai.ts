@@ -166,4 +166,173 @@ router.post('/parse-listing', withRole('Editor'), async (req: AuthRequest, res: 
     }
 });
 
+router.post('/autostudio/isolate', withRole('Editor'), async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const uid = req.user?.uid || 'unknown';
+        const now = Date.now();
+        cleanupRateLimitMap();
+
+        let rateLimit = rateLimitMap.get(uid);
+        if (!rateLimit || now > rateLimit.resetTime) {
+            rateLimit = { count: 0, resetTime: now + RATE_LIMIT_WINDOW_MS };
+        }
+        rateLimit.count++;
+        rateLimitMap.set(uid, rateLimit);
+
+        if (rateLimit.count > MAX_REQUESTS_PER_WINDOW) {
+            res.status(429).json({ error: 'Too many requests. Please try again later.' });
+            return;
+        }
+
+        const { base64Image, mimeType, systemInstruction, isolationPrompt } = req.body;
+        
+        if (!base64Image || !mimeType || !isolationPrompt) {
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
+
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            res.status(500).json({ error: 'AI service is not configured' });
+            return;
+        }
+
+        const ai = new GoogleGenAI({ apiKey });
+        const modelName = 'gemini-3.1-flash-image-preview';
+
+        const isolationResponse = await ai.models.generateContent({
+            model: modelName,
+            contents: {
+                parts: [
+                    {
+                        inlineData: {
+                            data: base64Image.split(',')[1] || base64Image,
+                            mimeType: mimeType,
+                        },
+                    },
+                    {
+                        text: isolationPrompt,
+                    },
+                ],
+            },
+            config: {
+                systemInstruction: systemInstruction || "You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output.",
+                imageConfig: {
+                    aspectRatio: "16:9",
+                    imageSize: "1K"
+                }
+            }
+        });
+
+        let isolatedBase64 = "";
+        for (const part of isolationResponse.candidates?.[0]?.content?.parts || []) {
+            if (part.inlineData) {
+                isolatedBase64 = part.inlineData.data;
+                break;
+            }
+        }
+
+        if (!isolatedBase64) {
+            throw new Error("Failed to isolate car in Stage 1");
+        }
+
+        res.json({ isolatedImage: `data:image/png;base64,${isolatedBase64}` });
+    } catch (error: unknown) {
+        console.error('AutoStudio Isolation error:', error);
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to isolate image' });
+    }
+});
+
+router.post('/autostudio/compose', withRole('Editor'), async (req: AuthRequest, res: Response): Promise<void> => {
+    try {
+        const uid = req.user?.uid || 'unknown';
+        const now = Date.now();
+        cleanupRateLimitMap();
+
+        let rateLimit = rateLimitMap.get(uid);
+        if (!rateLimit || now > rateLimit.resetTime) {
+            rateLimit = { count: 0, resetTime: now + RATE_LIMIT_WINDOW_MS };
+        }
+        rateLimit.count++;
+        rateLimitMap.set(uid, rateLimit);
+
+        if (rateLimit.count > MAX_REQUESTS_PER_WINDOW) {
+            res.status(429).json({ error: 'Too many requests. Please try again later.' });
+            return;
+        }
+
+        const { isolatedBase64, compositionPrompt, systemInstruction, backgroundImage, backgroundImageMimeType } = req.body;
+        
+        if (!isolatedBase64 || !compositionPrompt) {
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
+
+        const apiKey = process.env.GEMINI_API_KEY;
+        if (!apiKey) {
+            res.status(500).json({ error: 'AI service is not configured' });
+            return;
+        }
+
+        const ai = new GoogleGenAI({ apiKey });
+        const modelName = 'gemini-3.1-flash-image-preview';
+
+        const compositionParts: any[] = [
+            {
+                inlineData: {
+                    data: isolatedBase64.split(',')[1] || isolatedBase64,
+                    mimeType: 'image/png',
+                },
+            }
+        ];
+
+        if (backgroundImage && backgroundImageMimeType) {
+            compositionParts.push({
+                inlineData: {
+                    data: backgroundImage.split(',')[1] || backgroundImage,
+                    mimeType: backgroundImageMimeType,
+                },
+            });
+            compositionParts.push({
+                text: `${compositionPrompt} Use the provided background image as the environment. Place the isolated car realistically onto the floor of this specific room, matching the lighting and perspective.`
+            });
+        } else {
+            compositionParts.push({
+                text: compositionPrompt
+            });
+        }
+
+        const compositionResponse = await ai.models.generateContent({
+            model: modelName,
+            contents: {
+                parts: compositionParts,
+            },
+            config: {
+                systemInstruction: systemInstruction || "You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output.",
+                imageConfig: {
+                    aspectRatio: "16:9",
+                    imageSize: "1K"
+                }
+            }
+        });
+
+        let finalBase64 = "";
+        for (const part of compositionResponse.candidates?.[0]?.content?.parts || []) {
+            if (part.inlineData) {
+                finalBase64 = part.inlineData.data;
+                break;
+            }
+        }
+
+        if (!finalBase64) {
+            throw new Error("Failed to compose image in Stage 2");
+        }
+
+        res.json({ finalImage: `data:image/png;base64,${finalBase64}` });
+    } catch (error: unknown) {
+        console.error('AutoStudio Composition error:', error);
+        res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to compose image' });
+    }
+});
+
 export default router;

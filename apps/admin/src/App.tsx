@@ -14,6 +14,7 @@ import CustomerForm from './components/customers/CustomerForm';
 import OpportunitiesPage from './pages/OpportunitiesPage';
 import EditOpportunityPage from './pages/EditOpportunityPage';
 import OpportunityForm from './components/opportunities/OpportunityForm';
+import AutoStudioPage from './pages/AutoStudioPage';
 import './App.css'
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <li><Link to="/customers" className="hover:text-gray-300">Customers</Link></li>
             <li><Link to="/opportunities" className="hover:text-gray-300">Opportunities</Link></li>
             <li><Link to="/pipeline" className="hover:text-gray-300">Pipeline</Link></li>
+            <li><Link to="/autostudio" className="hover:text-gray-300">AutoStudio</Link></li>
             {role === 'Admin' && (
               <li><Link to="/users" className="hover:text-gray-300">Users</Link></li>
             )}
@@ -62,6 +64,7 @@ function App() {
           <Route path="/opportunities/new" element={<ProtectedRoute><OpportunityForm /></ProtectedRoute>} />
           <Route path="/opportunities/:id/edit" element={<ProtectedRoute><EditOpportunityPage /></ProtectedRoute>} />
           <Route path="/pipeline" element={<ProtectedRoute><PipelinePage /></ProtectedRoute>} />
+          <Route path="/autostudio" element={<ProtectedRoute><AutoStudioPage /></ProtectedRoute>} />
           {role === 'Admin' && <Route path="/users" element={<ProtectedRoute><UsersPage /></ProtectedRoute>} />}
         </Routes>
       </main>
