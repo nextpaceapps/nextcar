@@ -42,6 +42,12 @@ const nextConfig: NextConfig = {
       : 'http://localhost:5174';
 
     return [
+      // Default root to Latvian locale
+      {
+        source: '/',
+        destination: '/lv',
+        permanent: false,
+      },
       {
         source: '/admin/:path*',
         destination: `${adminOrigin}/:path*`,
@@ -51,7 +57,7 @@ const nextConfig: NextConfig = {
         source: '/admin',
         destination: `${adminOrigin}/`,
         permanent: false,
-      }
+      },
     ];
   },
 };

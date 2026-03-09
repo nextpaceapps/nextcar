@@ -1,7 +1,7 @@
 'use client';
 
-import { useSearchParams, usePathname } from 'next/navigation';
-import { useRouter } from '@/i18n/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import LeadCaptureForm from './LeadCaptureForm';
 import { useEffect, useState, Suspense } from 'react';
 import { useTranslations } from 'next-intl';

@@ -1,7 +1,8 @@
 import { defineRouting } from 'next-intl/routing';
 
 export const routing = defineRouting({
-  locales: ['en', 'lv', 'lt', 'ee', 'ru'],
+  // Keep Latvian as the primary locale and show it first in UI lists
+  locales: ['lv', 'en', 'lt', 'ee', 'ru'],
   defaultLocale: 'lv',
   localePrefix: 'always',
 });
