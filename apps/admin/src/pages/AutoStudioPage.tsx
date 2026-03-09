@@ -49,6 +49,14 @@ export default function AutoStudioPage() {
     "Place the isolated car onto a specific, static studio background. This background must be a consistent professional room with neutral grey tones and soft studio lighting. It should look exactly the same for every vehicle, as if all cars were photographed in the same physical room."
   );
 
+  const loadSettings = async () => {
+    const settings = await db.settings.get('current');
+    if (settings) {
+      setBackgroundImage(settings.backgroundImage);
+      setBackgroundImageMimeType(settings.backgroundImageMimeType);
+    }
+  };
+
   const resetPrompts = () => {
     setSystemInstruction("You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output.");
     setIsolationPrompt("Extract the car from this image. Remove all background elements, shadows, and surroundings. Return only the car isolated on a clean white background.");
@@ -59,14 +67,6 @@ export default function AutoStudioPage() {
     loadSettings();
   }, []);
 
-  const loadSettings = async () => {
-    const settings = await db.settings.get('current');
-    if (settings) {
-      setBackgroundImage(settings.backgroundImage);
-      setBackgroundImageMimeType(settings.backgroundImageMimeType);
-    }
-  };
-
   const handleSetBackgroundImage = async (url: string | null, mimeType: string | null) => {
     setBackgroundImage(url);
     setBackgroundImageMimeType(mimeType);
@@ -75,25 +75,6 @@ export default function AutoStudioPage() {
       backgroundImage: url,
       backgroundImageMimeType: mimeType
     });
-  };
-
-  const saveToHistory = async (original: string, final: string) => {
-    try {
-      await db.history.add({
-        id: Math.random().toString(36).substr(2, 9),
-        original,
-        final,
-        timestamp: Date.now(),
-      });
-      
-      const count = await db.history.count();
-      if (count > 20) {
-        const oldest = await db.history.orderBy('timestamp').limit(count - 20).toArray();
-        await db.history.bulkDelete(oldest.map(i => i.id));
-      }
-    } catch (e) {
-      console.error("Failed to save to IndexedDB:", e);
-    }
   };
 
   const handleImagesSelect = (images: { base64: string; mimeType: string; name: string }[]) => {
@@ -108,48 +89,69 @@ export default function AutoStudioPage() {
   };
 
   useEffect(() => {
-    if (!isProcessingBatch && queue.some(item => item.status === 'pending')) {
-      processNextInQueue();
-    }
-  }, [queue, isProcessingBatch]);
+    const processItem = async (itemId: string) => {
+      const item = queue.find(i => i.id === itemId);
+      if (!item) return;
 
-  const processNextInQueue = async () => {
-    const nextItem = queue.find(item => item.status === 'pending');
-    if (!nextItem) return;
+      setQueue(prev => prev.map(i => i.id === itemId ? { ...i, status: 'processing', stage: 'isolation' } : i));
 
-    setIsProcessingBatch(true);
-    await processItem(nextItem.id);
-    setIsProcessingBatch(false);
-  };
+      setIsProcessingBatch(true);
 
-  const processItem = async (itemId: string) => {
-    const item = queue.find(i => i.id === itemId);
-    if (!item) return;
+      try {
+        const finalUrl = await processCarImage(
+          item.base64,
+          item.mimeType,
+          systemInstruction,
+          isolationPrompt,
+          compositionPrompt,
+          backgroundImage,
+          backgroundImageMimeType,
+          (stage) => {
+            setQueue(prev => prev.map(i => i.id === itemId ? { ...i, stage } : i));
+          }
+        );
 
-    setQueue(prev => prev.map(i => i.id === itemId ? { ...i, status: 'processing', stage: 'isolation' } : i));
+        try {
+          await db.history.add({
+            id: Math.random().toString(36).substr(2, 9),
+            original: item.base64,
+            final: finalUrl,
+            timestamp: Date.now(),
+          });
 
-    try {
-      const finalUrl = await processCarImage(
-        item.base64,
-        item.mimeType,
-        systemInstruction,
-        isolationPrompt,
-        compositionPrompt,
-        backgroundImage,
-        backgroundImageMimeType,
-        (stage) => {
-          setQueue(prev => prev.map(i => i.id === itemId ? { ...i, stage } : i));
+          const count = await db.history.count();
+          if (count > 20) {
+            const oldest = await db.history.orderBy('timestamp').limit(count - 20).toArray();
+            await db.history.bulkDelete(oldest.map(i => i.id));
+          }
+        } catch (e) {
+          console.error("Failed to save to IndexedDB:", e);
         }
-      );
 
-      await saveToHistory(item.base64, finalUrl);
-      setQueue(prev => prev.map(i => i.id === itemId ? { ...i, status: 'completed', result: finalUrl } : i));
-    } catch (error: any) {
-      console.error(`Processing failed for ${item.name}:`, error);
-      const errorMessage = error.message || "AI processing failed.";
-      setQueue(prev => prev.map(i => i.id === itemId ? { ...i, status: 'error', error: errorMessage } : i));
+        setQueue(prev => prev.map(i => i.id === itemId ? { ...i, status: 'completed', result: finalUrl } : i));
+      } catch (error: unknown) {
+        console.error(`Processing failed for ${item.name}:`, error);
+        const errorMessage = error instanceof Error && error.message ? error.message : "AI processing failed.";
+        setQueue(prev => prev.map(i => i.id === itemId ? { ...i, status: 'error', error: errorMessage } : i));
+      } finally {
+        setIsProcessingBatch(false);
+      }
+    };
+
+    if (!isProcessingBatch && queue.some(item => item.status === 'pending')) {
+      const nextItem = queue.find(item => item.status === 'pending');
+      if (!nextItem) return;
+      void processItem(nextItem.id);
     }
-  };
+  }, [
+    queue,
+    isProcessingBatch,
+    backgroundImage,
+    backgroundImageMimeType,
+    systemInstruction,
+    isolationPrompt,
+    compositionPrompt,
+  ]);
 
   const retryItem = (itemId: string) => {
     setQueue(prev => prev.map(i => i.id === itemId ? { ...i, status: 'pending', error: undefined, stage: undefined } : i));

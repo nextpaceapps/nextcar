@@ -227,8 +227,11 @@ router.post('/autostudio/isolate', withRole('Editor'), async (req: AuthRequest, 
         let isolatedBase64 = "";
         for (const part of isolationResponse.candidates?.[0]?.content?.parts || []) {
             if (part.inlineData) {
-                isolatedBase64 = part.inlineData.data;
-                break;
+                const data = part.inlineData.data;
+                if (typeof data === 'string') {
+                    isolatedBase64 = data;
+                    break;
+                }
             }
         }
 
@@ -319,8 +322,11 @@ router.post('/autostudio/compose', withRole('Editor'), async (req: AuthRequest, 
         let finalBase64 = "";
         for (const part of compositionResponse.candidates?.[0]?.content?.parts || []) {
             if (part.inlineData) {
-                finalBase64 = part.inlineData.data;
-                break;
+                const data = part.inlineData.data;
+                if (typeof data === 'string') {
+                    finalBase64 = data;
+                    break;
+                }
             }
         }
 
