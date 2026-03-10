@@ -9,7 +9,10 @@ import {
   Trash2,
   Image as ImageIcon,
   Info,
-  RotateCcw
+  RotateCcw,
+  FolderPlus,
+  FolderOpen,
+  Plus
 } from 'lucide-react';
 import { ImageUploader } from '../components/autostudio/ImageUploader';
 import { PromptSettings } from '../components/autostudio/PromptSettings';
@@ -38,6 +41,39 @@ export default function AutoStudioPage() {
     () => db.history.orderBy('timestamp').reverse().limit(20).toArray(),
     []
   ) || [];
+
+  const galleries = useLiveQuery(
+    () => db.galleries.orderBy('createdAt').reverse().toArray(),
+    []
+  ) || [];
+
+  const [selectedGalleryId, setSelectedGalleryId] = useState<string | null>(null);
+  const [newGalleryName, setNewGalleryName] = useState('');
+  const [addToGalleryHistoryId, setAddToGalleryHistoryId] = useState<string | null>(null);
+
+  const galleryItemCounts = useLiveQuery(
+    async () => {
+      const items = await db.galleryItems.toArray();
+      const counts: Record<string, number> = {};
+      for (const i of items) {
+        counts[i.galleryId] = (counts[i.galleryId] ?? 0) + 1;
+      }
+      return counts;
+    },
+    []
+  ) ?? {};
+
+  const selectedGalleryItems = useLiveQuery(
+    async () => {
+      if (!selectedGalleryId) return [];
+      const items = await db.galleryItems.where('galleryId').equals(selectedGalleryId).sortBy('addedAt');
+      const withHistory = await Promise.all(
+        items.map(async (gi) => ({ galleryItem: gi, history: await db.history.get(gi.historyId) }))
+      );
+      return withHistory.filter((x): x is { galleryItem: typeof items[0]; history: NonNullable<typeof x.history> } => x.history != null);
+    },
+    [selectedGalleryId]
+  ) ?? [];
   
   const [systemInstruction, setSystemInstruction] = useState(
     "You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output."
@@ -168,8 +204,57 @@ export default function AutoStudioPage() {
   const deleteFromHistory = async (id: string) => {
     try {
       await db.history.delete(id);
+      await db.galleryItems.where('historyId').equals(id).delete();
     } catch (e) {
       console.error("Failed to delete from IndexedDB:", e);
+    }
+  };
+
+  const createGallery = async () => {
+    const name = newGalleryName.trim();
+    if (!name) return;
+    try {
+      await db.galleries.add({
+        id: Math.random().toString(36).substr(2, 9),
+        name,
+        createdAt: Date.now(),
+      });
+      setNewGalleryName('');
+    } catch (e) {
+      console.error("Failed to create gallery:", e);
+    }
+  };
+
+  const addToGallery = async (galleryId: string, historyId: string) => {
+    const existing = await db.galleryItems.where({ galleryId, historyId }).count();
+    if (existing > 0) return;
+    try {
+      await db.galleryItems.add({
+        id: Math.random().toString(36).substr(2, 9),
+        galleryId,
+        historyId,
+        addedAt: Date.now(),
+      });
+    } catch (e) {
+      console.error("Failed to add to gallery:", e);
+    }
+  };
+
+  const removeFromGallery = async (galleryItemId: string) => {
+    try {
+      await db.galleryItems.delete(galleryItemId);
+    } catch (e) {
+      console.error("Failed to remove from gallery:", e);
+    }
+  };
+
+  const deleteGallery = async (galleryId: string) => {
+    try {
+      await db.galleryItems.where('galleryId').equals(galleryId).delete();
+      await db.galleries.delete(galleryId);
+      if (selectedGalleryId === galleryId) setSelectedGalleryId(null);
+    } catch (e) {
+      console.error("Failed to delete gallery:", e);
     }
   };
 
@@ -300,6 +385,30 @@ export default function AutoStudioPage() {
                         >
                           <Download className="w-4 h-4" />
                         </a>
+                        <div className="relative">
+                          <button 
+                            type="button"
+                            onClick={() => setAddToGalleryHistoryId(addToGalleryHistoryId === item.id ? null : item.id)}
+                            className="p-2 bg-white/20 hover:bg-white/30 rounded-lg backdrop-blur-md transition-colors text-white"
+                            title="Add to gallery"
+                          >
+                            <FolderPlus className="w-4 h-4" />
+                          </button>
+                          {addToGalleryHistoryId === item.id && galleries.length > 0 && (
+                            <div className="absolute left-0 bottom-full mb-1 py-1 bg-gray-900 rounded-lg shadow-lg min-w-[140px] z-10">
+                              {galleries.map((g) => (
+                                <button
+                                  key={g.id}
+                                  type="button"
+                                  onClick={() => { void addToGallery(g.id, item.id); setAddToGalleryHistoryId(null); }}
+                                  className="w-full px-3 py-2 text-left text-sm text-white hover:bg-gray-700"
+                                >
+                                  {g.name}
+                                </button>
+                              ))}
+                            </div>
+                          )}
+                        </div>
                         <button 
                           onClick={() => deleteFromHistory(item.id)}
                           className="p-2 bg-red-500/80 hover:bg-red-500 text-white rounded-lg backdrop-blur-md transition-colors"
@@ -330,6 +439,105 @@ export default function AutoStudioPage() {
                 <div className="col-span-full py-20 text-center bg-white rounded-xl border border-dashed border-gray-200">
                   <ImageIcon className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                   <p className="text-gray-500 font-medium">No processed images yet.</p>
+                </div>
+              )}
+            </div>
+          </section>
+
+          <section>
+            <div className="flex items-center gap-2 mb-6 px-2">
+              <FolderOpen className="w-5 h-5 text-gray-500" />
+              <h2 className="text-xl font-semibold text-gray-800">Galleries</h2>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newGalleryName}
+                  onChange={(e) => setNewGalleryName(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && createGallery()}
+                  placeholder="New gallery name"
+                  className="flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={createGallery}
+                  disabled={!newGalleryName.trim()}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  <Plus className="w-4 h-4" />
+                  Create
+                </button>
+              </div>
+
+              {galleries.length === 0 ? (
+                <div className="py-12 text-center bg-white rounded-xl border border-dashed border-gray-200">
+                  <FolderPlus className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-500 font-medium">No galleries yet. Create one and add images from Recent Processing.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {galleries.map((gallery) => {
+                    const isSelected = selectedGalleryId === gallery.id;
+                    return (
+                      <div
+                        key={gallery.id}
+                        className="bg-white rounded-xl border border-gray-100 overflow-hidden shadow-sm"
+                      >
+                        <button
+                          type="button"
+                          onClick={() => setSelectedGalleryId(isSelected ? null : gallery.id)}
+                          className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 transition-colors"
+                        >
+                          <span className="font-medium text-gray-800">{gallery.name}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-xs text-gray-500">
+                              {galleryItemCounts[gallery.id] ?? 0} image{(galleryItemCounts[gallery.id] ?? 0) !== 1 ? 's' : ''}
+                            </span>
+                            <FolderOpen className={`w-4 h-4 text-gray-400 transition-transform ${isSelected ? 'rotate-90' : ''}`} />
+                          </div>
+                        </button>
+                        {isSelected && (
+                          <div className="border-t border-gray-100 p-4 bg-gray-50/50">
+                            <div className="flex items-center justify-between mb-3">
+                              <span className="text-sm font-medium text-gray-700">Images in this gallery</span>
+                              <button
+                                type="button"
+                                onClick={() => deleteGallery(gallery.id)}
+                                className="text-xs font-medium text-red-600 hover:text-red-700"
+                              >
+                                Delete gallery
+                              </button>
+                            </div>
+                            {selectedGalleryItems.length === 0 ? (
+                              <p className="text-sm text-gray-500 py-4">No images. Add from Recent Processing.</p>
+                            ) : (
+                              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                {selectedGalleryItems.map(({ galleryItem, history: hist }) => (
+                                  <div key={galleryItem.id} className="relative group rounded-lg overflow-hidden bg-gray-100 aspect-video">
+                                    <img src={hist.final} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                      <a href={hist.final} download className="p-2 bg-white/20 rounded-lg text-white hover:bg-white/30">
+                                        <Download className="w-4 h-4" />
+                                      </a>
+                                      <button
+                                        type="button"
+                                        onClick={() => removeFromGallery(galleryItem.id)}
+                                        className="p-2 bg-red-500/80 rounded-lg text-white hover:bg-red-500"
+                                      >
+                                        <Trash2 className="w-4 h-4" />
+                                      </button>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -368,7 +576,7 @@ export default function AutoStudioPage() {
                 </li>
                 <li className="flex gap-2">
                   <span className="text-blue-500 font-bold">•</span>
-                  <span>Results are stored locally in your browser history.</span>
+                  <span>Results are stored locally. Use Galleries to organise processed images.</span>
                 </li>
               </ul>
             </section>
