@@ -48,6 +48,8 @@ To run the application with local Firebase emulators:
     - `apps/admin`: set `VITE_SENTRY_DSN` for browser error reporting; set `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`, and optional `SENTRY_RELEASE` only in the local build environment or CI to upload source maps.
     - `apps/frontend`: set `NEXT_PUBLIC_SENTRY_DSN` for Next.js client/server reporting; set `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`, and optional `SENTRY_RELEASE` only in the build environment to upload source maps.
     - `apps/backend`: set `SENTRY_DSN` in `.env` or runtime environment for API error reporting.
+    - `apps/frontend/apphosting.yaml` should reference Cloud Secret Manager entries instead of committed literal values. This keeps Sentry deploy config out of git and prevents production deploys from silently losing Sentry because a local `.env` file was never merged.
+    - For App Hosting, keep shared defaults in `apphosting.yaml` and use `apphosting.<environment>.yaml` only for true environment-specific overrides. Avoid committing empty placeholder values in these files, because deployed config comes from YAML and secrets, not from local untracked `.env` files.
 
 ## Deployment
 

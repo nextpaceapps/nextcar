@@ -3,3 +3,27 @@ runConfig:
   memoryMiB: 512
   minInstances: 0
   maxInstances: 2
+
+# Keep deploy-time config in Secret Manager so merges to `main`
+# don't depend on uncommitted local `.env` files.
+env:
+  - variable: NEXT_PUBLIC_SENTRY_DSN
+    secret: nextcar-frontend-sentry-dsn
+    availability:
+      - BUILD
+      - RUNTIME
+
+  - variable: SENTRY_AUTH_TOKEN
+    secret: nextcar-sentry-auth-token
+    availability:
+      - BUILD
+
+  - variable: SENTRY_ORG
+    secret: nextcar-sentry-org
+    availability:
+      - BUILD
+
+  - variable: SENTRY_PROJECT
+    secret: nextcar-sentry-project
+    availability:
+      - BUILD
