@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import * as Sentry from '@sentry/nextjs';
 import { getPublishedVehicles } from '../../../lib/data/vehicles';
 
 export async function GET(request: Request) {
@@ -9,6 +10,13 @@ export async function GET(request: Request) {
         const vehicles = await getPublishedVehicles(limit);
         return NextResponse.json({ success: true, data: vehicles });
     } catch (error: unknown) {
+        Sentry.captureException(error, {
+            tags: {
+                area: 'frontend-api',
+                route: '/api/vehicles',
+                method: 'GET',
+            },
+        });
         const message = error instanceof Error ? error.message : 'Unknown error';
         return NextResponse.json({ success: false, error: { message } }, { status: 500 });
     }

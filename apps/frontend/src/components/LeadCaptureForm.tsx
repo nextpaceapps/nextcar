@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { useTranslations } from 'next-intl';
 
 interface LeadCaptureFormProps {
@@ -46,10 +47,38 @@ export default function LeadCaptureForm({ vehicleId, intent }: LeadCaptureFormPr
         setStatus('success');
         (e.target as HTMLFormElement).reset();
       } else {
+        if (res.status >= 500) {
+          Sentry.captureException(new Error(result.error || t('errorSubmitFailed')), {
+            tags: {
+              area: 'frontend-form',
+              form: 'lead-capture',
+              endpoint: '/api/leads',
+              method: 'POST',
+            },
+            extra: {
+              status: res.status,
+              vehicleId,
+              intent,
+              response: result,
+            },
+          });
+        }
         setStatus('error');
         setErrorMessage(result.error || t('errorSubmitFailed'));
       }
-    } catch {
+    } catch (error: unknown) {
+      Sentry.captureException(error, {
+        tags: {
+          area: 'frontend-form',
+          form: 'lead-capture',
+          endpoint: '/api/leads',
+          method: 'POST',
+        },
+        extra: {
+          vehicleId,
+          intent,
+        },
+      });
       setStatus('error');
       setErrorMessage(t('errorUnexpected'));
     }

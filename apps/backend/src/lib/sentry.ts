@@ -7,7 +7,13 @@ export function initSentry() {
     Sentry.init({
         dsn,
         environment: process.env.NODE_ENV || 'development',
-        tracesSampleRate: 0.1,
+        sendDefaultPii: true,
+        enableLogs: true,
+        integrations: [
+            Sentry.httpIntegration({ spans: true }),
+            Sentry.consoleLoggingIntegration({ levels: ['log', 'warn', 'error'] }),
+        ],
+        tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
     });
 }
 

@@ -1,13 +1,7 @@
+import './bootstrap';
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-import path from 'path';
-import { initSentry } from './lib/sentry';
-
-dotenv.config({ path: path.join(__dirname, '../.env.local') });
-dotenv.config({ path: path.join(__dirname, '../.env') });
-
-initSentry();
+import { Sentry } from './lib/sentry';
 
 const app = express();
 
@@ -17,9 +11,35 @@ app.use(cors({
         process.env.FRONTEND_ORIGIN || 'http://localhost:5173'
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'sentry-trace', 'baggage'],
     credentials: true
 }));
+app.use((req, res, next) => {
+    const sentryTrace = req.header('sentry-trace');
+    const baggage = req.header('baggage');
+
+    Sentry.continueTrace({ sentryTrace, baggage }, () => {
+        Sentry.startSpanManual(
+            {
+                name: `${req.method} ${req.path}`,
+                op: 'http.server',
+                forceTransaction: true,
+                attributes: {
+                    'http.request.method': req.method,
+                    'http.route': req.path,
+                    'url.full': `${req.protocol}://${req.get('host')}${req.originalUrl}`,
+                },
+            },
+            (span) => {
+                res.on('finish', () => {
+                    span.setAttribute('http.response.status_code', res.statusCode);
+                    span.end();
+                });
+                next();
+            },
+        );
+    });
+});
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 

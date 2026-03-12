@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '../../../lib/firebase-admin';
 import * as admin from 'firebase-admin';
+import * as Sentry from '@sentry/nextjs';
 import { z } from 'zod';
 import { COLLECTIONS } from '@nextcar/shared';
 
@@ -126,6 +127,13 @@ export async function POST(request: Request) {
 
         return NextResponse.json({ success: true });
     } catch (error) {
+        Sentry.captureException(error, {
+            tags: {
+                area: 'frontend-api',
+                route: '/api/leads',
+                method: 'POST',
+            },
+        });
         console.error('Error submitting lead:', error);
         return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
     }

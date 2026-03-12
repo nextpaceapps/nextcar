@@ -1,6 +1,7 @@
 import { Router, Response } from 'express';
 import { GoogleGenAI } from '@google/genai';
 import { withRole, type AuthRequest } from '../middleware/auth';
+import { Sentry } from '../lib/sentry';
 
 const router = Router();
 
@@ -161,6 +162,12 @@ router.post('/parse-listing', withRole('Editor'), async (req: AuthRequest, res: 
 
         res.json(result);
     } catch (error: unknown) {
+        Sentry.captureException(error, {
+            tags: {
+                area: 'backend-ai',
+                route: 'parse-listing',
+            },
+        });
         console.error('AI parsing error:', error);
         res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to parse listing' });
     }
@@ -241,6 +248,12 @@ router.post('/autostudio/isolate', withRole('Editor'), async (req: AuthRequest, 
 
         res.json({ isolatedImage: `data:image/png;base64,${isolatedBase64}` });
     } catch (error: unknown) {
+        Sentry.captureException(error, {
+            tags: {
+                area: 'backend-ai',
+                route: 'autostudio-isolate',
+            },
+        });
         console.error('AutoStudio Isolation error:', error);
         res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to isolate image' });
     }
@@ -336,6 +349,12 @@ router.post('/autostudio/compose', withRole('Editor'), async (req: AuthRequest, 
 
         res.json({ finalImage: `data:image/png;base64,${finalBase64}` });
     } catch (error: unknown) {
+        Sentry.captureException(error, {
+            tags: {
+                area: 'backend-ai',
+                route: 'autostudio-compose',
+            },
+        });
         console.error('AutoStudio Composition error:', error);
         res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to compose image' });
     }

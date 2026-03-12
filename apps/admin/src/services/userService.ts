@@ -1,30 +1,27 @@
-import { BACKEND_URL, getAuthHeaders } from './api';
+import { requestJson } from './api';
 import type { User } from '@nextcar/shared';
+
+type ApiResponse<T> = {
+    success: boolean;
+    data: T;
+    error?: string | { message?: string };
+};
 
 export const userService = {
     async getMyRole(): Promise<User> {
-        const headers = await getAuthHeaders();
-        const res = await fetch(`${BACKEND_URL}/api/admin/users/me`, { headers });
-        if (!res.ok) throw new Error('Failed to fetch user role');
-        const json = await res.json();
-        return json.data;
+        const { data } = await requestJson<ApiResponse<User>>('/api/admin/users/me');
+        return data.data;
     },
 
     async getUsers(): Promise<User[]> {
-        const headers = await getAuthHeaders();
-        const res = await fetch(`${BACKEND_URL}/api/admin/users`, { headers });
-        if (!res.ok) throw new Error('Failed to fetch users');
-        const json = await res.json();
-        return json.data;
+        const { data } = await requestJson<ApiResponse<User[]>>('/api/admin/users');
+        return data.data;
     },
 
     async updateUserRole(uid: string, role: 'Admin' | 'Editor' | 'Viewer'): Promise<void> {
-        const headers = await getAuthHeaders();
-        const res = await fetch(`${BACKEND_URL}/api/admin/users/${uid}`, {
+        await requestJson<ApiResponse<User>>(`/api/admin/users/${uid}`, {
             method: 'PUT',
-            headers,
             body: JSON.stringify({ role }),
         });
-        if (!res.ok) throw new Error('Failed to update user role');
     },
 };

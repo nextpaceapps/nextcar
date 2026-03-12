@@ -3,6 +3,7 @@ import { auth, db } from '../config/firebase';
 import type { DecodedIdToken } from 'firebase-admin/auth';
 import { errorResponse } from '../utils/response';
 import { COLLECTIONS } from '@nextcar/shared';
+import { Sentry } from '../lib/sentry';
 
 export interface AuthRequest extends Request {
     user?: DecodedIdToken;
@@ -49,6 +50,11 @@ export const withRole = (minRole: 'Admin' | 'Editor' | 'Viewer') => {
 
             req.user = decodedToken;
             req.userRole = userRole;
+            Sentry.setUser({
+                id: decodedToken.uid,
+                email: decodedToken.email,
+            });
+            Sentry.setTag('user_role', userRole);
             next();
         } catch (error) {
             console.error('Error verifying token:', error);

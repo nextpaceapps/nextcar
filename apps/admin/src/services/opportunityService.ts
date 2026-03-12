@@ -1,53 +1,45 @@
 import type { Opportunity, OpportunitySchema } from '@nextcar/shared';
-import { BACKEND_URL, getAuthHeaders } from './api';
+import { requestJson } from './api';
+
+type ApiResponse<T> = {
+    success: boolean;
+    data: T;
+    error?: string | { message?: string };
+};
 
 export const opportunityService = {
     async getOpportunities(): Promise<Opportunity[]> {
-        const response = await fetch(`${BACKEND_URL}/api/admin/opportunities`, {
-            headers: await getAuthHeaders()
-        });
-        const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to get opportunities');
+        const { data } = await requestJson<ApiResponse<Opportunity[]>>('/api/admin/opportunities');
         return data.data;
     },
 
     async getOpportunity(id: string): Promise<Opportunity | null> {
-        const response = await fetch(`${BACKEND_URL}/api/admin/opportunities/${id}`, {
-            headers: await getAuthHeaders()
+        const { response, data } = await requestJson<ApiResponse<Opportunity>>(`/api/admin/opportunities/${id}`, {
+            ignoreStatuses: [404],
         });
         if (response.status === 404) return null;
-        const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to fetch opportunity');
         return data.data;
     },
 
     async createOpportunity(opportunityData: OpportunitySchema): Promise<string> {
-        const response = await fetch(`${BACKEND_URL}/api/admin/opportunities`, {
+        const { data } = await requestJson<ApiResponse<Opportunity>>('/api/admin/opportunities', {
             method: 'POST',
-            headers: await getAuthHeaders(),
             body: JSON.stringify(opportunityData)
         });
-        const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to create opportunity');
+        if (!data.data.id) throw new Error('Created opportunity is missing an ID');
         return data.data.id;
     },
 
     async updateOpportunity(id: string, opportunityData: Partial<OpportunitySchema>): Promise<void> {
-        const response = await fetch(`${BACKEND_URL}/api/admin/opportunities/${id}`, {
+        await requestJson<ApiResponse<Opportunity>>(`/api/admin/opportunities/${id}`, {
             method: 'PUT',
-            headers: await getAuthHeaders(),
             body: JSON.stringify(opportunityData)
         });
-        const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to update opportunity');
     },
 
     async deleteOpportunity(id: string): Promise<void> {
-        const response = await fetch(`${BACKEND_URL}/api/admin/opportunities/${id}`, {
+        await requestJson<ApiResponse<{ id: string; message: string }>>(`/api/admin/opportunities/${id}`, {
             method: 'DELETE',
-            headers: await getAuthHeaders()
         });
-        const data = await response.json();
-        if (!data.success) throw new Error(data.error?.message || 'Failed to delete opportunity');
     }
 };

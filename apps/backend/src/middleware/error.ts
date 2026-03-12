@@ -16,11 +16,26 @@ export const errorHandler = (
     }
 
     if (err instanceof AppError) {
+        if (err.status >= 500) {
+            Sentry.captureException(err, {
+                tags: {
+                    area: 'backend',
+                    method: req.method,
+                    route: req.path,
+                },
+            });
+        }
         return errorResponse(res, err.code, err.message, err.status);
     }
 
     // Report unexpected errors to Sentry
-    Sentry.captureException(err);
+    Sentry.captureException(err, {
+        tags: {
+            area: 'backend',
+            method: req.method,
+            route: req.path,
+        },
+    });
     console.error('Unhandled Server Error:', err);
     return errorResponse(res, 'INTERNAL_SERVER_ERROR', 'An unexpected error occurred', 500);
 };

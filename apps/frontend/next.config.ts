@@ -3,6 +3,9 @@ import { withSentryConfig } from "@sentry/nextjs";
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
+const enableSentrySourceMaps = Boolean(
+  process.env.SENTRY_AUTH_TOKEN && process.env.SENTRY_ORG && process.env.SENTRY_PROJECT,
+);
 
 const nextConfig: NextConfig = {
   output: 'standalone',
@@ -64,7 +67,15 @@ const nextConfig: NextConfig = {
 
 export default withSentryConfig(withNextIntl(nextConfig), {
   silent: true,
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  release: process.env.SENTRY_RELEASE
+    ? {
+        name: process.env.SENTRY_RELEASE,
+      }
+    : undefined,
   sourcemaps: {
-    disable: true,
+    disable: !enableSentrySourceMaps,
   },
 });

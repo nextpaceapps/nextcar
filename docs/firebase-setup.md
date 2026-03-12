@@ -44,6 +44,10 @@ To run the application with local Firebase emulators:
 
 2.  **Environment Variables**:
     Copy `.env.example` to `.env` in both `apps/admin` and `apps/frontend` and fill in your Firebase SDK configuration details found in the Firebase Console (Project Settings > General > Your apps).
+    For Sentry:
+    - `apps/admin`: set `VITE_SENTRY_DSN` for browser error reporting; set `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`, and optional `SENTRY_RELEASE` only in the local build environment or CI to upload source maps.
+    - `apps/frontend`: set `NEXT_PUBLIC_SENTRY_DSN` for Next.js client/server reporting; set `SENTRY_AUTH_TOKEN`, `SENTRY_ORG`, `SENTRY_PROJECT`, and optional `SENTRY_RELEASE` only in the build environment to upload source maps.
+    - `apps/backend`: set `SENTRY_DSN` in `.env` or runtime environment for API error reporting.
 
 ## Deployment
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import * as Sentry from '@sentry/nextjs';
 import { z } from 'zod';
 import { useTranslations } from 'next-intl';
 
@@ -77,10 +78,36 @@ export default function CarVerticalRequestForm({
         setStatus('success');
         (e.target as HTMLFormElement).reset();
       } else {
+        if (res.status >= 500) {
+          Sentry.captureException(new Error(result.error || t('requestFailed')), {
+            tags: {
+              area: 'frontend-form',
+              form: 'carvertical-request',
+              endpoint: '/api/leads',
+              method: 'POST',
+            },
+            extra: {
+              status: res.status,
+              vehicleId,
+              response: result,
+            },
+          });
+        }
         setStatus('error');
         setErrorMessage(result.error || t('requestFailed'));
       }
-    } catch {
+    } catch (error: unknown) {
+      Sentry.captureException(error, {
+        tags: {
+          area: 'frontend-form',
+          form: 'carvertical-request',
+          endpoint: '/api/leads',
+          method: 'POST',
+        },
+        extra: {
+          vehicleId,
+        },
+      });
       setStatus('error');
       setErrorMessage(t('requestFailed'));
     }
