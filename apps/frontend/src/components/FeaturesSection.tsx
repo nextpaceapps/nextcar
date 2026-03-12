@@ -2,7 +2,9 @@ import { getTranslations } from 'next-intl/server';
 import type { Vehicle, VehicleEquipment } from '@nextcar/shared';
 import FeatureCategory from './FeatureCategory';
 
-const EQUIPMENT_ORDER: (keyof VehicleEquipment)[] = [
+type VehicleEquipmentKey = Extract<keyof VehicleEquipment, string>;
+
+const EQUIPMENT_ORDER: VehicleEquipmentKey[] = [
   'airConditioning',
   'infotainment',
   'mirrors',
@@ -15,7 +17,7 @@ const EQUIPMENT_ORDER: (keyof VehicleEquipment)[] = [
   'other',
 ];
 
-const CATEGORY_ICONS: Record<keyof VehicleEquipment, string> = {
+const CATEGORY_ICONS: Record<VehicleEquipmentKey, string> = {
   airConditioning: 'ac_unit',
   infotainment: 'wifi',
   mirrors: 'rearview_mirror',
