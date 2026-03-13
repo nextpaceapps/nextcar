@@ -3,6 +3,7 @@ import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { vehicleSchema, YOUTUBE_URL_REGEX, type VehicleSchema, type Vehicle, type VehiclePhoto } from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { FolderOpen, Upload } from 'lucide-react';
 import { vehicleService } from '../../services/vehicleService';
 import { aiService } from '../../services/aiService';
 import { storageService } from '../../services/storageService';
@@ -12,6 +13,7 @@ import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, us
 import type { DragEndEvent } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, rectSortingStrategy } from '@dnd-kit/sortable';
 import { SortablePhotoItem } from './SortablePhotoItem';
+import { AutoStudioGalleryPicker, type AutoStudioGalleryImportItem } from './AutoStudioGalleryPicker';
 
 interface VehicleFormProps {
     initialData?: Vehicle;
@@ -40,6 +42,8 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
     // Image upload state
     const [pendingImages, setPendingImages] = useState<PendingImage[]>([]);
     const [isUploading, setIsUploading] = useState(false);
+    const [isImportingFromAutoStudio, setIsImportingFromAutoStudio] = useState(false);
+    const [isAutoStudioPickerOpen, setIsAutoStudioPickerOpen] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
 
     // Cleanup object URLs on unmount to prevent memory leaks
@@ -156,22 +160,52 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
     };
 
     // --- Image Handling ---
-    const handleFilesSelected = (files: FileList | null) => {
-        if (!files) return;
+    const addPendingFiles = useCallback((files: File[]) => {
+        if (files.length === 0) return;
 
-        const newImages: PendingImage[] = Array.from(files).map((file) => ({
+        const newImages: PendingImage[] = files.map((file) => ({
             file,
             preview: URL.createObjectURL(file),
             progress: 0,
         }));
 
         setPendingImages(prev => [...prev, ...newImages]);
+    }, []);
+
+    const handleFilesSelected = (files: FileList | null) => {
+        if (!files) return;
+        addPendingFiles(Array.from(files));
+    };
+
+    const dataUrlToFile = async (dataUrl: string, fileName: string): Promise<File> => {
+        const response = await fetch(dataUrl);
+        const blob = await response.blob();
+        return new File([blob], fileName, { type: blob.type || 'image/png' });
+    };
+
+    const handleImportFromAutoStudio = async (items: AutoStudioGalleryImportItem[]) => {
+        try {
+            setIsImportingFromAutoStudio(true);
+            setSaveError(null);
+
+            const files = await Promise.all(
+                items.map((item) => dataUrlToFile(item.dataUrl, item.suggestedName))
+            );
+
+            addPendingFiles(files);
+            setIsAutoStudioPickerOpen(false);
+        } catch (error: unknown) {
+            console.error('Failed to import AutoStudio images:', error);
+            setSaveError(error instanceof Error ? error.message : 'Failed to import AutoStudio images.');
+        } finally {
+            setIsImportingFromAutoStudio(false);
+        }
     };
 
     const handleDrop = useCallback((e: React.DragEvent) => {
         e.preventDefault();
-        handleFilesSelected(e.dataTransfer.files);
-    }, []);
+        addPendingFiles(Array.from(e.dataTransfer.files));
+    }, [addPendingFiles]);
 
     const handleDragOver = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -549,6 +583,37 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                                     ))}
                                 </div>
                             </div>
+                        )}
+
+                        <div className="mb-4 flex flex-wrap items-center gap-3">
+                            <button
+                                type="button"
+                                onClick={() => fileInputRef.current?.click()}
+                                className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                            >
+                                <Upload className="h-4 w-4" />
+                                Browse Files
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setIsAutoStudioPickerOpen(prev => !prev)}
+                                disabled={isImportingFromAutoStudio}
+                                className="inline-flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                            >
+                                <FolderOpen className="h-4 w-4" />
+                                {isAutoStudioPickerOpen ? 'Hide AutoStudio' : 'Import From AutoStudio'}
+                            </button>
+                            {isImportingFromAutoStudio && (
+                                <span className="text-sm text-gray-500">Preparing selected AutoStudio images...</span>
+                            )}
+                        </div>
+
+                        {isAutoStudioPickerOpen && (
+                            <AutoStudioGalleryPicker
+                                disabled={isImportingFromAutoStudio}
+                                onClose={() => setIsAutoStudioPickerOpen(false)}
+                                onImport={handleImportFromAutoStudio}
+                            />
                         )}
 
                         {/* Drop zone */}
