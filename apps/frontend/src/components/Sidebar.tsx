@@ -20,9 +20,9 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
   const pathname = usePathname();
 
   return (
-    <aside className="w-full lg:w-[380px] lg:h-screen lg:sticky top-0 p-8 lg:p-12 flex flex-col justify-between bg-background-light z-40">
-      <div className="space-y-16">
-        <div className="flex flex-col gap-4">
+    <aside className="w-full lg:w-[380px] lg:sticky top-0 p-5 lg:p-12 flex flex-col bg-background-light z-40">
+      <div className="space-y-8 lg:space-y-16">
+        <div className="flex flex-col gap-3 lg:gap-4">
           <Link href="/" className="inline-flex items-start group">
             <span className="font-display font-bold text-2xl tracking-tight uppercase group-hover:opacity-80 transition-opacity">
               NEXTCAR
@@ -57,7 +57,7 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 lg:space-y-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">
             {t('ongoingSales')}
           </p>
@@ -76,10 +76,10 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 lg:space-y-6">
           <Link
             href="?contact=true"
-            className="w-full bg-primary text-white py-5 rounded-full font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]"
+            className="w-full bg-primary text-white py-3.5 lg:py-5 rounded-full font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 group active:scale-[0.98]"
           >
             {t('letsTalk')}
             <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">
@@ -87,31 +87,20 @@ const Sidebar: React.FC<SidebarProps> = ({ vehicles, totalCount, lowestPrice }) 
             </span>
           </Link>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="p-5 rounded-large bg-white border border-slate-100 hover:border-slate-300 transition-colors">
-              <span className="material-symbols-outlined text-slate-400 mb-2">account_balance</span>
+          <div className="grid grid-cols-2 gap-2 lg:gap-3">
+            <div className="p-3 lg:p-5 rounded-large bg-white border border-slate-100 hover:border-slate-300 transition-colors">
+              <span className="material-symbols-outlined text-slate-400 mb-1 lg:mb-2">account_balance</span>
               <p className="text-xs font-bold uppercase tracking-wider">{t('leasing')}</p>
               <p className="text-[10px] text-slate-500 font-medium">{t('leasingFrom')}</p>
             </div>
-            <div className="p-5 rounded-large bg-white border border-slate-100 hover:border-slate-300 transition-colors">
-              <span className="material-symbols-outlined text-slate-400 mb-2">payments</span>
+            <div className="p-3 lg:p-5 rounded-large bg-white border border-slate-100 hover:border-slate-300 transition-colors">
+              <span className="material-symbols-outlined text-slate-400 mb-1 lg:mb-2">payments</span>
               <p className="text-xs font-bold uppercase tracking-wider">{t('credit')}</p>
               <p className="text-[10px] text-slate-500 font-medium">{t('creditFastApproval')}</p>
             </div>
           </div>
 
           <SidebarPageLinks />
-        </div>
-      </div>
-
-      <div className="space-y-8 pt-12 lg:pt-0">
-        <div className="flex flex-col gap-4">
-          <a
-            className="text-xl font-semibold tracking-tight hover:underline"
-            href="tel:+37120399627"
-          >
-            +371 20399627
-          </a>
         </div>
       </div>
     </aside>
