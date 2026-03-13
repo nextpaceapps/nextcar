@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+@layer components {
+  .autostudio-prompt-card {
+    background-color: #fff !important;
+  }
+
+  .autostudio-prompt-field {
+    background-color: #fff !important;
+    color: #000 !important;
+    caret-color: #000 !important;
+  }
+
+  .autostudio-prompt-field::placeholder {
+    color: #64748b !important;
+  }
+}
