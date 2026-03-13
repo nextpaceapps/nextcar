@@ -36,7 +36,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
   };
 
   const promptFieldClassName =
-    'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] leading-7 text-black shadow-sm outline-none transition-all placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 resize-y';
+    'autostudio-prompt-field w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] leading-7 text-black shadow-sm outline-none transition-all placeholder:text-slate-500 focus:border-blue-400 focus:ring-4 focus:ring-blue-100 resize-y';
 
   return (
     <div className="space-y-5">
@@ -61,7 +61,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
       </div>
 
       <div className="space-y-4">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+        <div className="autostudio-prompt-card rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-blue-600">
             <ShieldAlert className="w-4 h-4" />
             Global System Instruction
@@ -73,7 +73,6 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
             value={systemInstruction}
             onChange={(e) => setSystemInstruction(e.target.value)}
             className={`${promptFieldClassName} mt-4 min-h-[180px]`}
-            style={{ backgroundColor: '#fff', color: '#000' }}
             placeholder="General AI instructions..."
           />
           <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-500">
@@ -82,7 +81,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4">
+        <div className="autostudio-prompt-card rounded-2xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <label className="block text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
@@ -118,7 +117,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4">
+        <div className="autostudio-prompt-card rounded-2xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <label className="block text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
@@ -136,7 +135,6 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
             value={isolationPrompt}
             onChange={(e) => setIsolationPrompt(e.target.value)}
             className={`${promptFieldClassName} mt-4 min-h-[170px]`}
-            style={{ backgroundColor: '#fff', color: '#000' }}
             placeholder="Instructions for background removal..."
           />
           <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-500">
@@ -145,7 +143,7 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
           </p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4">
+        <div className="autostudio-prompt-card rounded-2xl border border-slate-200 bg-white p-4">
           <div className="flex items-center justify-between gap-3">
             <div>
               <label className="block text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500">
@@ -163,7 +161,6 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
             value={compositionPrompt}
             onChange={(e) => setCompositionPrompt(e.target.value)}
             className={`${promptFieldClassName} mt-4 min-h-[210px]`}
-            style={{ backgroundColor: '#fff', color: '#000' }}
             placeholder="Instructions for static background..."
           />
           <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-500">
