@@ -270,8 +270,8 @@ export default function AutoStudioPage() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-8 space-y-8">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+        <div className="space-y-8 lg:col-span-7 xl:col-span-8">
           <section className="bg-white rounded-2xl p-8 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold text-gray-800">Upload Vehicle</h2>
@@ -544,9 +544,9 @@ export default function AutoStudioPage() {
           </section>
         </div>
 
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-5 xl:col-span-4">
           <div className="sticky top-6 space-y-8">
-            <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+            <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm xl:p-7">
               <PromptSettings 
                 systemInstruction={systemInstruction}
                 isolationPrompt={isolationPrompt}
