@@ -56,17 +56,37 @@ const Footer: React.FC = () => {
             </a>
 
             <div className="flex gap-8 text-white font-medium uppercase text-xs tracking-widest">
-              <a className="hover:text-slate-400 transition-colors" href="#">
+              <a
+                className="hover:text-slate-400 transition-colors"
+                href="https://www.tiktok.com/@get_next_car"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                tiktok
+              </a>
+              <a
+                className="hover:text-slate-400 transition-colors"
+                href="https://www.instagram.com/next_car_yo/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                instagram
+              </a>
+              <a
+                className="hover:text-slate-400 transition-colors"
+                href="https://www.facebook.com/profile.php?id=61584998199988"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                facebook
+              </a>
+              <a
+                className="hover:text-slate-400 transition-colors"
+                href="https://x.com/next_car_yo"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
                 x
-              </a>
-              <a className="hover:text-slate-400 transition-colors" href="#">
-                behance
-              </a>
-              <a className="hover:text-slate-400 transition-colors" href="#">
-                linkedin
-              </a>
-              <a className="hover:text-slate-400 transition-colors" href="#">
-                dribbble
               </a>
             </div>
           </div>
