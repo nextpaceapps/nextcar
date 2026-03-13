@@ -11,8 +11,12 @@ const PATH_MAP: Record<(typeof PAGE_KEYS)[number], string> = {
   contacts: '/contacts',
 };
 
+const CONTACT_PHONE = '+371 20399627';
+const CONTACT_PHONE_TEL = '+37120399627';
+
 export default function SidebarPageLinks() {
   const t = useTranslations('nav');
+  const tContacts = useTranslations('contacts');
   const pathname = usePathname();
 
   return (
@@ -37,6 +41,15 @@ export default function SidebarPageLinks() {
           </Link>
         );
       })}
+      <div className="pt-2 mt-2 border-t border-slate-100">
+        <a
+          href={`tel:${CONTACT_PHONE_TEL}`}
+          className="block py-2 text-sm font-semibold text-slate-900 hover:text-primary transition-colors rounded-lg px-3 -mx-3"
+        >
+          {CONTACT_PHONE}
+        </a>
+        <p className="text-[10px] text-slate-400 px-3 -mx-3">{tContacts('phone')}</p>
+      </div>
     </nav>
   );
 }
