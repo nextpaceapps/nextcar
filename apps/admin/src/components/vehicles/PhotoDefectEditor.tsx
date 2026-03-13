@@ -8,7 +8,7 @@ interface PhotoDefectEditorProps {
 }
 
 export function PhotoDefectEditor({ photoIndex, disabled }: PhotoDefectEditorProps) {
-    const { control, formState: { errors } } = useFormContext<VehicleSchema>();
+    const { control, register, formState: { errors } } = useFormContext<VehicleSchema>();
     const { fields, append, remove } = useFieldArray({
         control,
         name: `photos.${photoIndex}.defects`,
@@ -34,7 +34,7 @@ export function PhotoDefectEditor({ photoIndex, disabled }: PhotoDefectEditorPro
                         <div key={field.id} className="flex flex-col gap-0.5">
                             <div className="flex gap-1">
                                 <input
-                                    {...control.register(`photos.${photoIndex}.defects.${defectIndex}.description`)}
+                                    {...register(`photos.${photoIndex}.defects.${defectIndex}.description`)}
                                     placeholder="Defect description (max 500 chars)"
                                     disabled={disabled}
                                     className={`flex-1 rounded border px-2 py-1 text-xs ${fieldError ? 'border-red-500' : 'border-gray-300'}`}
