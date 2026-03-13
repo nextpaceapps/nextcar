@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import type { Vehicle } from '@nextcar/shared';
+import { createVehiclePath } from '@/lib/vehicleSlug';
 
 const PLACEHOLDER_IMAGE = 'https://placehold.co/200x200?text=No+Image';
 
@@ -30,7 +31,7 @@ export default function SidebarVehiclePreviews({ vehicles, totalCount }: Sidebar
     <div className="flex items-center gap-4">
       <div className="flex -space-x-4 overflow-hidden">
         {vehicles.slice(0, 3).map((vehicle) => {
-          const href = `/vehicles/${vehicle.id}`;
+          const href = createVehiclePath(vehicle);
           const imageUrl = getFirstPhotoUrl(vehicle);
           const label = `${vehicle.year} ${vehicle.make} ${vehicle.model}`;
           return (

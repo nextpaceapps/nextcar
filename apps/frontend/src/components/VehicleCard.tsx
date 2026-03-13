@@ -5,6 +5,7 @@ import type { Vehicle } from '@nextcar/shared';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { DefectIndicator } from './DefectIndicator';
+import { createVehiclePath } from '@/lib/vehicleSlug';
 
 interface VehicleCardProps {
   vehicle: Vehicle;
@@ -16,10 +17,11 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
   const sortedPhotos = [...vehicle.photos].sort((a, b) => a.order - b.order);
   const coverPhoto = sortedPhotos[0];
   const imageUrl = coverPhoto?.url || 'https://placehold.co/600x400?text=No+Image';
+  const vehiclePath = createVehiclePath(vehicle);
 
   return (
     <div className="group flex flex-col gap-6">
-      <Link href={`/vehicles/${vehicle.id}`} className="block">
+      <Link href={vehiclePath} className="block">
         <div className="h-[280px] md:h-[480px] relative overflow-hidden rounded-[2rem]">
           <Image
             src={imageUrl}
@@ -40,7 +42,7 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 px-2">
         <div className="md:col-span-7">
-          <Link href={`/vehicles/${vehicle.id}`} className="block w-fit">
+          <Link href={vehiclePath} className="block w-fit">
             <h3 className="text-2xl font-bold text-gray-900 mb-3 hover:opacity-80 transition-opacity">
               {vehicle.make} {vehicle.model}
             </h3>
@@ -59,7 +61,7 @@ export default function VehicleCard({ vehicle, priority = false }: VehicleCardPr
               €{vehicle.price.toLocaleString()}
             </span>
             <Link
-              href={`/vehicles/${vehicle.id}`}
+              href={vehiclePath}
               className="ml-auto px-6 py-2 bg-gray-900 text-white text-xs font-bold rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap"
             >
               {t('viewDetails')}
