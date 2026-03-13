@@ -1,15 +1,20 @@
 import React from 'react';
 import { Settings2, Info, RotateCcw, ShieldAlert } from 'lucide-react';
 
+const PLATE_REMOVAL_INSTRUCTION =
+  " Additionally, detect any visible license plates on the vehicle and replace each one with a clean solid rectangle containing the centered text 'NEXT CAR'.";
+
 interface PromptSettingsProps {
   systemInstruction: string;
   isolationPrompt: string;
   compositionPrompt: string;
   backgroundImage: string | null;
+  removeLicensePlate: boolean;
   setSystemInstruction: (v: string) => void;
   setIsolationPrompt: (v: string) => void;
   setCompositionPrompt: (v: string) => void;
   setBackgroundImage: (url: string | null, mimeType: string | null) => void;
+  setRemoveLicensePlate: (v: boolean) => void;
   onReset: () => void;
 }
 
@@ -18,10 +23,12 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
   isolationPrompt,
   compositionPrompt,
   backgroundImage,
+  removeLicensePlate,
   setSystemInstruction,
   setIsolationPrompt,
   setCompositionPrompt,
   setBackgroundImage,
+  setRemoveLicensePlate,
   onReset,
 }) => {
   const handleBgUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,6 +144,25 @@ export const PromptSettings: React.FC<PromptSettingsProps> = ({
             className={`${promptFieldClassName} mt-4 min-h-[170px]`}
             placeholder="Instructions for background removal..."
           />
+          <label className="mt-3 flex cursor-pointer items-center gap-2.5">
+            <input
+              type="checkbox"
+              checked={removeLicensePlate}
+              onChange={(e) => {
+                const checked = e.target.checked;
+                setRemoveLicensePlate(checked);
+                if (checked) {
+                  if (!isolationPrompt.includes(PLATE_REMOVAL_INSTRUCTION)) {
+                    setIsolationPrompt(isolationPrompt + PLATE_REMOVAL_INSTRUCTION);
+                  }
+                } else {
+                  setIsolationPrompt(isolationPrompt.replace(PLATE_REMOVAL_INSTRUCTION, ''));
+                }
+              }}
+              className="h-4 w-4 rounded border-slate-300 text-blue-600 accent-blue-600"
+            />
+            <span className="text-sm text-slate-700">Remove license plate (replace with "NEXT CAR")</span>
+          </label>
           <p className="mt-3 flex items-center gap-1.5 text-xs text-slate-500">
             <Info className="w-3.5 h-3.5" />
             Used to extract the car from original photo.

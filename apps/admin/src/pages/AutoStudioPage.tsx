@@ -76,14 +76,15 @@ export default function AutoStudioPage() {
   ) ?? [];
   
   const [systemInstruction, setSystemInstruction] = useState(
-    "You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output."
+    "You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output. Maintain strict structural integrity: do not add new badges, model numbers, emblems, or body lines. Keep the original factory specifications exactly as shown in the source image."
   );
   const [isolationPrompt, setIsolationPrompt] = useState(
-    "Extract the car from this image. Remove all background elements, shadows, and surroundings. Return only the car isolated on a clean white background."
+    "Extract the car from this image. Remove all background elements, shadows, and surroundings. Return only the car isolated on a clean white background. Additionally, detect any visible license plates on the vehicle and replace each one with a clean solid rectangle containing the centered text 'NEXT CAR'."
   );
   const [compositionPrompt, setCompositionPrompt] = useState(
     "Place the isolated car onto a specific, static studio background. This background must be a consistent professional room with neutral grey tones and soft studio lighting. It should look exactly the same for every vehicle, as if all cars were photographed in the same physical room."
   );
+  const [removeLicensePlate, setRemoveLicensePlate] = useState(true);
 
   const loadSettings = async () => {
     const settings = await db.settings.get('current');
@@ -94,9 +95,10 @@ export default function AutoStudioPage() {
   };
 
   const resetPrompts = () => {
-    setSystemInstruction("You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output.");
-    setIsolationPrompt("Extract the car from this image. Remove all background elements, shadows, and surroundings. Return only the car isolated on a clean white background.");
+    setSystemInstruction("You are a professional automotive photo editor. Your goal is to process car photos with high precision, maintaining the vehicle's shape, color, and details while ensuring a clean and realistic output. Maintain strict structural integrity: do not add new badges, model numbers, emblems, or body lines. Keep the original factory specifications exactly as shown in the source image.");
+    setIsolationPrompt("Extract the car from this image. Remove all background elements, shadows, and surroundings. Return only the car isolated on a clean white background. Additionally, detect any visible license plates on the vehicle and replace each one with a clean solid rectangle containing the centered text 'NEXT CAR'.");
     setCompositionPrompt("Place the isolated car onto a specific, static studio background. This background must be a consistent professional room with neutral grey tones and soft studio lighting. It should look exactly the same for every vehicle, as if all cars were photographed in the same physical room.");
+    setRemoveLicensePlate(true);
   };
 
   useEffect(() => {
@@ -547,15 +549,17 @@ export default function AutoStudioPage() {
         <div className="lg:col-span-5 xl:col-span-4">
           <div className="sticky top-6 space-y-8">
             <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm xl:p-7">
-              <PromptSettings 
+              <PromptSettings
                 systemInstruction={systemInstruction}
                 isolationPrompt={isolationPrompt}
                 compositionPrompt={compositionPrompt}
                 backgroundImage={backgroundImage}
+                removeLicensePlate={removeLicensePlate}
                 setSystemInstruction={setSystemInstruction}
                 setIsolationPrompt={setIsolationPrompt}
                 setCompositionPrompt={setCompositionPrompt}
                 setBackgroundImage={handleSetBackgroundImage}
+                setRemoveLicensePlate={setRemoveLicensePlate}
                 onReset={resetPrompts}
               />
             </section>
