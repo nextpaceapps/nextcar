@@ -1,7 +1,6 @@
 import {
   generateVehicleDetailMetadata,
   renderVehicleDetailPage,
-  revalidate,
 } from '../../vehicleDetailPage';
 
 type Props = {
@@ -9,7 +8,7 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export { revalidate };
+export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Props['params'] }) {
   const { locale, id } = await params;
