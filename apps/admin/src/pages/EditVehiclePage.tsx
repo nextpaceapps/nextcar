@@ -16,5 +16,5 @@ export default function EditVehiclePage() {
     if (error) return <div>Error loading vehicle</div>;
     if (!vehicle) return <div>Vehicle not found</div>;
 
-    return <VehicleForm initialData={vehicle} isEdit={true} />;
+    return <VehicleForm key={vehicle.id} initialData={vehicle} isEdit={true} />;
 }

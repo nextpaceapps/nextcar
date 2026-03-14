@@ -8,7 +8,16 @@ interface PhotoDefectEditorProps {
 }
 
 export function PhotoDefectEditor({ photoIndex, disabled }: PhotoDefectEditorProps) {
-    const { control, register, formState: { errors } } = useFormContext<VehicleSchema>();
+    const formContext = useFormContext<VehicleSchema>();
+    // Guard: form context can be null if rendered outside FormProvider (e.g. old build, portal, or race).
+    if (!formContext) {
+        return (
+            <div className="border-t border-gray-100 bg-gray-50/80 px-2 py-1.5 text-xs text-gray-500">
+                Defects (unavailable)
+            </div>
+        );
+    }
+    const { control, register, formState: { errors } } = formContext;
     const { fields, append, remove } = useFieldArray({
         control,
         name: `photos.${photoIndex}.defects`,
