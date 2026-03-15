@@ -1,7 +1,15 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { vehicleSchema, YOUTUBE_URL_REGEX, type VehicleSchema, type Vehicle, type VehiclePhoto } from '@nextcar/shared';
+import {
+    createVehicleSlug,
+    normalizeVehicleSlug,
+    vehicleSchema,
+    YOUTUBE_URL_REGEX,
+    type VehicleSchema,
+    type Vehicle,
+    type VehiclePhoto,
+} from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FolderOpen, Upload } from 'lucide-react';
 import { vehicleService } from '../../services/vehicleService';
@@ -67,11 +75,13 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
     const defaultValues = initialData
         ? {
             ...initialData,
+            slug: initialData.slug ?? createVehicleSlug(initialData),
             features: initialData.features || [],
             photos: normalizedPhotos,
             featured: !!initialData.featured,
         }
         : {
+            slug: '',
             status: 'draft',
             features: [],
             photos: [],
@@ -87,15 +97,39 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
             featured: false,
         } as VehicleSchema;
 
-    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<VehicleSchema>({
+    const { register, control, handleSubmit, reset, getValues, setValue, watch, formState: { errors, isSubmitting, dirtyFields } } = useForm<VehicleSchema>({
         resolver: zodResolver(vehicleSchema),
         defaultValues,
     });
+
+    const watchedSlug = watch('slug');
+    const watchedMake = watch('make');
+    const watchedModel = watch('model');
+    const watchedYear = watch('year');
+    const watchedEngineSize = watch('engineSize');
+    const watchedFuelType = watch('fuelType');
+
+    useEffect(() => {
+        const hasEnoughData = Boolean(watchedMake?.trim() && watchedModel?.trim() && watchedYear);
+        const generatedSlug = hasEnoughData ? createVehicleSlug({
+            make: watchedMake,
+            model: watchedModel,
+            year: watchedYear,
+            engineSize: watchedEngineSize,
+            fuelType: watchedFuelType,
+        }) : '';
+
+        if (dirtyFields.slug) return;
+        if ((watchedSlug ?? '') === generatedSlug) return;
+
+        setValue('slug', generatedSlug, { shouldDirty: false, shouldValidate: true });
+    }, [dirtyFields.slug, setValue, watchedEngineSize, watchedFuelType, watchedMake, watchedModel, watchedSlug, watchedYear]);
 
     // Helper for optional number fields — converts empty string to undefined instead of NaN
     const optionalNumber = (name: keyof VehicleSchema) => register(name, {
         setValueAs: (v: string | undefined | null) => (v === '' || v === undefined || v === null) ? undefined : Number(v)
     });
+    const slugField = register('slug');
 
     const { fields: photoFields, remove: removePhoto, move: movePhoto } = useFieldArray({
         control,
@@ -148,6 +182,7 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
             // Reset form with parsed data
             reset({
                 ...parsed,
+                slug: createVehicleSlug(parsed),
                 photos: initialData?.photos || [],
             });
             setParseSuccess(true);
@@ -241,6 +276,20 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
         setVideoLinks(prev => prev.filter((_, i) => i !== index));
     };
 
+    const handleGenerateSlug = () => {
+        setValue('slug', createVehicleSlug(getValues()), {
+            shouldDirty: true,
+            shouldValidate: true,
+        });
+    };
+
+    const handleSlugBlur = () => {
+        setValue('slug', normalizeVehicleSlug(getValues('slug')) ?? '', {
+            shouldDirty: true,
+            shouldValidate: true,
+        });
+    };
+
     // --- Form Submit ---
     const createMutation = useMutation({
         mutationFn: vehicleService.createVehicle,
@@ -298,7 +347,12 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                 defects: (p.defects ?? []).filter((d) => (d.description ?? '').trim().length > 0),
             }));
 
-            const finalData = { ...data, photos: allPhotos, videoLinks };
+            const finalData = {
+                ...data,
+                slug: normalizeVehicleSlug(data.slug),
+                photos: allPhotos,
+                videoLinks,
+            };
 
             if (isEdit) {
                 await updateMutation.mutateAsync(finalData);
@@ -407,6 +461,31 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                                 <label className="block text-sm font-medium text-gray-700">Color *</label>
                                 <input {...register('color')} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2" />
                                 {errors.color && <p className="text-red-500 text-xs mt-1">{errors.color.message}</p>}
+                            </div>
+                            <div className="md:col-span-3">
+                                <div className="flex items-center justify-between gap-3">
+                                    <label className="block text-sm font-medium text-gray-700">Slug</label>
+                                    <button
+                                        type="button"
+                                        onClick={handleGenerateSlug}
+                                        className="text-sm font-medium text-blue-600 hover:text-blue-800"
+                                    >
+                                        Generate from vehicle details
+                                    </button>
+                                </div>
+                                <input
+                                    {...slugField}
+                                    onBlur={(event) => {
+                                        slugField.onBlur(event);
+                                        handleSlugBlur();
+                                    }}
+                                    placeholder="e.g. peugeot-308-2023-1598-cc-plug-in-hybrid"
+                                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm border p-2"
+                                />
+                                <p className="mt-1 text-xs text-gray-500">
+                                    Stored in Firestore and used for public vehicle URLs. You can customize it.
+                                </p>
+                                {errors.slug && <p className="text-red-500 text-xs mt-1">{errors.slug.message}</p>}
                             </div>
                         </div>
                     </fieldset>

@@ -4,6 +4,7 @@ export const vehicleStatusSchema = z.enum(['draft', 'published', 'sold', 'archiv
 export const fuelTypeSchema = z.enum(['Petrol', 'Diesel', 'Electric', 'Hybrid', 'Plug-in Hybrid']);
 export const transmissionSchema = z.enum(['Manual', 'Automatic']);
 export const bodyTypeSchema = z.enum(['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Truck']);
+export const VEHICLE_SLUG_REGEX = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 export const vehiclePhotoDefectSchema = z.object({
     description: z.string().min(1).max(500),
@@ -29,9 +30,19 @@ export const vehicleEquipmentSchema = z.object({
 });
 
 export const YOUTUBE_URL_REGEX = /^(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/|live\/)|youtu\.be\/)/;
+export const vehicleSlugSchema = z.preprocess(
+    (value) => typeof value === 'string' && value.trim() === '' ? undefined : value,
+    z.string()
+        .trim()
+        .min(1, 'Slug is required')
+        .max(160, 'Slug must be 160 characters or fewer')
+        .regex(VEHICLE_SLUG_REGEX, 'Slug must contain only lowercase letters, numbers, and hyphens')
+        .optional()
+);
 
 export const vehicleSchema = z.object({
     id: z.string().optional(),
+    slug: vehicleSlugSchema,
     make: z.string().min(1, 'Make is required'),
     model: z.string().min(1, 'Model is required'),
     year: z.number().int().min(1900).max(new Date().getFullYear() + 1),
