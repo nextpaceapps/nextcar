@@ -12,18 +12,3 @@ env:
     availability:
       - BUILD
       - RUNTIME
-
-  - variable: SENTRY_AUTH_TOKEN
-    secret: nextcar-sentry-auth-token
-    availability:
-      - BUILD
-
-  - variable: SENTRY_ORG
-    secret: nextcar-sentry-org
-    availability:
-      - BUILD
-
-  - variable: SENTRY_PROJECT
-    secret: nextcar-sentry-project
-    availability:
-      - BUILD
