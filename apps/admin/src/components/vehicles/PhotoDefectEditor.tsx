@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { useFieldArray, type Control, type FieldErrors, type UseFormRegister } from 'react-hook-form';
-import type { VehicleSchema } from '@nextcar/shared';
+import { z } from 'zod';
+import { vehicleSchema, type VehicleSchema } from '@nextcar/shared';
+
+type VehicleFormValues = z.input<typeof vehicleSchema>;
 
 interface PhotoDefectEditorProps {
     photoIndex: number;
     disabled?: boolean;
-    control: Control<VehicleSchema>;
-    register: UseFormRegister<VehicleSchema>;
-    errors: FieldErrors<VehicleSchema>;
+    control: Control<VehicleFormValues, unknown, VehicleSchema>;
+    register: UseFormRegister<VehicleFormValues>;
+    errors: FieldErrors<VehicleFormValues>;
 }
 
 export function PhotoDefectEditor({ photoIndex, disabled, control, register, errors }: PhotoDefectEditorProps) {
