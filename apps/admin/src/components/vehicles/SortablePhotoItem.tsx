@@ -1,17 +1,20 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
-import type { VehiclePhoto, VehicleSchema } from '@nextcar/shared';
+import { z } from 'zod';
+import { vehicleSchema, type VehiclePhoto, type VehicleSchema } from '@nextcar/shared';
 import { PhotoDefectEditor } from './PhotoDefectEditor';
+
+type VehicleFormValues = z.input<typeof vehicleSchema>;
 
 interface SortablePhotoItemProps {
     photo: VehiclePhoto & { id: string };
     index: number;
     onRemove: (index: number, url: string) => void;
     disabled?: boolean;
-    control: Control<VehicleSchema>;
-    register: UseFormRegister<VehicleSchema>;
-    errors: FieldErrors<VehicleSchema>;
+    control: Control<VehicleFormValues, unknown, VehicleSchema>;
+    register: UseFormRegister<VehicleFormValues>;
+    errors: FieldErrors<VehicleFormValues>;
 }
 
 export function SortablePhotoItem({ photo, index, onRemove, disabled, control, register, errors }: SortablePhotoItemProps) {

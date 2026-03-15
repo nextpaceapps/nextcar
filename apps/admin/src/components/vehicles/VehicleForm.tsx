@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import {
     createVehicleSlug,
     normalizeVehicleSlug,
@@ -33,6 +34,8 @@ interface PendingImage {
     preview: string;
     progress: number;
 }
+
+type VehicleFormValues = z.input<typeof vehicleSchema>;
 
 export default function VehicleForm({ initialData, isEdit = false }: VehicleFormProps) {
     const { role } = useAuth();
@@ -72,7 +75,7 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
         defects: p.defects ?? [],
     }));
 
-    const defaultValues = initialData
+    const defaultValues: VehicleFormValues = initialData
         ? {
             ...initialData,
             slug: initialData.slug ?? createVehicleSlug(initialData),
@@ -95,9 +98,9 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
             bodyType: 'Sedan',
             color: '',
             featured: false,
-        } as VehicleSchema;
+        };
 
-    const { register, control, handleSubmit, reset, getValues, setValue, watch, formState: { errors, isSubmitting, dirtyFields } } = useForm<VehicleSchema>({
+    const { register, control, handleSubmit, reset, getValues, setValue, watch, formState: { errors, isSubmitting, dirtyFields } } = useForm<VehicleFormValues, unknown, VehicleSchema>({
         resolver: zodResolver(vehicleSchema),
         defaultValues,
     });
@@ -120,7 +123,7 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
         }) : '';
 
         if (dirtyFields.slug) return;
-        if ((watchedSlug ?? '') === generatedSlug) return;
+        if ((typeof watchedSlug === 'string' ? watchedSlug : '') === generatedSlug) return;
 
         setValue('slug', generatedSlug, { shouldDirty: false, shouldValidate: true });
     }, [dirtyFields.slug, setValue, watchedEngineSize, watchedFuelType, watchedMake, watchedModel, watchedSlug, watchedYear]);
@@ -179,10 +182,20 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
 
         try {
             const parsed = await aiService.parseVehicleListing(rawText);
+            const parsedSlug = parsed.make && parsed.model && parsed.year && parsed.fuelType
+                ? createVehicleSlug({
+                    make: parsed.make,
+                    model: parsed.model,
+                    year: parsed.year,
+                    engineSize: parsed.engineSize,
+                    fuelType: parsed.fuelType,
+                })
+                : '';
+
             // Reset form with parsed data
             reset({
                 ...parsed,
-                slug: createVehicleSlug(parsed),
+                slug: parsed.slug ?? parsedSlug,
                 photos: initialData?.photos || [],
             });
             setParseSuccess(true);
@@ -284,7 +297,9 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
     };
 
     const handleSlugBlur = () => {
-        setValue('slug', normalizeVehicleSlug(getValues('slug')) ?? '', {
+        const currentSlug = getValues('slug');
+
+        setValue('slug', normalizeVehicleSlug(typeof currentSlug === 'string' ? currentSlug : undefined) ?? '', {
             shouldDirty: true,
             shouldValidate: true,
         });

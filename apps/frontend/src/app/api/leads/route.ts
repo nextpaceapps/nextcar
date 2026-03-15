@@ -41,6 +41,25 @@ const leadSchema = z.object({
     { message: 'Name is required', path: ['name'] }
 );
 
+function getLeadSourcePage(request: Request, vehicleId?: string): string {
+    const referer = request.headers.get('referer');
+
+    if (referer) {
+        try {
+            const url = new URL(referer);
+            const path = `${url.pathname}${url.search}`;
+
+            if (path.includes('/vehicles/')) {
+                return path;
+            }
+        } catch {
+            // Ignore malformed referer values and fall back to a generic vehicle path.
+        }
+    }
+
+    return vehicleId ? `/vehicles/${vehicleId}` : '/vehicles';
+}
+
 export async function POST(request: Request) {
     try {
         const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
@@ -109,7 +128,7 @@ export async function POST(request: Request) {
         const oppNotes = isCarVertical ? 'CarVertical report request' : (message || '');
         const oppSource = isCarVertical
             ? { page: 'carvertical', vehicleId: vehicleId || null, submittedAt: admin.firestore.FieldValue.serverTimestamp() }
-            : { page: vehicleId ? `/vehicles/${vehicleId}` : '/vehicles', vehicleId: vehicleId || null, submittedAt: admin.firestore.FieldValue.serverTimestamp() };
+            : { page: getLeadSourcePage(request, vehicleId), vehicleId: vehicleId || null, submittedAt: admin.firestore.FieldValue.serverTimestamp() };
 
         const newOpp = {
             id: oppRef.id,
