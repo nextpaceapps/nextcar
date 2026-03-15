@@ -1,5 +1,6 @@
 export * from './types/vehicle.js';
 export * from './schemas/vehicle.js';
+export * from './vehicleSlug.js';
 export * from './types/customer.js';
 export * from './schemas/customer.js';
 export * from './types/opportunity.js';

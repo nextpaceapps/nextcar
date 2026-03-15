@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { notFound, permanentRedirect } from 'next/navigation';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { resolveVehicleSlug } from '@nextcar/shared';
 import { getPublishedVehicleById } from '@/lib/data/vehicles';
 import HeroGallery from '@/components/HeroGallery';
 import PdpHeader from '@/components/PdpHeader';
@@ -15,7 +16,6 @@ import HistoryCard from '@/components/HistoryCard';
 import ReviewCard from '@/components/ReviewCard';
 import {
   createLocalizedVehiclePath,
-  createVehicleSlug,
   getVehicleAbsoluteUrl,
 } from '@/lib/vehicleSlug';
 
@@ -132,7 +132,7 @@ export async function renderVehicleDetailPage({
     getVehicleOrNotFound(id),
   ]);
 
-  const canonicalSlug = createVehicleSlug(vehicle);
+  const canonicalSlug = resolveVehicleSlug(vehicle);
   if (slug !== canonicalSlug) {
     permanentRedirect(
       `${createLocalizedVehiclePath(vehicle, locale)}${buildQueryString(searchParams)}`

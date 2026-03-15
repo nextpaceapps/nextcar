@@ -11,6 +11,7 @@
 - **Collection names** live in `COLLECTIONS` constant (`packages/shared/src/index.ts`). Never hardcode `'vehicles'` or any collection string.
 - **Soft deletes** — set `deleted: true`, never remove documents. All queries must filter `where('deleted', '==', false)`.
 - **Timestamps** — use `serverTimestamp()` for `createdAt`/`updatedAt`. Never set them client-side.
+- **Vehicle slugs are persisted** in the `slug` field. Public vehicle URLs should use the stored slug, and backend writes should normalize or generate one when missing.
 
 ## Code Quality
 

@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { db } from '../config/firebase';
 import { withRole } from '../middleware/auth';
 import { asyncHandler, withValidation } from '../middleware/validate';
-import { vehicleSchema, COLLECTIONS, type Vehicle } from '@nextcar/shared';
+import { vehicleSchema, COLLECTIONS, resolveVehicleSlug, type Vehicle } from '@nextcar/shared';
 import { AppError } from '../utils/AppError';
 import { successResponse } from '../utils/response';
 import { FieldValue } from 'firebase-admin/firestore';
@@ -53,6 +53,7 @@ router.get('/:id', withRole('Viewer'), asyncHandler(async (req, res) => {
 router.post('/', withRole('Editor'), withValidation(vehicleSchema.omit({ status: true, deleted: true })), asyncHandler(async (req, res) => {
     const vehicleData = {
         ...req.body,
+        slug: resolveVehicleSlug(req.body),
         status: 'draft',
         deleted: false,
         createdAt: FieldValue.serverTimestamp(),
@@ -78,9 +79,12 @@ router.put('/:id', withRole('Editor'), withValidation(vehicleSchema.partial()), 
     }
 
     const { id, deleted, ...updateData } = req.body;
+    const existingVehicle = doc.data() as Vehicle;
+    const nextVehicle = { ...existingVehicle, ...updateData };
 
     const payload = {
         ...updateData,
+        slug: resolveVehicleSlug(nextVehicle),
         updatedAt: FieldValue.serverTimestamp(),
     };
 
