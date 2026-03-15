@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { useForm, useFieldArray, type SubmitHandler, FormProvider } from 'react-hook-form';
+import { useForm, useFieldArray, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { vehicleSchema, YOUTUBE_URL_REGEX, type VehicleSchema, type Vehicle, type VehiclePhoto } from '@nextcar/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -87,11 +87,10 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
             featured: false,
         } as VehicleSchema;
 
-    const methods = useForm<VehicleSchema>({
+    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = useForm<VehicleSchema>({
         resolver: zodResolver(vehicleSchema),
         defaultValues,
     });
-    const { register, control, handleSubmit, reset, getValues, formState: { errors, isSubmitting } } = methods;
 
     // Helper for optional number fields — converts empty string to undefined instead of NaN
     const optionalNumber = (name: keyof VehicleSchema) => register(name, {
@@ -316,7 +315,6 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
     };
 
     return (
-        <FormProvider {...methods}>
         <div className="max-w-5xl mx-auto space-y-8">
             {/* AI Parsing Section */}
             <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-200">
@@ -545,6 +543,9 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                                                         index={index}
                                                         onRemove={handleRemoveExistingPhoto}
                                                         disabled={isViewer}
+                                                        control={control}
+                                                        register={register}
+                                                        errors={errors}
                                                     />
                                                 );
                                             })}
@@ -715,6 +716,5 @@ export default function VehicleForm({ initialData, isEdit = false }: VehicleForm
                 </fieldset>
             </form>
         </div>
-        </FormProvider>
     );
 }

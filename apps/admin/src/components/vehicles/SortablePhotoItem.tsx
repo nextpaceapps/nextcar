@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { VehiclePhoto } from '@nextcar/shared';
+import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
+import type { VehiclePhoto, VehicleSchema } from '@nextcar/shared';
 import { PhotoDefectEditor } from './PhotoDefectEditor';
 
 interface SortablePhotoItemProps {
@@ -8,9 +9,12 @@ interface SortablePhotoItemProps {
     index: number;
     onRemove: (index: number, url: string) => void;
     disabled?: boolean;
+    control: Control<VehicleSchema>;
+    register: UseFormRegister<VehicleSchema>;
+    errors: FieldErrors<VehicleSchema>;
 }
 
-export function SortablePhotoItem({ photo, index, onRemove, disabled }: SortablePhotoItemProps) {
+export function SortablePhotoItem({ photo, index, onRemove, disabled, control, register, errors }: SortablePhotoItemProps) {
     const {
         attributes,
         listeners,
@@ -56,7 +60,7 @@ export function SortablePhotoItem({ photo, index, onRemove, disabled }: Sortable
                     #{index + 1}
                 </span>
             </div>
-            <PhotoDefectEditor photoIndex={index} disabled={disabled} />
+            <PhotoDefectEditor photoIndex={index} disabled={disabled} control={control} register={register} errors={errors} />
         </div>
     );
 }
